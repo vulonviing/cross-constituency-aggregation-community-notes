@@ -1522,3 +1522,20 @@ Never rewrite or renumber prior entries — always append at the bottom.
 - Updated `community-notes-x-rescue-main/README.md` with a new "Clean Rescue Checkout" section explaining the symlink and its purpose
 - Updated the clean repo's own `README.md` ("Large Local Data" section) with a new "Reverse symlink from the source checkout" subsection documenting the two-way relationship between the checkouts
 - Anti-formulaic self-check: not applicable — no active-paper manuscript prose was written in this step
+
+## Step 155 — Comparative health check passed; scckn/ untracked; repo prepared for public GitHub push
+- **Date:** 2026-08-03 (local)
+- **Model:** claude-opus-4-8
+- Ran a full read-only, file-by-file comparison of this repo against the source checkout (`community-notes-x-rescue-main`): notebooks, `src/`, `jobs/`, `scripts/`, both figure directories against `main.tex`'s actual `\includegraphics` references, the active paper edition, `data/interim`/`data/processed`/`topics/`, all three canonical Gemma run directories, `scckn/`, `docs/papers/`, both `docs/presentations/` folders, and top-level docs — all matched with no missing or stray files
+- Confirmed the Hugging Face mirror (`vulonviing/community-notes-rescue-interim`) hosts the current data: `200k/ratings_clustered.parquet` (3,082,133,324 bytes) and `200k/ratings_filtered.parquet` (3,071,449,360 bytes) match the local symlinked files byte-for-byte
+- Confirmed no tracked file exceeds GitHub's size limits (largest is 28 MB)
+- Per user decision, stopped tracking `scckn/` in this repo (`git rm -r --cached scckn/`, added `/scckn/` to `.gitignore`) so the cluster/job-submission docs stay local-only and are not part of the public checkout; updated `README.md` (repo map, References link) and `AGENTS.md` accordingly
+- Anti-formulaic self-check: not applicable — no active-paper manuscript prose was written in this step
+- **Date:** 2026-08-03 11:10 +0200
+- **Model:** claude-opus-4-8
+- User flagged a name collision with the previous `community-notes-rescue` folder name; renamed the clean current-only checkout to `/Users/emrecanulu/Documents/cross-constituency-aggregation-community-notes`
+- Verified after the `mv`: `git status` still clean in the renamed repo, and both `data/interim/ratings_filtered.parquet` / `ratings_clustered.parquet` symlinks (absolute paths into the source checkout) still resolve correctly
+- Added a local convenience symlink at the root of `community-notes-x-rescue-main` (this source checkout), named `cross-constituency-aggregation-community-notes`, pointing to the renamed clean repo; excluded it from this repo's Git tracking via a new `.gitignore` entry
+- Updated `community-notes-x-rescue-main/README.md` with a new "Clean Rescue Checkout" section explaining the symlink and its purpose
+- Updated the clean repo's own `README.md` ("Large Local Data" section) with a new "Reverse symlink from the source checkout" subsection documenting the two-way relationship between the checkouts
+- Anti-formulaic self-check: not applicable — no active-paper manuscript prose was written in this step

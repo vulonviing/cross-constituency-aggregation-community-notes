@@ -7,8 +7,9 @@ This repository is one active, root-first project.
 - Do not introduce scale-selection directories or alternate active strategies.
 - Production paths are fixed. Smoke output belongs only in `.artifacts/smoke/`.
 - Downstream analysis uses Method-B reassigned clusters.
-- Keep `scckn/` at the repository root. Reference papers live under
-  `docs/papers/`.
+- Keep `scckn/` at the repository root. It is local-only and untracked (see
+  `.gitignore`) — it is not part of the public GitHub checkout. Reference
+  papers live under `docs/papers/`.
 - Large raw files, `data/master_full.parquet`, and the two oversized interim
   ratings files remain local/ignored. In this checkout the two interim
   ratings files are symlinks into the original source checkout; see

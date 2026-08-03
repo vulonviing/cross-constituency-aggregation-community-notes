@@ -31,7 +31,7 @@ files are attached.
 ├── scripts/                 # Hugging Face interim-data helpers
 ├── docs/                    # Reference papers and presentations
 ├── raw/                     # Local Community Notes snapshot inputs
-└── scckn/                   # Cluster documentation
+└── scckn/                   # Cluster documentation (local-only, untracked)
 ```
 
 ## Canonical Stages
@@ -319,6 +319,6 @@ This logging is mandatory for all models/agents (see the **HARD RULE** in
 ## References
 
 - Paper: [paper/README.md](paper/README.md)
-- SCCKN index: [scckn/README.md](scckn/README.md)
+- SCCKN index: `scckn/README.md` (local-only, untracked — not in the public checkout)
 - Reference papers and presentations: [docs/README.md](docs/README.md)
 - AI step logs: [ai-usage/README.md](ai-usage/README.md)
