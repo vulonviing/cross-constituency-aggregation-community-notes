@@ -92,6 +92,17 @@ not.
 `data/master_full.parquet` is not mirrored anywhere; regenerate it by running
 `notebooks/00_ingest.ipynb` against the raw snapshot in `raw/`.
 
+### Reverse symlink from the source checkout
+
+The original, full-history working copy
+(`community-notes-x-rescue-main`, which also holds `archive/` and every
+historical paper edition) keeps a symlink at its own root,
+`cross-constituency-aggregation-community-notes`, pointing back to this
+repository. That symlink is a local convenience only: it is excluded from
+that repository's Git history via its `.gitignore` and is not part of this
+repository. The two checkouts intentionally share one physical copy of the
+large `ratings_*.parquet` files instead of storing them twice.
+
 ## How To Run
 
 ### Local Setup

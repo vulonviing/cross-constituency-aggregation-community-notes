@@ -1512,3 +1512,13 @@ Never rewrite or renumber prior entries — always append at the bottom.
 - Updated `README.md` (removed archive/gabriel/Obsidian references, added a "Large Local Data" section documenting the symlink + HF setup), `AGENTS.md` (dropped archive/Obsidian rules), `paper/README.md` (single active edition only), `notebooks/README.md` (dropped stale archive path), and `docs/README.md` (added the missing presentation entry)
 - Verified end-to-end: new repo totals 406 MB (vs. 34 GB source); all `src/*` modules import cleanly under the source `.venv`; `latexmk -pdf main.tex` compiles the active paper to a clean 10-page PDF with all three figures present; `git init` + `git add -A` stages 404 files with the large ratings symlinks and build junk correctly excluded via `.gitignore`
 - Anti-formulaic self-check: not applicable — no active-paper manuscript prose was written in this step
+
+## Step 154 — Clean rescue repo renamed; cross-repo symlink added
+- **Date:** 2026-08-03 11:10 +0200
+- **Model:** claude-opus-4-8
+- User flagged a name collision with the previous `community-notes-rescue` folder name; renamed the clean current-only checkout to `/Users/emrecanulu/Documents/cross-constituency-aggregation-community-notes`
+- Verified after the `mv`: `git status` still clean in the renamed repo, and both `data/interim/ratings_filtered.parquet` / `ratings_clustered.parquet` symlinks (absolute paths into the source checkout) still resolve correctly
+- Added a local convenience symlink at the root of `community-notes-x-rescue-main` (this source checkout), named `cross-constituency-aggregation-community-notes`, pointing to the renamed clean repo; excluded it from this repo's Git tracking via a new `.gitignore` entry
+- Updated `community-notes-x-rescue-main/README.md` with a new "Clean Rescue Checkout" section explaining the symlink and its purpose
+- Updated the clean repo's own `README.md` ("Large Local Data" section) with a new "Reverse symlink from the source checkout" subsection documenting the two-way relationship between the checkouts
+- Anti-formulaic self-check: not applicable — no active-paper manuscript prose was written in this step
