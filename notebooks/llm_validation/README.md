@@ -2,8 +2,8 @@
 
 This folder contains the canonical two-stage validation over the frozen 13,655
 Representative rescue candidates. The completed production run uses
-`google/gemma-4-31B-it` on SCCKN; it does not call OpenCode or Gabriel. The
-merged expanded Stage 2 result retains 8,558 notes at the threshold of 50.
+`google/gemma-4-31B-it`; it does not call OpenCode or Gabriel. The merged
+expanded Stage 2 result retains 8,558 notes at the threshold of 50.
 
 ## Frozen Method
 
@@ -25,19 +25,18 @@ merged expanded Stage 2 result retains 8,558 notes at the threshold of 50.
 The prompt templates in `prompts.py` remain unchanged. Their SHA-256 values are
 stored in each run manifest.
 
-## SCCKN Setup
+## Cluster Setup
 
-From the SCCKN repository root:
+From the repository root:
 
 ```bash
 jobs/submit_llm_validation.sh --dry-run setup
 jobs/submit_llm_validation.sh setup
 ```
 
-The setup job creates a pinned Python environment under `/work`, installs
-vLLM, removes its optional `torchcodec` video backend for this text-only run,
-and downloads the 62.6 GB model into the existing `/work` Hugging Face cache.
-No API key is required.
+The setup job creates a pinned Python environment, installs vLLM, removes its
+optional `torchcodec` video backend for this text-only run, and downloads the
+62.6 GB model into the Hugging Face cache. No API key is required.
 
 ## Smoke
 
@@ -74,9 +73,9 @@ python3 notebooks/llm_validation/run_validation.py shard-status
 
 Tasks 2-7 cover canonical manifest rows 2,000-13,655 in five 2,000-note
 shards and one 1,655-note shard. `-tc 3` permits at most three tasks (six L40S
-GPUs) to run concurrently. The array is pinned to SCCKN's verified L40S host,
-and each task rejects any non-L40S allocation before model startup. Each task
-uses a distinct local vLLM port, log,
+GPUs) to run concurrently. The array is pinned to the cluster's verified L40S
+host, and each task rejects any non-L40S allocation before model startup.
+Each task uses a distinct local vLLM port, log,
 exclusive lock, and SQLite database under
 `data/llm_validation/runs/gemma-4-31b-it-scckn-v1/shards/`. Resubmitting the
 same task reads its existing database and evaluates only pending notes.
@@ -117,7 +116,7 @@ Prepare locally without inference and inspect the frozen manifest:
 python3 notebooks/llm_validation/run_validation.py stage1-5-prepare
 ```
 
-Submit the complete bounded run on SCCKN:
+Submit the complete bounded run:
 
 ```bash
 jobs/submit_llm_validation.sh --dry-run stage1-5 1703 64
@@ -158,7 +157,7 @@ python3 notebooks/llm_validation/run_validation.py stage2-expanded-prepare
 jobs/submit_llm_validation.sh --dry-run stage2-expanded-array 1-6 3 64
 ```
 
-Submit all six disjoint SCCKN shards after the committed contract is pulled:
+Submit all six disjoint shards after the committed contract is pulled:
 
 ```bash
 jobs/submit_llm_validation.sh stage2-expanded-array 1-6 3 64
@@ -166,7 +165,7 @@ python3 notebooks/llm_validation/run_validation.py stage2-expanded-shard-status
 ```
 
 Tasks 1-5 contain 2,000 notes each and task 6 contains 376. At most three
-tasks run concurrently on `gpu@scc213`. Every shard has a separate manifest,
+tasks run concurrently on the pinned GPU queue. Every shard has a separate manifest,
 SQLite database, backup, exports, lock, local vLLM port, and logs. Each attempt
 is committed immediately, exports refresh every 100 processed notes and on
 graceful scheduler stop, and a resumed task skips terminal notes. The first
@@ -196,16 +195,16 @@ Production output is isolated under
 - prompt snapshots, `run_manifest.json`, and `summary.json`
 
 The parent Stage 1 and Stage 1.5 results remain in their separately identified
-run directories. The historical `data/gabriel/` tree is not an active output
-or runtime dependency.
+run directories. Historical Gabriel data is not an active output or runtime
+dependency.
 
-SGE stdout and stderr use job-specific files under
+Scheduler stdout and stderr use job-specific files under
 `.artifacts/logs/llm_validation/gemma-4-31b-it-scckn-v1/`; logs from resumed
 batches are not overwritten or appended into one ambiguous file. Array vLLM
 logs include both job and task IDs.
 
-SQLite uses rollback journaling and full synchronous commits for SCCKN's NFS
-`/work` filesystem. Every accepted note is committed immediately. Scheduler
+SQLite uses rollback journaling and full synchronous commits for the cluster's
+networked filesystem. Every accepted note is committed immediately. Scheduler
 notifications stop new work, let in-flight calls finish, and refresh atomically
 written exports. Array jobs reserve a 15-minute soft-to-hard limit window so
 the runner can finish in-flight requests. A hard kill can lose only unfinished

@@ -102,3 +102,6 @@ data/master_full.parquet
 
 # Cluster/job-submission docs kept local only; not part of the public checkout.
 /scckn/
+
+# AI work log kept local only; not part of the public checkout.
+/ai-usage/

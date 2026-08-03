@@ -684,7 +684,7 @@ class Stage1ShardTests(unittest.TestCase):
         )
         self.assertIn("-t 2-7", result.stdout)
         self.assertIn("-tc 3", result.stdout)
-        self.assertIn("-q gpu@scc213", result.stdout)
+        self.assertIn("-q gpu", result.stdout)
         self.assertIn("LLM_VALIDATION_CONCURRENCY=64", result.stdout)
 
     def test_stage15_dry_run_is_isolated_and_bounded(self) -> None:
@@ -796,7 +796,7 @@ class ExpandedStage2ShardTests(unittest.TestCase):
         self.assertIn("-N cn_gemma_s2e", result.stdout)
         self.assertIn("-t 1-6", result.stdout)
         self.assertIn("-tc 3", result.stdout)
-        self.assertIn("-q gpu@scc213", result.stdout)
+        self.assertIn("-q gpu", result.stdout)
         self.assertIn("LLM_VALIDATION_CONCURRENCY=64", result.stdout)
 
     def test_expanded_merge_is_atomic_and_idempotent(self) -> None:

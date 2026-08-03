@@ -4,20 +4,19 @@ This repository contains one active analysis pipeline: the 100k-note,
 200k-user Community Notes analysis with sparse spectral clustering, Method-B
 vote-profile reassignment, and Representative note selection.
 
-This is the clean, current-only rescue of that pipeline: only the active
-code, data, figures, and manuscript were carried over. See
-[Large Local Data](#large-local-data) below for how the two oversized interim
-files are attached.
+This is the clean, current-only checkout of that pipeline: only the active
+code, data, figures, and manuscript are included. See
+[Large Local Data](#large-local-data) below for the two oversized interim
+files.
 
 ## Repository Map
 
 ```text
 .
-├── ai-usage/                # AI step logs (append-only model/agent work record)
 ├── data/
 │   ├── master_full.parquet  # Local, ignored, produced by ingest
 │   ├── interim/             # Clustering and Method-B outputs
-│   │                        #   (two ratings_*.parquet files are symlinks; see below)
+│   │                        #   (two ratings_*.parquet files are gitignored; see below)
 │   ├── processed/           # Scoring outputs
 │   │   └── topics/          # Representative topic outputs
 │   └── llm_validation/      # Canonical Gemma validation runs and results
@@ -27,11 +26,10 @@ files are attached.
 │   └── script_figures/      # Manually produced figures
 ├── paper/                   # Active paper (see paper/README.md)
 ├── src/                     # Reusable Python implementation
-├── jobs/                    # SCCKN submission interface
+├── jobs/                    # Job scripts that run the notebooks
 ├── scripts/                 # Hugging Face interim-data helpers
 ├── docs/                    # Reference papers and presentations
-├── raw/                     # Local Community Notes snapshot inputs
-└── scckn/                   # Cluster documentation (local-only, untracked)
+└── raw/                     # Local Community Notes snapshot inputs
 ```
 
 ## Canonical Stages
@@ -44,7 +42,7 @@ files are attached.
 6. `notebooks/06_plots.ipynb`
 7. `notebooks/07_paper_visuals.ipynb`
 
-SCCKN stages use one command:
+Each stage is submitted through one command:
 
 ```bash
 jobs/submit_stage.sh [--dry-run] <stage>
@@ -68,40 +66,22 @@ checkout, and fetch or upload them with `scripts/fetch_interim_from_hf.sh` and
 
 `data/master_full.parquet` and the two oversized interim ratings files
 (`data/interim/ratings_filtered.parquet`, `data/interim/ratings_clustered.parquet`,
-~3 GB each) are never committed to Git (see `.gitignore`).
-
-In this checkout, the two interim files are **symlinks** to the original
-working copy at `community-notes-x-rescue-main/data/interim/`, so the
-pipeline can run immediately without re-fetching them. If you move or share
-this repository independently of that source checkout, replace the symlinks
-with real files:
+~3 GB each) are never committed to Git (see `.gitignore`). Fetch the two
+interim files with:
 
 ```bash
 scripts/fetch_interim_from_hf.sh
 ```
 
 This pulls both files from the `vulonviing/community-notes-rescue-interim`
-Hugging Face dataset repo, which already hosts current `200k/ratings_filtered.parquet`
-and `200k/ratings_clustered.parquet` uploads (verified at the time of this
-rescue). If the dataset is ever rotated or re-created, confirm it still holds
-current uploads before relying on it (`hf download --repo-type=dataset
-vulonviing/community-notes-rescue-interim --include "200k/*.parquet"` or check
-the HF web UI) — re-upload with `scripts/upload_interim_to_hf.sh` if it does
-not.
+Hugging Face dataset repo. If the dataset is ever rotated or re-created,
+confirm it still holds current uploads before relying on it (`hf download
+--repo-type=dataset vulonviing/community-notes-rescue-interim --include
+"200k/*.parquet"` or check the HF web UI) — re-upload with
+`scripts/upload_interim_to_hf.sh` if it does not.
 
 `data/master_full.parquet` is not mirrored anywhere; regenerate it by running
 `notebooks/00_ingest.ipynb` against the raw snapshot in `raw/`.
-
-### Reverse symlink from the source checkout
-
-The original, full-history working copy
-(`community-notes-x-rescue-main`, which also holds `archive/` and every
-historical paper edition) keeps a symlink at its own root,
-`cross-constituency-aggregation-community-notes`, pointing back to this
-repository. That symlink is a local convenience only: it is excluded from
-that repository's Git history via its `.gitignore` and is not part of this
-repository. The two checkouts intentionally share one physical copy of the
-large `ratings_*.parquet` files instead of storing them twice.
 
 ## How To Run
 
@@ -139,26 +119,22 @@ jobs/submit_stage.sh plots
 jobs/submit_stage.sh paper_visuals
 ```
 
-### Production Run On SCCKN
+### Production Run
 
-1. Sync the repository to a project directory under `/work`, not `$HOME`.
-2. Put the raw snapshot and FastText files in the root `raw/` directory.
-3. Install any missing packages in the SCCKN Python environment, including `pyamg`.
-4. Set `TEST_MODE=0` in `config.txt`.
-5. Submit the six stages in the order shown above.
+1. Put the raw snapshot and FastText files in the root `raw/` directory.
+2. Install any missing packages in the active Python environment, including `pyamg`.
+3. Set `TEST_MODE=0` in `config.txt`.
+4. Submit the six stages in the order shown above.
 
 The production clustering configuration is fixed at 100,000 notes and 200,000
 users. Downstream stages always consume Method-B reassigned clusters from
 `data/interim/user_clusters_method_b_voteprofile.parquet`.
 
-Monitor jobs with:
-
-```bash
-qstat -u emrecan.ulu
-qacct -j <job-id>
-```
-
-Logs and status files are written under `.artifacts/logs/`.
+`jobs/submit_stage.sh` and `jobs/submit_llm_validation.sh` target an SGE-style
+scheduler (`qsub`/`qstat`/`qacct`); adapt the queue names and resource flags to
+whatever job scheduler is available, or run the underlying Python entry points
+directly for a local run. Logs and status files are written under
+`.artifacts/logs/`.
 
 ### Resume From Interim Data
 
@@ -175,12 +151,11 @@ especially the Method-B user assignment, must also exist before starting from
 
 The canonical validation is implemented under
 `notebooks/llm_validation/` and evaluates the frozen 13,655-note universe with
-Gemma 4 31B IT in BF16 on two SCCKN L40S GPUs. Prompts contain only note text:
+Gemma 4 31B IT in BF16 on two L40S-class GPUs. Prompts contain only note text:
 no tweet retrieval, URL fetching, Gabriel scaffold, or upstream selection
 score is supplied to the model.
 
-On SCCKN, install the pinned runtime and model, then submit the 128-note Stage 1
-smoke:
+Install the pinned runtime and model, then submit the 128-note Stage 1 smoke:
 
 ```bash
 jobs/submit_llm_validation.sh setup
@@ -306,19 +281,12 @@ framing and canonical Gemma validation results.
 Smoke mode changes scale and output location only. It does not redefine the
 production methodology.
 
-## AI Step Logs
+## Acknowledgments
 
-`ai-usage/step_logs/STEP_LOG.md` is an append-only record of work done by AI
-agents in this repository. Each entry captures the date, time, model used, a
-global step number, a step title, and rough bullet points of what was done.
-
-This logging is mandatory for all models/agents (see the **HARD RULE** in
-[AGENTS.md](AGENTS.md)). For the entry format and rules, see
-[ai-usage/README.md](ai-usage/README.md).
+The authors acknowledge support by the local computing resources through the
+core facility [SCCKN](https://scc.uni-konstanz.de).
 
 ## References
 
 - Paper: [paper/README.md](paper/README.md)
-- SCCKN index: `scckn/README.md` (local-only, untracked — not in the public checkout)
 - Reference papers and presentations: [docs/README.md](docs/README.md)
-- AI step logs: [ai-usage/README.md](ai-usage/README.md)

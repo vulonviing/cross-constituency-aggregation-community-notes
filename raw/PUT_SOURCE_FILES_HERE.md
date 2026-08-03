@@ -24,5 +24,5 @@ ls -lh raw/
 test -x raw/fasttext
 ```
 
-On SCCKN, keep the repository and raw data under `/work`; the home directory
-quota is too small for the snapshot.
+On a shared cluster, keep the repository and raw data on scratch/project
+storage rather than a small home-directory quota — the snapshot is large.

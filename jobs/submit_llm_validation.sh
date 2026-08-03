@@ -82,7 +82,7 @@ case "$action" in
         [[ "$request_concurrency" =~ ^[1-9][0-9]*$ ]] || usage
         script="jobs/llm_validation_gpu.sh"
         qsub_args=(
-            -S /bin/bash -N cn_gemma_s1_shard -q gpu@scc213 -pe smp 8
+            -S /bin/bash -N cn_gemma_s1_shard -q "${GPU_QUEUE:-gpu}" -pe smp 8
             -l gpu=2,tesla_l40=1,h_vmem=64G,s_rt=11:45:00,h_rt=12:00:00
             -notify -t "$task_range" -tc "$max_concurrent"
             -o "$LOG_ROOT" -e "$LOG_ROOT" -cwd
@@ -103,7 +103,7 @@ case "$action" in
         fi
         script="jobs/llm_validation_gpu.sh"
         qsub_args=(
-            -S /bin/bash -N cn_gemma_s2e -q gpu@scc213 -pe smp 8
+            -S /bin/bash -N cn_gemma_s2e -q "${GPU_QUEUE:-gpu}" -pe smp 8
             -l gpu=2,tesla_l40=1,h_vmem=64G,s_rt=11:45:00,h_rt=12:00:00
             -notify -t "$task_range" -tc "$max_concurrent"
             -o "$LOG_ROOT" -e "$LOG_ROOT" -cwd

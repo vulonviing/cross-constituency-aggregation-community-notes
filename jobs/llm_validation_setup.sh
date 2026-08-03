@@ -10,8 +10,8 @@ fi
 PROJECT_ROOT="${SGE_O_WORKDIR:-$(pwd)}"
 cd "$PROJECT_ROOT"
 
-ENV_DIR="${LLM_VALIDATION_ENV_DIR:-/work/emrecan.ulu/envs/community-notes-gemma4-v1}"
-HF_HOME="${HF_HOME:-/work/emrecan.ulu/hf_cache}"
+ENV_DIR="${LLM_VALIDATION_ENV_DIR:-/work/$USER/envs/community-notes-gemma4-v1}"
+HF_HOME="${HF_HOME:-/work/$USER/hf_cache}"
 MODEL="google/gemma-4-31B-it"
 REVISION="518276fb130dc81caf9a4f772e65e63ef2526493"
 

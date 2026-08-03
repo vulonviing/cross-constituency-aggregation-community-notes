@@ -1,7 +1,7 @@
 # Validation Warning
 
 The current LLM validation was not run through a Jupyter notebook. Canonical
-results come from the SCCKN Gemma 4 31B command-line pipeline under
+results come from the Gemma 4 31B command-line pipeline under
 `notebooks/llm_validation/`.
 
 Use the merged expanded Stage 2 output at

@@ -8,8 +8,7 @@ This repository carries only the active manuscript.
 |---|---|---|
 | `03-07-2026-1550-edition/` | 03-07-2026 15:50 | Active paper — current manuscript and conference abstract |
 
-Earlier dated editions (first write, Jingyao revision, rewrite draft) are not
-part of this checkout; they remain in the original project history.
+Earlier drafts are not part of this public checkout.
 
 Compile with:
 

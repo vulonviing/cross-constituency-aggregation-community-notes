@@ -101,8 +101,8 @@ qsub_args=(
     -v "CN_SUBMIT_HELPER=1"
 )
 
-if [ "$mail" = "1" ]; then
-    qsub_args+=(-m bea -M emrecan.ulu@uni-konstanz.de)
+if [ "$mail" = "1" ] && [ -n "${NOTIFY_EMAIL:-}" ]; then
+    qsub_args+=(-m bea -M "$NOTIFY_EMAIL")
 fi
 qsub_args+=("jobs/${stage}.sh")
 
