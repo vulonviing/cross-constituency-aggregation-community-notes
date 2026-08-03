@@ -1,0 +1,101 @@
+# ---------------------------------------------------------------------------
+# Local workspace noise
+# ---------------------------------------------------------------------------
+.DS_Store
+**/.DS_Store
+Thumbs.db
+ehthumbs.db
+
+# ---------------------------------------------------------------------------
+# Secrets, credentials, and local-only config
+# ---------------------------------------------------------------------------
+.env
+.env.*
+!.env.example
+**/.env
+**/.env.*
+!**/.env.example
+
+*.pem
+*.p12
+*.pfx
+*.crt
+*.token
+*.secret
+*.private.key
+*.api_key
+*.apikey
+.ssh/
+**/.ssh/
+secrets/
+**/secrets/
+credentials/
+**/credentials/
+
+# Claude/Codex/local tool state that can contain machine-specific paths.
+.claude/settings.local.json
+**/.claude/settings.local.json
+.codex/
+
+# Multi-agent coordination file: session-local, not for version control.
+common-memory.md
+**/common-memory.md
+
+# ---------------------------------------------------------------------------
+# Runtime caches and local environments
+# ---------------------------------------------------------------------------
+__pycache__/
+**/__pycache__/
+*.py[cod]
+*$py.class
+
+.venv/
+venv/
+env/
+ENV/
+.conda/
+
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+
+build/
+dist/
+*.egg-info/
+.artifacts/
+
+.ipynb_checkpoints/
+**/.ipynb_checkpoints/
+*.ipynb.bak
+**/*.ipynb.bak
+
+# LaTeX build products; the canonical paper/main.pdf remains tracked.
+*.aux
+*.fdb_latexmk
+*.fls
+*.log
+*.out
+*.synctex.gz
+
+# JetBrains IDE
+.idea/
+**/.idea/
+
+# ---------------------------------------------------------------------------
+# GitHub-too-large project data
+# ---------------------------------------------------------------------------
+# Canonical raw inputs are local-only.
+raw/*.tsv
+raw/*.parquet
+raw/*.csv
+raw/*.gz
+
+# Large interim ratings files: exceed GitHub LFS 2 GB limit.
+# They are mirrored by scripts/fetch_interim_from_hf.sh.
+data/interim/ratings_filtered.parquet
+data/interim/ratings_clustered.parquet
+
+# Full master table is reproducible from raw inputs and remains local.
+data/master_full.parquet

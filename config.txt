@@ -1,0 +1,29 @@
+# Canonical 200k Representative pipeline configuration.
+#
+# TEST_MODE=0 writes canonical outputs under data/ and figures/paper/.
+# TEST_MODE=1 runs a small smoke test and writes only under
+# .artifacts/smoke/, leaving production artifacts untouched.
+TEST_MODE=0
+
+# Analytical universe
+FASTTEXT_LID_MODEL=raw/lid.176.ftz
+FASTTEXT_BINARY=raw/fasttext
+LANGUAGE_FILTER=en
+LANGUAGE_MIN_CONFIDENCE=0.5
+LANGUAGE_BATCH_SIZE=10000
+
+# Canonical clustering configuration: 100k notes, 200k users.
+# The spectral solution is followed by Method-B vote-profile reassignment.
+FULL_RESOURCE_PROFILE=large
+FULL_CLUSTER_TARGET_NOTES=100000
+FULL_CLUSTER_TARGET_USERS=200000
+FULL_CLUSTER_K_MAX=7
+FULL_CLUSTER_STABILITY_RUNS=5
+FULL_CLUSTER_STABILITY_SUBSAMPLE_FRAC=0.8
+FULL_CLUSTER_BATCH_SIZE=250000
+FULL_CLUSTER_MIN_NOTE_RATINGS=3
+FULL_CLUSTER_KNN_NEIGHBORS=15
+
+# Representative topic-modeling diagnostic subset.
+FULL_DIAGNOSTIC_MIN_SPREAD_PCT=90
+FULL_DIAGNOSTIC_MIN_CLUSTER_RATINGS=3

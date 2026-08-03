@@ -1,0 +1,289 @@
+\documentclass[10pt,twocolumn]{article}
+
+\usepackage[margin=0.75in]{geometry}
+\usepackage{times}
+\usepackage{microtype}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{amsmath}
+\usepackage{enumitem}
+\usepackage{natbib}
+\usepackage[hidelinks]{hyperref}
+\usepackage{tcolorbox}
+\usepackage{xcolor}
+\usepackage{tikz}
+\usepackage{tabularx}
+\urlstyle{same}
+
+\setlength{\columnsep}{0.25in}
+\setlength{\parindent}{1em}
+\setlength{\parskip}{0pt}
+\raggedbottom
+
+% ─────────────────────────────────────────────────────────────────────────────
+% Conference first-stage submission: abstract + introduction only.
+% The introduction is the detailed ("complex") version and is supplemented with
+% the concrete CCA rule so that abstract + introduction are self-contained.
+% ─────────────────────────────────────────────────────────────────────────────
+
+\title{\textbf{Cross-Constituency Aggregation for Community Notes}}
+
+\author{
+Emrecan Ulu\\
+University of Konstanz
+\and
+Jingyao\\
+University of Konstanz
+}
+
+\date{}
+
+\begin{document}
+
+\maketitle
+
+\begin{abstract}
+Community Notes is X's crowd-based fact-checking system: contributors write
+contextual notes, other contributors rate them, and a bridging algorithm decides
+which notes become visible. The algorithm is designed to avoid simple majority
+capture by estimating note quality separately from ideological alignment, so a
+note should gain support across disagreement rather than only within one side
+\citep{wojcik2022birdwatch,xcommunitynotes2026ranking}. This design is powerful,
+but it also creates a visibility problem. Because the system works through
+sparse and unequal participation, display decisions can depend heavily on the
+ratings supplied by a relatively small active core, and many notes remain in
+Needs More Ratings when the algorithm does not find enough diverse support
+\citep{goyal2026qsmf,razuvayevskaya2025timeliness}. We argue that this is not
+only a data-sparsity problem. It is also an aggregation problem: Community Notes
+treats cross-group agreement indirectly, through a fitted model, rather than as
+an explicit decision rule over constituencies.
+
+We take inspiration from political science and social choice. In systems such
+as Switzerland's double-majority referendum rule, important decisions must gain
+support not only from a national majority but also from a majority of cantons;
+the system treats cross-group support as part of the decision's legitimacy. Our
+philosophy is simple: a note should not become visible because one active group
+overwhelms the rest; it should become visible when each relevant constituency
+has a real chance to support it. We operationalize this idea as
+cross-constituency aggregation. We recover behavioral constituencies from
+co-rating patterns among 200,000 active raters, compute each note's approval
+rate inside each constituency, and combine those rates with a geometric mean
+under a minimum-coverage rule. In a 100,000-note analytical slice, Community
+Notes displays 6,832 of 44,722 representative-picked notes (15\%). Our rule
+identifies a 13,655-note rescue pool, raising potential visibility to 20,487
+notes (46\%) before validation. A second-stage validation screen classifies
+3,896 candidates as sourced, factual, and rescue-worthy. These results suggest
+that useful notes can remain hidden when cross-group support is modeled only
+indirectly.
+\end{abstract}
+
+\section{Introduction}
+
+Community Notes is X's crowdsourced fact-checking system. When users believe a
+post needs context, contributors can write a short note. Other contributors
+then rate whether that note is helpful. If the system decides that the note has
+enough support, the note is shown under the post. This makes Community Notes a
+large public experiment in crowd-based moderation: the platform does not rely
+only on professional fact-checkers or automated classifiers, but asks a crowd
+to decide which context should become visible \citep{wojcik2022birdwatch,
+xcommunitynotes2026ranking}.
+
+The key innovation of Community Notes is its bridging algorithm. A simple
+majority vote would be easy to capture by one political side or one active
+group. X's current 2026 official guide describes the main ranking layer as
+matrix factorization over the sparse note-rater matrix. In simplified form, the
+predicted rating is
+\[
+    \hat{r}_{un} = \mu + i_u + i_n + f_u \cdot f_n.
+\]
+This decomposes a rating into four parts:
+
+\begin{itemize}
+    \item $\mu$: the global average rating level;
+    \item $i_u$: the rater intercept, capturing whether a rater is generally
+    more generous or stricter when rating notes;
+    \item $i_n$: the note intercept, used as the note's helpfulness score;
+    \item $f_u \cdot f_n$: the match between the rater factor and the note
+    factor, capturing whether a note appeals to raters with particular
+    viewpoints.
+\end{itemize}
+
+The important point is that a note receives a high helpfulness score only when
+its support cannot be explained merely by viewpoint compatibility. X therefore
+presents the model as a way to identify notes with broad appeal across
+viewpoints \citep{xcommunitynotes2026ranking}.
+
+This matrix-factorization layer is not the whole current production system.
+The official ranking guide also describes agreement safeguards, Net Helpful
+minimums, checks for rater engagement and rater independence, topic and group
+models, and a November 2025 Gaussian final-scoring pilot that approximates a
+geometric mean of helpfulness rates across the rater-factor spectrum
+\citep{xcommunitynotes2026ranking}. We therefore treat the formula as the core
+ranking layer, not as the full Community Notes pipeline.
+
+This design is powerful, but it also has a problem. After viewpoint agreement
+is modeled, the system still estimates note helpfulness from sparse and uneven
+ratings. Recent work argues that this makes the quality estimate sensitive to
+rater quality, noisy raters, strategic raters, and hyperactive minorities
+\citep{goyal2026qsmf,nudo2026hyperactive}. The official guide itself reflects
+this concern: its rater-engagement safeguard recomputes a baseline intercept
+after omitting the top 0.1\% of rating-volume contributors, in order to check
+whether notes are helpful beyond the most active raters
+\citep{xcommunitynotes2026ranking}. Participation in Community Notes is also
+highly unequal. Razuvayevskaya et al. report that the top 10\% of contributors
+produce 58\% of all notes, while most users remain much less active
+\citep{razuvayevskaya2025timeliness}. This matters because a crowd system can
+formally include many people while still depending heavily on a small, active
+core.
+
+The reason is structural. Community Notes faces sparse and uneven
+participation: most raters see only a small part of the note universe, while a
+small number of users rate very often. The current model answers this problem
+as an estimation task. It adjusts for rater-level tendencies, estimates note
+helpfulness, and uses a latent rater-note factor to capture whether a note fits
+the raters who evaluate it. This is a reasonable way to prevent one-sided
+agreement from being mistaken for broad quality. But it still keeps group
+support inside a fitted model. It does not create direct quantities such as
+``approval inside constituency A'' or ``approval inside constituency B.'' As a
+result, cross-group acceptance is present only indirectly, and a small active
+core can still shape which signals the model sees most often.
+
+Our approach starts from a different premise about the disagreement itself.
+Latent-quality estimation makes sense only if rater disagreement is noise around
+a shared quality signal, something that washes out once it is partialled away.
+On a platform that works as a de facto public sphere, that picture does not
+hold. Raters do not fluctuate randomly around one true score; they cluster by
+what they attend to: which claims are worth checking, what counts as credible
+evidence, what context feels necessary. Those judgments cohere within a
+group and pull apart across groups. The disagreement that results is neither
+noise nor reducible to a single ideological axis. It is structured: persistent,
+correlated across issues, and organized into behavioral blocs that we later
+recover from real co-rating patterns.
+
+Because the disagreement is structured, we do not try to decide which raters are
+better, more sincere, or more reliable as individuals. We treat the recovered
+constituencies as legitimate parts of the crowd and ask whether a note is
+acceptable across them, which turns Community Notes from a prediction problem
+into a crowd-agreement problem: the platform is making a collective decision, in
+the name of ``the community,'' about whether a note should be attached to a
+public post. The question this paper asks follows directly:
+
+\begin{quote}
+When ratings come from behaviorally distinct constituencies, which aggregation
+rule should decide whether a Community Note becomes visible?
+\end{quote}
+
+We compare the platform's current decision with a rule that requires meaningful
+support from each recovered constituency, treating disagreement as a feature of
+the governance problem rather than as noise to be averaged away. This paper makes
+three contributions:
+
+\begin{itemize}[nosep,leftmargin=1.2em]
+    \item We reframe the Community Notes display decision as an aggregation
+    problem over behaviorally distinct constituencies, rather than a
+    latent-quality estimate over a pooled crowd.
+    \item We recover those constituencies endogenously from co-rating
+    behavior, with no external party, country, or ideology labels, and give a
+    transparent standing test for when a recovered cluster may count as a
+    constituency.
+    \item We operationalize cross-group legitimacy as a concrete
+    non-compensatory rule (a geometric mean under minimum coverage) and show, on
+    a 100{,}000-note slice, that it surfaces a large pool of otherwise-hidden
+    public-interest notes, which a second-stage screen validates as sourced and
+    factual.
+\end{itemize}
+
+The inspiration is political science and social choice rather than another
+rater-quality model. Divided societies often use power sharing, double
+majorities, parallel consent, vote pooling, or veto-like rules so that
+collective decisions depend on support traveling across groups, not only on the
+strongest or most active side
+\citep{lijphart1977democracy,mcgarryoleary2009,
+horowitz1991makingmoderation,reilly2002electoral}. Social-choice theory gives
+a formal version of the same idea: legitimate collective decisions should
+represent relevant parts of the public, not only the largest or most active
+part \citep{peters2019proportionality,qiu2025representative}. We borrow this
+logic in a limited way. Community Notes is not a state, and displaying a note
+is not passing a law. Still, both settings face the same aggregation problem
+under disagreement.
+
+\begin{tcolorbox}[title=Philosophy, fonttitle=\bfseries,
+    coltitle=black, colbacktitle=green!20, colback=green!6,
+    colframe=green!45!black, boxrule=0.6pt, arc=2pt,
+    left=6pt, right=6pt, top=5pt, bottom=5pt]
+\textbf{Our philosophy is simple:} all recovered constituencies count. A note
+should become visible when it can survive cross-group acceptance, not when one
+active group dominates the observed rating record. Over time, such a rule may
+also encourage contributors to write and rate notes that can travel across
+camps, because visibility depends on cross-constituency support rather than
+one-sided enthusiasm.
+\end{tcolorbox}
+
+\begin{tcolorbox}[title=Principles, fonttitle=\bfseries,
+    coltitle=black, colbacktitle=green!20, colback=green!6,
+    colframe=green!45!black, boxrule=0.6pt, arc=2pt,
+    left=6pt, right=6pt, top=5pt, bottom=5pt]
+\begin{description}[leftmargin=0pt,labelsep=0.6em,itemsep=0.25em]
+    \item[\textbf{\emph{P1. Presence.}}] Every constituency must be present in the
+    decision.
+    \item[\textbf{\emph{P2. Non-compensation.}}] One constituency's rejection should
+    not be fully compensated by another constituency's enthusiasm.
+    \item[\textbf{\emph{P3. Symmetry.}}] Constituencies should enter the rule
+    symmetrically, so that no group is privileged by default.
+    \item[\textbf{\emph{P4. Behavioral recovery.}}] Constituencies should be
+    recovered from observed rating behavior rather than assigned from outside
+    labels such as party, country, or ideology.
+\end{description}
+\end{tcolorbox}
+
+\medskip
+
+We operationalize these rules as cross-constituency aggregation. Using the
+active 200k Representative pipeline, we cluster active raters from co-rating
+behavior, reassign them into two main behavioral constituencies, compute each
+note's approval rate inside each constituency, and combine these rates with a
+geometric mean under a minimum-coverage requirement. The geometric mean creates
+a soft veto: if either constituency strongly rejects a note, the final score
+falls, even if the other constituency is highly supportive. We then use this
+score to identify hidden Community Notes that deserve a second look, and we
+validate those candidates separately for factuality, sourcing, relevance, and
+usefulness.
+
+Concretely, let $a_{ic}$ be note $i$'s approval rate inside constituency $c$.
+Writing $H_{ic}$ and $N_{ic}$ for the helpful and total ratings the note receives
+from constituency $c$,
+\[
+a_{ic} =
+\begin{cases}
+H_{ic}/N_{ic}, & N_{ic} > 0,\\
+0.5, & N_{ic} = 0,
+\end{cases}
+\]
+where the $0.5$ fallback marks abstention rather than endorsement: a constituency
+that has never rated the note casts no vote. The cross-constituency score is the
+geometric mean
+\[
+    C_i = \sqrt{a_{i1}\,a_{i2}},
+\]
+and a note is selected when $C_i \geq 0.5$ and each constituency contributes at
+least three raters; when Community Notes does not already display such a note, it
+enters the rescue pool. Because $C_i$ falls toward zero as either approval rate
+does, strong support from one constituency cannot rescue a note the other
+rejects (P2), while the rule reads only within-constituency rates, so a larger or
+busier bloc earns no extra weight (P3). The minimum-coverage requirement enforces
+presence (P1), and the constituencies themselves are recovered from co-rating
+behavior rather than assigned from outside labels (P4).
+
+In a 100,000-note analytical slice, Community Notes displays 6,832 of 44,722
+representative-picked notes, or 15\%. Cross-constituency aggregation identifies
+a 13,655-note rescue pool, raising potential visibility to 20,487 notes, or
+46\%, before validation. A second-stage validation screen classifies 3,896 of
+these candidates as sourced, factual, and rescue-worthy. These results suggest
+that Community Notes may have an aggregation problem as well as a rating
+problem: useful public-interest notes can remain hidden when cross-group
+support is modeled only indirectly.
+
+\bibliographystyle{plainnat}
+\bibliography{references}
+
+\end{document}

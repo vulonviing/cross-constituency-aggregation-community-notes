@@ -1,0 +1,27 @@
+{
+  "run_id": "gemma-4-31b-it-scckn-v1",
+  "notes": 2000,
+  "stage1_status": {
+    "resolved": 1999,
+    "unresolved": 1
+  },
+  "stage1_labels": {
+    "sourced_factual_information": 1584,
+    "opinion_or_speculation": 195,
+    "irrelevant_trivial_or_spam": 160,
+    "unsourced_context_or_claim": 40,
+    "hostile_troll_or_derogatory": 20,
+    "null": 1
+  },
+  "stage2_status": {
+    "pending": 1584
+  },
+  "attempt_status": {
+    "valid": 1999,
+    "response_error": 9
+  },
+  "first_attempt_valid_rate": 0.9965,
+  "prompt_tokens": 1263313,
+  "completion_tokens": 1317475,
+  "reasoning_tokens": 0
+}

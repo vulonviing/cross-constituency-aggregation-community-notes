@@ -1,0 +1,59 @@
+{
+  "run_id": "gemma-4-31b-it-scckn-stage1-5-opinion-v1",
+  "parent_run_id": "gemma-4-31b-it-scckn-v1",
+  "notes": 1703,
+  "stage1_5_status": {
+    "resolved": 1703
+  },
+  "stage1_5_labels": {
+    "sourced_factual_core_absent": 1423,
+    "sourced_factual_core_present": 280
+  },
+  "strict_sourced_rows": 10096,
+  "newly_admitted_rows": 280,
+  "expanded_sourced_rows": 10376,
+  "labels_by_url_presence": {
+    "no_url": {
+      "sourced_factual_core_absent": 822,
+      "sourced_factual_core_present": 2
+    },
+    "url": {
+      "sourced_factual_core_absent": 601,
+      "sourced_factual_core_present": 278
+    }
+  },
+  "labels_by_old_gabriel_label": {
+    "hostile_troll_or_derogatory": {
+      "sourced_factual_core_absent": 142,
+      "sourced_factual_core_present": 38
+    },
+    "irrelevant_trivial_or_spam": {
+      "sourced_factual_core_absent": 75,
+      "sourced_factual_core_present": 1
+    },
+    "missing": {
+      "sourced_factual_core_absent": 39,
+      "sourced_factual_core_present": 1
+    },
+    "opinion_or_speculation": {
+      "sourced_factual_core_absent": 972,
+      "sourced_factual_core_present": 196
+    },
+    "sourced_factual_information": {
+      "sourced_factual_core_absent": 69,
+      "sourced_factual_core_present": 44
+    },
+    "unsourced_context_or_claim": {
+      "sourced_factual_core_absent": 126
+    }
+  },
+  "attempt_status": {
+    "valid": 1703,
+    "response_error": 3
+  },
+  "first_attempt_valid_rate": 0.9982384028185555,
+  "valid_calls_missing_reasoning": 0,
+  "prompt_tokens": 942206,
+  "completion_tokens": 1033568,
+  "reasoning_tokens": 0
+}

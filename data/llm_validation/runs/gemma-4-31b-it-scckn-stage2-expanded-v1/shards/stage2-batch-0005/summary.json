@@ -1,0 +1,33 @@
+{
+  "run_id": "gemma-4-31b-it-scckn-stage2-expanded-v1",
+  "notes": 2000,
+  "rescue_threshold": 50,
+  "stage2_status": {
+    "complete": 2000
+  },
+  "route_counts": {
+    "strict_stage1": 1940,
+    "stage1_5_recall": 60
+  },
+  "strict_final_rows": 1595,
+  "expanded_final_rows": 1600,
+  "stage1_5_contribution_rows": 5,
+  "score_bins": {
+    "0-9": 1,
+    "10-39": 339,
+    "40-49": 60,
+    "50-69": 222,
+    "70-89": 503,
+    "90-100": 875
+  },
+  "attempt_status": {
+    "valid": 2000,
+    "response_error": 1
+  },
+  "first_attempt_valid_rate": 0.9995,
+  "retry_attempts": 1,
+  "valid_calls_missing_reasoning": 0,
+  "prompt_tokens": 970532,
+  "completion_tokens": 1413252,
+  "reasoning_tokens": 0
+}
