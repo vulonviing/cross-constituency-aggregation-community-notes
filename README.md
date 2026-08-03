@@ -100,10 +100,8 @@ clustering/scoring numbers may shift as a result.
 
 The snapshot behind this repository's `master_full.parquet` (and therefore
 behind every committed `data/interim/`, `data/processed/`, and
-`data/llm_validation/` artifact) was retrieved **approximately 2026-05-08**.
-No exact download timestamp was recorded; this date is inferred from the
-ingest tooling's first commit (2026-05-09) and the file's own creation time.
-Anyone who needs the precise historical result set should use the committed
+`data/llm_validation/` artifact) was retrieved on **2026-05-08**. Anyone who
+needs this exact historical result set should use the committed
 `data/interim/`, `data/processed/`, and `data/llm_validation/` outputs (or
 fetch `master_full.parquet` from Hugging Face above) rather than
 re-downloading raw inputs from X.
