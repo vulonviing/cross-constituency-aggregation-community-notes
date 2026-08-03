@@ -6,8 +6,9 @@ vote-profile reassignment, and Representative note selection.
 
 This is the clean, current-only checkout of that pipeline: only the active
 code, data, figures, and manuscript are included. See
-[Large Local Data](#large-local-data) below for the two oversized interim
-files.
+[Large Local Data](#large-local-data) below for the three oversized files, and
+[Running From Scratch](#running-from-scratch) for how to reproduce results
+without them.
 
 ## Repository Map
 
@@ -57,31 +58,55 @@ Notebooks are the single source of truth. Jobs execute them for their data and f
 `TEST_MODE=1` in `config.txt` isolates all smoke-test output under
 `.artifacts/smoke/`. Production output always uses the root paths shown above.
 
-The two oversized ratings parquet files are not stored in Git. See
-[Large Local Data](#large-local-data) for how they are attached in this
-checkout, and fetch or upload them with `scripts/fetch_interim_from_hf.sh` and
+The three oversized files below are not stored in Git. See
+[Large Local Data](#large-local-data) for their Hugging Face paths, and fetch
+or upload them with `scripts/fetch_interim_from_hf.sh` and
 `scripts/upload_interim_to_hf.sh`.
 
 ## Large Local Data
 
-`data/master_full.parquet` and the two oversized interim ratings files
-(`data/interim/ratings_filtered.parquet`, `data/interim/ratings_clustered.parquet`,
-~3 GB each) are never committed to Git (see `.gitignore`). Fetch the two
-interim files with:
+Three files are never committed to Git (see `.gitignore`) because they exceed
+GitHub's size limits. All three are mirrored on the
+`vulonviing/community-notes-rescue-interim` Hugging Face dataset repo:
+
+| File | Size | Hugging Face path |
+|---|---|---|
+| `data/master_full.parquet` | ~6.6 GB | `master/master_full.parquet` |
+| `data/interim/ratings_filtered.parquet` | ~3 GB | `200k/ratings_filtered.parquet` |
+| `data/interim/ratings_clustered.parquet` | ~3 GB | `200k/ratings_clustered.parquet` |
+
+Fetch all three with:
 
 ```bash
 scripts/fetch_interim_from_hf.sh
 ```
 
-This pulls both files from the `vulonviing/community-notes-rescue-interim`
-Hugging Face dataset repo. If the dataset is ever rotated or re-created,
-confirm it still holds current uploads before relying on it (`hf download
---repo-type=dataset vulonviing/community-notes-rescue-interim --include
+If the dataset is ever rotated or re-created, confirm it still holds current
+uploads before relying on it (`hf download --repo-type=dataset
+vulonviing/community-notes-rescue-interim --include "master/*.parquet"
 "200k/*.parquet"` or check the HF web UI) — re-upload with
 `scripts/upload_interim_to_hf.sh` if it does not.
 
-`data/master_full.parquet` is not mirrored anywhere; regenerate it by running
-`notebooks/00_ingest.ipynb` against the raw snapshot in `raw/`.
+### Raw Data Provenance
+
+`data/master_full.parquet` is the direct output of `notebooks/00_ingest.ipynb`
+run against the official Community Notes snapshot
+(`notes-*.tsv`, `ratings-*.tsv`, `noteStatusHistory-00000.tsv` from
+<https://x.com/i/communitynotes/download-data>). X's published snapshot
+changes continuously — new notes, ratings, and status updates are added over
+time — so re-downloading it today and re-running ingest will **not**
+reproduce the exact same `master_full.parquet`, and downstream
+clustering/scoring numbers may shift as a result.
+
+The snapshot behind this repository's `master_full.parquet` (and therefore
+behind every committed `data/interim/`, `data/processed/`, and
+`data/llm_validation/` artifact) was retrieved **approximately 2026-05-08**.
+No exact download timestamp was recorded; this date is inferred from the
+ingest tooling's first commit (2026-05-09) and the file's own creation time.
+Anyone who needs the precise historical result set should use the committed
+`data/interim/`, `data/processed/`, and `data/llm_validation/` outputs (or
+fetch `master_full.parquet` from Hugging Face above) rather than
+re-downloading raw inputs from X.
 
 ## How To Run
 
@@ -96,6 +121,28 @@ python -m pip install -r requirements.txt
 
 Place the Community Notes snapshot and FastText files under `raw/`; see
 `raw/PUT_SOURCE_FILES_HERE.md`.
+
+### Running From Scratch
+
+How much you need to fetch or run depends on what you are trying to do:
+
+1. **Just read the results / build the paper.** No download needed. Cloning
+   this repository already gives you `data/processed/`, `data/interim/` (except
+   the two oversized ratings files), and `data/llm_validation/` — everything
+   the paper and its figures are built from. Skip straight to
+   [Build The Paper](#build-the-paper).
+2. **Re-run clustering/scoring/topics to check the pipeline.** You do not need
+   the raw X snapshot. Run `scripts/fetch_interim_from_hf.sh` to pull
+   `master_full.parquet` and the two interim ratings files (see
+   [Large Local Data](#large-local-data)), then start from
+   `notebooks/01_clustering.ipynb` onward — `data/master_full.parquet` is
+   `01_clustering.ipynb`'s input.
+3. **Reproduce ingestion itself from raw X data.** Download a fresh snapshot
+   from the official links in `raw/PUT_SOURCE_FILES_HERE.md` and the FastText
+   language model, place them under `raw/`, then run `00_ingest.ipynb` onward.
+   Read [Raw Data Provenance](#raw-data-provenance) first: X's snapshot changes
+   over time, so a newly downloaded snapshot will not reproduce this
+   repository's exact `master_full.parquet` or its downstream numbers.
 
 ### Smoke Test
 
