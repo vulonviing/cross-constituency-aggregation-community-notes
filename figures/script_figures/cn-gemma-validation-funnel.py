@@ -21,7 +21,7 @@ All values are hardcoded from the frozen validation run summaries:
   data/llm_validation/runs/gemma-4-31b-it-scckn-stage1-5-opinion-v1/summary.json
   data/llm_validation/runs/gemma-4-31b-it-scckn-stage2-expanded-v1/summary.json
 
-Outputs (same basename triplet per AGENTS.md):
+Outputs (same basename triplet per figures/README.md):
   cn-gemma-validation-funnel.pdf
   cn-gemma-validation-funnel.png
 

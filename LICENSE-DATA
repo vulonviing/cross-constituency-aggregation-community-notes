@@ -40,8 +40,6 @@ Please cite the paper (see [CITATION.cff](CITATION.cff)):
   subject to X's own terms; our license applies only to the derived artifacts
   and the analysis expressed in them. No raw snapshot files are redistributed
   here.
-- **Third-party material in `docs/papers/`.** Those PDFs and notes are the work
-  of their respective authors and are included for reference only.
 - **Model outputs.** The Gemma validation records in `data/llm_validation/` were
   produced with Gemma 4 31B IT, whose use is governed by Google's Gemma Terms of
   Use.

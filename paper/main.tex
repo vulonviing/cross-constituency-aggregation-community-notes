@@ -228,7 +228,7 @@ Our Cross-Constituency Aggregation (CCA) approach fundamentally rejects this pro
 
 \begin{figure*}[t]
   \centering
-  \includegraphics[width=0.93\textwidth]{../../figures/script_figures/fig1-rater-dominance.pdf}
+  \includegraphics[width=0.93\textwidth]{../figures/script_figures/fig1-rater-dominance.pdf}
   \caption{Repeated participation gives a small set of highly active raters more
   leverage over the latent space fitted by matrix factorization. The model does
   not assign these users an explicit vote weight. Instead, their longer rating
@@ -718,7 +718,7 @@ only when users rate enough of the same notes to be compared.
 
 \begin{figure}[h]
   \centering
-  \includegraphics[width=\columnwidth]{../../figures/script_figures/fig2-dataset-construction.pdf}
+  \includegraphics[width=\columnwidth]{../figures/script_figures/fig2-dataset-construction.pdf}
   \caption{Construction of the analytical sample. Starting from 1.7M English
   notes, we retain notes on tweets carrying at least three English-language
   candidate notes, and keep a note only if it drew at least three eligible
@@ -888,7 +888,7 @@ the merits of the ratings it has.
 
 \begin{figure}[h]
   \centering
-  \includegraphics[width=\columnwidth]{../../figures/script_figures/fig3-rescue-panels.pdf}
+  \includegraphics[width=\columnwidth]{../figures/script_figures/fig3-rescue-panels.pdf}
   \caption{Cross-constituency aggregation expands the qualified set and validates
   hidden candidates. Among 44,722 representative-picked notes, 20,405 meet the
   CCA threshold: 6,750 are already shown and 13,655 form the hidden rescue pool.
@@ -949,7 +949,7 @@ above the display threshold rather than barely over it.
 
 \begin{figure}[h]
   \centering
-  \includegraphics[width=\columnwidth]{../../figures/script_figures/cn-gemma-validation-funnel.pdf}
+  \includegraphics[width=\columnwidth]{../figures/script_figures/cn-gemma-validation-funnel.pdf}
   \caption{Two-stage Gemma validation of the 13,655-note rescue pool. The upper
   bar reports the Stage 1 content screen together with the Stage 1.5 recall,
   which recovers 280 opinion-labeled notes with a sourced factual core. The
@@ -978,7 +978,7 @@ viewpoints rather than one careful reader and one permissive one.
 
 \begin{figure}[h]
   \centering
-  \includegraphics[width=\columnwidth]{../../figures/script_figures/cn-topic-signatures.pdf}
+  \includegraphics[width=\columnwidth]{../figures/script_figures/cn-topic-signatures.pdf}
   \caption{Average approval rate by constituency across 13 subject areas.
   Bubble size encodes note count. Approval leadership flips between
   constituencies across topics, and the size of the gap ranges from 0.090 on
@@ -1370,12 +1370,12 @@ the tracked artifact's terminal newline:
 \end{itemize}
 
 \subsection{Stage 1: Content Classification}
-\VerbatimInput[fontsize=\scriptsize]{../../data/llm_validation/runs/gemma-4-31b-it-scckn-v1/stage1_prompt.txt}
+\VerbatimInput[fontsize=\scriptsize]{../data/llm_validation/runs/gemma-4-31b-it-scckn-v1/stage1_prompt.txt}
 
 \subsection{Stage 1.5: Sourced-Factual-Core Recall}
-\VerbatimInput[fontsize=\scriptsize]{../../data/llm_validation/runs/gemma-4-31b-it-scckn-stage1-5-opinion-v1/stage1_5_prompt.txt}
+\VerbatimInput[fontsize=\scriptsize]{../data/llm_validation/runs/gemma-4-31b-it-scckn-stage1-5-opinion-v1/stage1_5_prompt.txt}
 
 \subsection{Stage 2: Rescue-Worthiness Scoring}
-\VerbatimInput[fontsize=\scriptsize]{../../data/llm_validation/runs/gemma-4-31b-it-scckn-stage2-expanded-v1/stage2_prompt.txt}
+\VerbatimInput[fontsize=\scriptsize]{../data/llm_validation/runs/gemma-4-31b-it-scckn-stage2-expanded-v1/stage2_prompt.txt}
 
 \end{document}

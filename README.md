@@ -14,7 +14,7 @@ two-stage LLM check for sourcing and rescue-worthiness.
 
 | If you want to | Go to |
 |---|---|
-| **Read the paper** | [`paper/03-07-2026-1550-edition/main.pdf`](paper/03-07-2026-1550-edition/main.pdf) |
+| **Read the paper** | [`paper/main.pdf`](paper/main.pdf) |
 | **Check a number in the paper** | [REPRODUCING.md](REPRODUCING.md) — maps every result to the file that produced it |
 | **Verify the results yourself** | `python run_tests.py` — 64 tests, no data downloads needed ([last run](tests/RESULTS.md)) |
 | **See the talks** | [`docs/presentations/`](docs/presentations/) |
@@ -26,7 +26,7 @@ two-stage LLM check for sourcing and rescue-worthiness.
 
 ```text
 .
-├── paper/                   # The manuscript (see paper/README.md)
+├── paper/                   # The manuscript and the conference abstract
 ├── REPRODUCING.md           # Paper result -> source file, with runnable snippets
 ├── run_tests.py             # Runs all 64 tests
 ├── tests/                   # Aggregation-rule units + paper-number regressions
@@ -40,7 +40,7 @@ two-stage LLM check for sourcing and rescue-worthiness.
 ├── figures/script_figures/  # Paper figures, each with its generating script
 ├── jobs/                    # Job scripts that run the notebooks on a cluster
 ├── scripts/                 # Hugging Face large-file helpers
-├── docs/                    # Reference papers and presentations
+├── docs/presentations/      # The two talks given on this work
 └── raw/                     # Local snapshot inputs (contents gitignored)
 ```
 
@@ -241,14 +241,13 @@ details are in `notebooks/llm_validation/README.md`.
 
 ### Build The Paper
 
-The active paper is `paper/03-07-2026-1550-edition/`. Compile it with:
-
 ```bash
-cd paper/03-07-2026-1550-edition
+cd paper
 latexmk -pdf main.tex
 ```
 
-See [paper/README.md](paper/README.md) for the full version history.
+The conference abstract builds the same way from
+`paper/conference-abstract-intro/`. See [paper/README.md](paper/README.md).
 
 ## Methodology
 
@@ -383,4 +382,4 @@ core facility [SCCKN](https://scc.uni-konstanz.de).
 - Reproduction map: [REPRODUCING.md](REPRODUCING.md)
 - Data catalogue: [data/README.md](data/README.md)
 - Figures: [figures/README.md](figures/README.md)
-- Reference papers and presentations: [docs/README.md](docs/README.md)
+- Presentations: [docs/README.md](docs/README.md)

@@ -10,7 +10,7 @@ Column mapping:
   avg_cluster_0 → paper Cluster 1 (Cl.1, red  #ff5a52, 53.9% of raters)
   avg_cluster_1 → paper Cluster 2 (Cl.2, blue #58a5ff, 46.1% of raters)
 
-Outputs (same basename triplet per AGENTS.md):
+Outputs (same basename triplet per figures/README.md):
   cn-topic-signatures.pdf
   cn-topic-signatures.png
 

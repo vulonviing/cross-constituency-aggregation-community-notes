@@ -1,7 +1,7 @@
 # Reproducing the Paper
 
 This document maps every headline number, table, and figure in
-[`paper/03-07-2026-1550-edition/main.pdf`](paper/03-07-2026-1550-edition/main.pdf)
+[`paper/main.pdf`](paper/main.pdf)
 to the artifact that produced it.
 
 **The fastest check is two commands.** From the repository root:
@@ -157,7 +157,7 @@ naming the fetch script.
 ### Rebuilding the manuscript
 
 ```bash
-cd paper/03-07-2026-1550-edition
+cd paper
 latexmk -pdf main.tex          # 18 pages, no undefined references
 ```
 
@@ -226,7 +226,7 @@ today will not reproduce these results.
 
 | Looking for | Path |
 |---|---|
-| The paper | `paper/03-07-2026-1550-edition/main.pdf` |
+| The paper | `paper/main.pdf` |
 | Method implementation | `src/` |
 | Stage-by-stage pipeline | `notebooks/` |
 | Gemma validation code | `notebooks/llm_validation/` |

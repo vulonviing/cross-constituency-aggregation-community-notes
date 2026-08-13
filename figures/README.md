@@ -41,8 +41,8 @@ figures/script_figures/
     <name>.png       ← raster output, for slides and previews
 ```
 
-The figure and the code that produces it always sit side by side. This rule is
-also stated in `AGENTS.md`.
+The figure and the code that produces it always sit side by side, so there is no
+figure in the paper whose provenance has to be hunted down.
 
 Figures 1 through 3 are named for what they show; the `cn-` prefix on Figures 4
 and 5 is historical and carries no meaning beyond the project name.
