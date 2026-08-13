@@ -100,6 +100,13 @@ user_stats      = pd.read_parquet(INTERIM   / 'user_stats.parquet')
 # Figure 7 only needs the rating-edge count. Reading parquet metadata keeps the
 # 200k representative notebook light on 8GB machines.
 ratings_clustered_path = INTERIM / 'ratings_clustered.parquet'
+if not ratings_clustered_path.exists():
+    raise FileNotFoundError(
+        f'{ratings_clustered_path} is missing.\n'
+        'This figure reports the total rating-edge count, which only that file '
+        'carries. It is too large for Git and is mirrored on Hugging Face; fetch '
+        'it with scripts/fetch_interim_from_hf.sh (see REPRODUCING.md, tier B).'
+    )
 try:
     import pyarrow.parquet as pq
     ratings_clustered_n_rows = int(pq.ParquetFile(ratings_clustered_path).metadata.num_rows)

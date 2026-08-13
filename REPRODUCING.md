@@ -18,8 +18,8 @@ here and reports 64 passing tests. Nothing needs to be downloaded first. See
 
 | Tier | What it needs | What it covers |
 |---|---|---|
-| **A** | This repository only | Every result from clustering onward: cluster structure, scoring, selection, topics, Gemma validation. All of Tables 1 and 4–6 and Figures 1 and 3–5. |
-| **B** | Tier A plus three large files from Hugging Face (~12.6 GB) | Re-running clustering and scoring from ratings; the 1.7M → 510k → 100k sample-construction chain behind Figure 2. |
+| **A** | This repository only | Every result from clustering onward: cluster structure, scoring, selection, topics, Gemma validation. All of Tables 1 and 4–6 and Figures 1, 3, 4, and 5. |
+| **B** | Tier A plus three large files from Hugging Face (~12.6 GB) | Re-running clustering and scoring from ratings; the 1.7M → 510k → 100k sample-construction chain and Figure 2, which both need the rating-level tables. |
 | **C** | Tier B plus a raw X snapshot | Ingestion from scratch. **Not bit-reproducible** — see the warning below. |
 
 ### The Tier C warning
@@ -141,9 +141,11 @@ python figures/script_figures/cn-gemma-validation-funnel.py  # Figure 4
 python figures/script_figures/cn-topic-signatures.py         # Figure 5
 ```
 
-Each writes its own `.pdf` and `.png` beside itself at 300 dpi. Figures 1 and 2
-are self-contained; Figures 3, 4, and 5 plot the canonical pipeline and
-validation values.
+Each writes its own `.pdf` and `.png` beside itself at 300 dpi. Four of the five
+run on a fresh clone. Figure 2 is the exception: it reports the total
+rating-edge count, which only `data/interim/ratings_clustered.parquet` carries,
+so it belongs to tier B below. Running it without that file stops with a message
+naming the fetch script.
 
 ### Rebuilding the manuscript
 
@@ -167,7 +169,7 @@ scripts/fetch_interim_from_hf.sh
 | File | Size | Unlocks |
 |---|---|---|
 | `data/interim/ratings_filtered.parquet` | ~3 GB | re-running `01_clustering` |
-| `data/interim/ratings_clustered.parquet` | ~3 GB | re-running `02_scoring`, `03_topics` |
+| `data/interim/ratings_clustered.parquet` | ~3 GB | re-running `02_scoring`, `03_topics`; regenerating Figure 2 |
 | `data/master_full.parquet` | ~6.6 GB | the sample-construction chain behind Figure 2 |
 
 With those in place, the stages run in order:

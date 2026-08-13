@@ -339,6 +339,10 @@ python figures/script_figures/cn-gemma-validation-funnel.py  # Figure 4
 python figures/script_figures/cn-topic-signatures.py         # Figure 5
 ```
 
+All but Figure 2 run on a fresh clone; that one also needs
+`data/interim/ratings_clustered.parquet` from Hugging Face. See
+[figures/README.md](figures/README.md).
+
 Smoke mode changes scale and output location only. It does not redefine the
 production methodology.
 
