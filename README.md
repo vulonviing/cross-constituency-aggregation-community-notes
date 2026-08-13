@@ -37,7 +37,7 @@ above can be re-derived from the files in this repository.
 
 ```text
 .
-├── paper/                   # The manuscript and the conference abstract
+├── paper/                   # The manuscript, source and PDF
 ├── REPRODUCING.md           # Paper result -> source file, with runnable snippets
 ├── run_tests.py             # Runs all 64 tests
 ├── tests/                   # Aggregation-rule units + paper-number regressions
@@ -257,8 +257,9 @@ cd paper
 latexmk -pdf main.tex
 ```
 
-The conference abstract builds the same way from
-`paper/conference-abstract-intro/`. See [paper/README.md](paper/README.md).
+The five figures and the three frozen prompt files the appendices quote are
+pulled in from `figures/` and `data/`, so a fresh clone builds without any extra
+downloads. See [paper/README.md](paper/README.md).
 
 ## Methodology
 
