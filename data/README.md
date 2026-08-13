@@ -23,6 +23,12 @@ with `scripts/fetch_interim_from_hf.sh`.
 In this checkout the two `interim/ratings_*.parquet` entries are symlinks to the
 working repository's copies, so both checkouts share one physical file on disk.
 
+The same dataset also carries `scale-ladder/`, the mirror of the scale-selection
+study described under [`scale-ladder/`](scale-ladder/) below. Its small
+diagnostics are committed here; its per-rater assignments are only on Hugging
+Face. See [The Scale Ladder Mirror](../README.md#the-scale-ladder-mirror) for
+what was kept, what was dropped, and why.
+
 ## interim/ — clustering stage (`notebooks/01_clustering.ipynb`)
 
 | File | Rows | What it holds |
@@ -37,6 +43,13 @@ working repository's copies, so both checkouts share one physical file on disk.
 | `embedding.parquet` | 200,000 | The spectral embedding coordinates the clustering ran on. |
 | `graph_diagnostics.parquet` | 1 | k-NN affinity graph shape: backend, neighbor count, edge counts. |
 | `runtime_diagnostics.parquet` | 7 | Wall-clock seconds per clustering stage. |
+
+## scale-ladder/ — the scale-selection study
+
+Forty-two clustering runs at scales from 50k to 250k across three eigensolvers,
+one directory each, holding only the five small diagnostic tables. This is the
+evidence behind Table 1 of the paper and behind its footnote on what bootstrap
+stability fails to certify. See [`scale-ladder/README.md`](scale-ladder/README.md).
 
 ## processed/ — scoring and selection (`notebooks/02_scoring.ipynb`)
 

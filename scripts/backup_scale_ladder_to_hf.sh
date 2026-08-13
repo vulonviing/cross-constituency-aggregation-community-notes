@@ -1,0 +1,132 @@
+#!/usr/bin/env bash
+
+# Mirror the scale-selection study from SCCKN to Hugging Face.
+#
+# The ladder runs live only on the cluster, under
+#   /work/$USER/cnotes_all/data/full_spectral_fast_*/interim_B/
+# and the cluster account will not last forever. This script copies the part of
+# each run that cannot be recomputed:
+#
+#   - the five small diagnostic tables (a few KB each), and
+#   - the per-rater cluster assignments and vote statistics (~20 MB per run).
+#
+# It deliberately skips ratings_filtered.parquet, ratings_clustered.parquet, and
+# embedding.parquet. Those are large (373 GB across the ladder) and derivable
+# from master_full.parquet, which is already on the same dataset repo.
+#
+# RUN THIS ON THE CLUSTER, not on a laptop:
+#
+#     ssh scckn 'bash -s' < scripts/backup_scale_ladder_to_hf.sh
+#
+# Nothing is staged on the laptop; files go straight from /work to Hugging Face.
+# The whole selection is pushed as a single commit, because the Hub caps commits
+# at 128 per hour and the ladder holds several hundred files.
+set -euo pipefail
+
+DATA_ROOT="${DATA_ROOT:-/work/$USER/cnotes_all/data}"
+DATASET="${DATASET:-vulonviing/community-notes-rescue-interim}"
+PREFIX="${PREFIX:-scale-ladder}"
+
+export HF_HOME="${HF_HOME:-/work/$USER/hf_cache}"
+HF_BIN="${HF_BIN:-$HOME/.local/bin/hf}"
+# The hf CLI ships with its own interpreter; the default python3 on SCCKN has
+# pandas but not huggingface_hub, so the two are not interchangeable.
+PANDAS_PY="${PANDAS_PY:-/software/packages/anaconda/2024.10/bin/python3}"
+
+KEEP=(
+    stability_over_k.parquet
+    silhouette_over_k.parquet
+    cluster_summary.parquet
+    graph_diagnostics.parquet
+    runtime_diagnostics.parquet
+    user_clusters.parquet
+    user_clusters_method_a_embedding.parquet
+    user_clusters_method_b_voteprofile.parquet
+    user_stats.parquet
+)
+
+command -v "$HF_BIN" >/dev/null 2>&1 || { echo "error: hf CLI not found at $HF_BIN" >&2; exit 2; }
+[ -d "$DATA_ROOT" ] || { echo "error: $DATA_ROOT does not exist" >&2; exit 2; }
+
+echo "Mirroring $DATA_ROOT -> $DATASET:$PREFIX/"
+"$HF_BIN" auth whoami >/dev/null || { echo "error: not logged in to Hugging Face" >&2; exit 2; }
+
+# Assemble the selection as hard links first, then push it in a single commit.
+# Uploading file by file costs one commit each and trips the Hub's 128-commits-
+# per-hour limit long before the ladder is done. Hard links cost no space and no
+# time because the staging tree sits on the same filesystem as the data.
+STAGE="${STAGE:-/work/$USER/.hf_ladder_stage}"
+rm -rf "$STAGE"
+mkdir -p "$STAGE"
+
+staged=0
+skipped=0
+
+for run_dir in "$DATA_ROOT"/full_spectral_fast_*; do
+    run="$(basename "$run_dir")"
+    src="$run_dir/interim_B"
+
+    if [ ! -f "$src/stability_over_k.parquet" ]; then
+        echo "  skip $run (no output)"
+        skipped=$((skipped + 1))
+        continue
+    fi
+
+    mkdir -p "$STAGE/$run"
+    for f in "${KEEP[@]}"; do
+        [ -f "$src/$f" ] || continue
+        ln "$src/$f" "$STAGE/$run/$f" 2>/dev/null || cp "$src/$f" "$STAGE/$run/$f"
+    done
+    staged=$((staged + 1))
+done
+
+echo "  staged $staged runs ($(du -sh "$STAGE" | cut -f1)), uploading as one commit"
+"$HF_BIN" upload "$DATASET" "$STAGE" "$PREFIX" --repo-type=dataset --quiet
+rm -rf "$STAGE"
+
+# A manifest so the dataset is legible without this repository.
+manifest="$(mktemp)"
+trap 'rm -f "$manifest"' EXIT
+
+"$PANDAS_PY" - "$DATA_ROOT" > "$manifest" <<'PYEOF'
+import glob, os, re, sys
+import pandas as pd
+
+root = sys.argv[1]
+print("# Scale-selection ladder\n")
+print("Clustering runs from the study that chose 200,000 raters as the production")
+print("scale. One directory per run, named `full_spectral_fast_<solver>_<scale>`.\n")
+print("Each holds the run's small diagnostic tables plus its per-rater cluster")
+print("assignments. The rating-level tables are not mirrored: they are rebuildable")
+print("from `master/master_full.parquet` in this same dataset together with the")
+print("`user_clusters` file kept here.\n")
+print("| Run | Solver | Selected k | Mean bootstrap ARI | Cluster sizes |")
+print("|---|---|---|---|---|")
+
+def scale_key(name):
+    m = re.search(r"(\d+)k", name)
+    return (int(m.group(1)) if m else 0, name)
+
+for d in sorted(glob.glob(os.path.join(root, "full_spectral_fast_*")), key=lambda p: scale_key(os.path.basename(p))):
+    run = os.path.basename(d)
+    p = os.path.join(d, "interim_B")
+    try:
+        s = pd.read_parquet(os.path.join(p, "stability_over_k.parquet"))
+        best = s.loc[s.mean_ari.idxmax()]
+        c = pd.read_parquet(os.path.join(p, "cluster_summary.parquet"))
+        sizes = " / ".join(f"{int(v):,}" for v in sorted(c.users))
+    except Exception:
+        continue
+    body = run.replace("full_spectral_fast_", "")
+    solver = "arpack" if re.match(r"^\d+k$", body) else body.split("_")[0]
+    print(f"| `{run}` | {solver} | {int(best.k)} | {float(best.mean_ari):.4f} | {sizes} |")
+
+print("\nGenerated by `scripts/backup_scale_ladder_to_hf.sh` in")
+print("<https://github.com/vulonviing/cross-constituency-aggregation-community-notes>.")
+PYEOF
+
+"$HF_BIN" upload "$DATASET" "$manifest" "$PREFIX/MANIFEST.md" --repo-type=dataset --quiet
+
+echo
+echo "Done: $staged runs mirrored, $skipped skipped (empty on the cluster)."
+echo "Browse at https://huggingface.co/datasets/$DATASET/tree/main/$PREFIX"

@@ -1,5 +1,11 @@
 # docs/
 
+## scale-selection/
+
+The two reports behind the choice of 200,000 raters as the production scale, and
+a key mapping their cluster paths onto this repository. See
+[`scale-selection/README.md`](scale-selection/README.md).
+
 ## presentations/
 
 Two talks were given on this work. Only the final version of each is kept here.

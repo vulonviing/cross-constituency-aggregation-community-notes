@@ -4,7 +4,7 @@ Last recorded run of the full suite. Reproduce it from the repository root with:
 
 ```bash
 python -m pip install -r requirements.txt
-python run_tests.py          # all 64 tests
+python run_tests.py          # all 68 tests
 python run_tests.py -v       # per-test names
 ```
 
@@ -16,17 +16,17 @@ that ship with this repository, so no Hugging Face download is required.
 
 | | |
 |---|---|
-| Date | 2026-08-13 15:11 +0200 |
+| Date | 2026-08-13 20:56 +0200 |
 | Command | `python run_tests.py` |
-| Result | **64 tests, 64 passed, 0 failed, 0 skipped** (1.11 s) |
+| Result | **68 tests, 68 passed, 0 failed, 0 skipped** (1.09 s) |
 | Python | 3.11.9 |
 | pandas / numpy / pyarrow | 3.0.0 / 2.3.0 / 23.0.1 |
 | Platform | macOS 26.5.2, arm64 |
 
 ```text
-................................................................
+....................................................................
 ----------------------------------------------------------------------
-Ran 64 tests in 1.106s
+Ran 68 tests in 1.092s
 
 OK
 ```
@@ -50,13 +50,17 @@ any dataset:
 - **Selection** — a note is counted as rescued only when its bridge score clears
   0.5 *and* the platform had not already shown it.
 
-### `tests/test_paper_numbers.py` — 18 tests, committed pipeline data
+### `tests/test_paper_numbers.py` — 22 tests, committed pipeline data
 
 Re-derives each headline number from the artifact that produced it. A test skips
 with an explicit message if its input file is missing.
 
 | Assertion | Value | Source file |
 |---|---|---|
+| Every row of Table 1 (60k…250k): `k`, ARI, cluster sizes | see the paper's Table 1 | `data/scale-ladder/<run>/` |
+| The 250k run collapses | 249,933 / 67 at ARI 0.997 | `data/scale-ladder/full_spectral_fast_amg_250k/` |
+| The ladder holds 19 AMG variants | 19 | `data/scale-ladder/full_spectral_fast_amg_*` |
+| **8 of them pick a degenerate `k = 2`** | 55–70 raters isolated, ARI 0.976–1.000 | same |
 | Bootstrap stability selects `k` | 3 (mean ARI 0.971) | `data/interim/stability_over_k.parquet` |
 | `k=2` is markedly less stable | 0.593 | same |
 | Cluster sizes | 107,680 / 92,256 / 64 | `data/interim/cluster_summary.parquet` |

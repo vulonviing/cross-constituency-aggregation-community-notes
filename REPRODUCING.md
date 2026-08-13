@@ -12,7 +12,7 @@ python run_tests.py
 ```
 
 That re-derives the paper's headline numbers from the parquet files committed
-here and reports 64 passing tests. No data has to be downloaded first. See
+here and reports 68 passing tests. No data has to be downloaded first. See
 [tests/RESULTS.md](tests/RESULTS.md) for the last recorded run.
 
 To confirm the Gemma validation files are themselves unchanged:
@@ -25,8 +25,8 @@ bash scripts/verify_llm_checksums.sh
 
 | Tier | What it needs | What it covers |
 |---|---|---|
-| **A** | This repository only | Every result from clustering onward: cluster structure, scoring, selection, topics, Gemma validation. All of Tables 1 and 4–6 and Figures 1, 3, 4, and 5. |
-| **B** | Tier A plus three large files from Hugging Face (~12.6 GB) | Re-running clustering and scoring from ratings; the 1.7M → 510k → 100k sample-construction chain and Figure 2, which both need the rating-level tables. |
+| **A** | This repository only | Every result from clustering onward: cluster structure, scoring, selection, topics, Gemma validation. Table 1 and its footnote, Tables 4–6, and Figures 1, 3, 4, and 5. |
+| **B** | Tier A plus files from Hugging Face | Re-running clustering and scoring from ratings; the 1.7M → 510k → 100k sample-construction chain and Figure 2, which both need the rating-level tables; and the per-rater assignments of the scale ladder. |
 | **C** | Tier B plus a raw X snapshot | Ingestion from scratch. **Not bit-reproducible** — see the warning below. |
 
 ### The Tier C warning
@@ -65,6 +65,36 @@ s = pd.read_parquet("data/interim/stability_over_k.parquet")
 print(s[["k", "mean_ari"]])                       # k=3 is the maximum
 print(pd.read_parquet("data/interim/cluster_summary.parquet"))
 ```
+
+### The scale ladder (Section 3, Table 1)
+
+Table 1 compares the partition the algorithm selects at six different scales, and
+its footnote makes the argument that stability alone certifies nothing. Both read
+from `data/scale-ladder/`, which holds the diagnostics of all 42 runs that
+produced output.
+
+| Claim in the paper | Value | Run directory |
+|---|---|---|
+| 60k selects `k = 2` | ARI 0.989, camps 22,392 / 37,608 | `full_spectral_fast_60k` |
+| 150k selects `k = 3` | ARI 0.977, 62 hyperactive raters | `full_spectral_fast_amg_150k` |
+| 200k selects `k = 3` | ARI 0.971, 64 hyperactive raters | `full_spectral_fast_amg_200k` |
+| 210k selects `k = 3` | ARI 0.969, 66 hyperactive raters | `full_spectral_fast_amg_210k` |
+| 240k selects `k = 4` | ARI 0.955, 1,431 + 60 split off | `full_spectral_fast_amg_240k` |
+| 250k collapses | ARI 0.997, **249,933 / 67** | `full_spectral_fast_amg_250k` |
+| **8 of 19 AMG runs pick a degenerate `k = 2`** | 55–70 raters isolated, ARI 0.976–1.000 | all `full_spectral_fast_amg_*` |
+
+```python
+import glob, os, pandas as pd
+for d in sorted(glob.glob("data/scale-ladder/full_spectral_fast_amg_*")):
+    s = pd.read_parquet(f"{d}/stability_over_k.parquet")
+    best = s.loc[s.mean_ari.idxmax()]
+    c = pd.read_parquet(f"{d}/cluster_summary.parquet")
+    print(os.path.basename(d), int(best.k), round(best.mean_ari, 4), sorted(c.users))
+```
+
+The Pearson and discriminating-share columns of Table 1 need note-level scoring
+per scale, which is not committed; those two columns are sourced to
+[`docs/scale-selection/`](docs/scale-selection/) instead.
 
 ### Reassignment robustness (Section 6.2)
 
@@ -165,9 +195,9 @@ latexmk -pdf main.tex          # 18 pages, no undefined references
 
 ## Tier B — re-running the pipeline from ratings
 
-Three files exceed GitHub's size limits and are mirrored on the
-`vulonviing/community-notes-rescue-interim` Hugging Face dataset. Fetch them
-with:
+Files too large for GitHub are mirrored on the
+`vulonviing/community-notes-rescue-interim` Hugging Face dataset. Fetch the three
+production ones with:
 
 ```bash
 scripts/fetch_interim_from_hf.sh
@@ -179,7 +209,12 @@ scripts/fetch_interim_from_hf.sh
 | `data/interim/ratings_clustered.parquet` | ~3 GB | re-running `02_scoring`, `03_topics`; regenerating Figure 2 |
 | `data/master_full.parquet` | ~6.6 GB | the sample-construction chain behind Figure 2 |
 
-With those in place, the stages run in order:
+The same dataset also holds `scale-ladder/`, which carries the per-rater cluster
+assignments of all 42 ladder runs (~845 MB). Those are not needed to check any
+number in the paper; they are there so the study survives the cluster account.
+See [The Scale Ladder Mirror](README.md#the-scale-ladder-mirror).
+
+With the three production files in place, the stages run in order:
 
 ```bash
 jobs/submit_stage.sh clustering
@@ -231,6 +266,7 @@ today will not reproduce these results.
 | Stage-by-stage pipeline | `notebooks/` |
 | Gemma validation code | `notebooks/llm_validation/` |
 | Committed results | `data/processed/`, `data/interim/`, `data/llm_validation/` |
+| Why the analysis runs at 200k | `docs/scale-selection/`, `data/scale-ladder/` |
 | Figure scripts and outputs | `figures/script_figures/` |
 | Tests and their last run | `tests/`, `tests/RESULTS.md` |
 | Cluster job submission | `jobs/` |

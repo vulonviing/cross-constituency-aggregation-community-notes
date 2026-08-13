@@ -23,6 +23,7 @@ import pandas as pd
 REPO_ROOT = Path(__file__).resolve().parent.parent
 INTERIM = REPO_ROOT / "data" / "interim"
 PROCESSED = REPO_ROOT / "data" / "processed"
+SCALE_LADDER = REPO_ROOT / "data" / "scale-ladder"
 STAGE2_EXPANDED = (
     REPO_ROOT
     / "data"
@@ -38,11 +39,24 @@ STAGE2_EXPANDED = (
 MIN_RATERS_PER_CAMP = 10
 DISCRIMINATING_GAP = 0.3
 
+# A ladder run counts as degenerate when it splits the crowd in two and one side
+# is a handful of hyperactive raters rather than a camp. The paper's footnote
+# uses this reading of the eight runs it calls out.
+DEGENERATE_MAX_SMALL_CLUSTER = 100
+
 
 def _load(path: Path, test: unittest.TestCase) -> pd.DataFrame:
     if not path.exists():
         test.skipTest(f"missing {path.relative_to(REPO_ROOT)}; see REPRODUCING.md")
     return pd.read_parquet(path)
+
+
+def _ladder_run(name: str, test: unittest.TestCase) -> tuple[int, float, list[int]]:
+    """Return (selected k, its mean bootstrap ARI, cluster sizes) for one run."""
+    stability = _load(SCALE_LADDER / name / "stability_over_k.parquet", test)
+    best = stability.loc[stability["mean_ari"].idxmax()]
+    summary = _load(SCALE_LADDER / name / "cluster_summary.parquet", test)
+    return int(best["k"]), float(best["mean_ari"]), sorted(int(v) for v in summary["users"])
 
 
 class ClusteringSelectionTests(unittest.TestCase):
@@ -70,6 +84,67 @@ class ClusteringSelectionTests(unittest.TestCase):
         self.assertGreater(
             summary.loc[2, "median_total_votes"] / summary.loc[0, "median_total_votes"], 10
         )
+
+
+class ScaleLadderTests(unittest.TestCase):
+    """Table 1 and its footnote: what the algorithm chose at every scale tried."""
+
+    # Paper row -> (run directory, k, mean ARI, cluster sizes ascending)
+    TABLE_1 = {
+        "60k": ("full_spectral_fast_60k", 2, 0.989, [22_392, 37_608]),
+        "150k": ("full_spectral_fast_amg_150k", 3, 0.977, [62, 66_170, 83_768]),
+        "200k": ("full_spectral_fast_amg_200k", 3, 0.971, [64, 92_256, 107_680]),
+        "210k": ("full_spectral_fast_amg_210k", 3, 0.969, [66, 97_614, 112_320]),
+        "240k": ("full_spectral_fast_amg_240k", 4, 0.955, [60, 1_431, 113_230, 125_279]),
+        "250k": ("full_spectral_fast_amg_250k", 2, 0.997, [67, 249_933]),
+    }
+
+    def test_every_table_one_row_reproduces(self):
+        for label, (run, k, ari, sizes) in self.TABLE_1.items():
+            with self.subTest(scale=label):
+                got_k, got_ari, got_sizes = _ladder_run(run, self)
+                self.assertEqual(got_k, k)
+                self.assertAlmostEqual(got_ari, ari, places=3)
+                self.assertEqual(got_sizes, sizes)
+
+    def test_the_250k_run_is_the_failure_mode_at_its_clearest(self):
+        """One camp of 249,933 against 67 hyperactive raters, at ARI 0.997."""
+        k, ari, sizes = _ladder_run("full_spectral_fast_amg_250k", self)
+        self.assertEqual((k, sizes), (2, [67, 249_933]))
+        self.assertGreater(ari, 0.99)
+
+    def _amg_runs(self) -> list[str]:
+        if not SCALE_LADDER.is_dir():
+            self.skipTest("missing data/scale-ladder; see REPRODUCING.md")
+        return sorted(
+            p.name
+            for p in SCALE_LADDER.iterdir()
+            if p.is_dir() and "_amg_" in p.name and not p.name.endswith("_reassigned")
+        )
+
+    def test_the_ladder_holds_nineteen_amg_variants(self):
+        self.assertEqual(len(self._amg_runs()), 19)
+
+    def test_eight_of_the_nineteen_pick_a_degenerate_two_way_split(self):
+        """Stability by itself certifies nothing: the footnote to Table 1."""
+        degenerate = []
+        for run in self._amg_runs():
+            k, ari, sizes = _ladder_run(run, self)
+            if k == 2 and sizes[0] <= DEGENERATE_MAX_SMALL_CLUSTER:
+                degenerate.append((run, ari, sizes[0]))
+
+        self.assertEqual(len(degenerate), 8)
+        self.assertEqual(
+            sorted(run.replace("full_spectral_fast_amg_", "") for run, _, _ in degenerate),
+            ["100k", "160k", "170k", "180k", "220k", "230k", "250k", "90k"],
+        )
+        # The paper quotes 55 to 70 power-voters at ARI between 0.976 and 1.000.
+        for run, ari, smallest in degenerate:
+            with self.subTest(run=run):
+                self.assertGreaterEqual(ari, 0.976)
+                self.assertLessEqual(ari, 1.000)
+                self.assertGreaterEqual(smallest, 55)
+                self.assertLessEqual(smallest, 70)
 
 
 class ReassignmentRobustnessTests(unittest.TestCase):

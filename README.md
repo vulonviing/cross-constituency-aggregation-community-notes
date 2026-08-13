@@ -27,7 +27,7 @@ above can be re-derived from the files in this repository.
 |---|---|
 | **Read the paper** | [`paper/main.pdf`](paper/main.pdf) |
 | **Check a number in the paper** | [REPRODUCING.md](REPRODUCING.md) — maps every result to the file that produced it |
-| **Verify the results yourself** | `python run_tests.py` — 64 tests, no data downloads needed ([last run](tests/RESULTS.md)) |
+| **Verify the results yourself** | `python run_tests.py` — 68 tests, no data downloads needed ([last run](tests/RESULTS.md)) |
 | **See the talks** | [`docs/presentations/`](docs/presentations/) |
 | **Read the method** | [`src/`](src/) for the implementation, [`notebooks/`](notebooks/) for the stages |
 | **Find a data file** | [`data/README.md`](data/README.md) |
@@ -39,7 +39,7 @@ above can be re-derived from the files in this repository.
 .
 ├── paper/                   # The manuscript, source and PDF
 ├── REPRODUCING.md           # Paper result -> source file, with runnable snippets
-├── run_tests.py             # Runs all 64 tests
+├── run_tests.py             # Runs all 68 tests
 ├── tests/                   # Aggregation-rule units + paper-number regressions
 ├── src/                     # Reusable Python implementation
 ├── notebooks/               # Canonical pipeline notebooks
@@ -47,11 +47,14 @@ above can be re-derived from the files in this repository.
 ├── data/                    # All derived artifacts (see data/README.md)
 │   ├── interim/             # Clustering outputs and the canonical partition
 │   ├── processed/           # Scoring, selection, and topic outputs
+│   ├── scale-ladder/        # Diagnostics from all 42 scale runs, backing Table 1
 │   └── llm_validation/      # Gemma run records, auditable call by call
 ├── figures/script_figures/  # Paper figures, each with its generating script
 ├── jobs/                    # Job scripts that run the notebooks on a cluster
-├── scripts/                 # Hugging Face large-file helpers
-├── docs/presentations/      # The two talks given on this work
+├── scripts/                 # Hugging Face helpers and the checksum verifier
+├── docs/
+│   ├── presentations/       # The two talks given on this work
+│   └── scale-selection/     # Why the analysis runs at 200k
 └── raw/                     # Local snapshot inputs (contents gitignored)
 ```
 
@@ -108,6 +111,46 @@ uploads before relying on it (`hf download --repo-type=dataset
 vulonviing/community-notes-rescue-interim --include "master/*.parquet"
 "200k/*.parquet"` or check the HF web UI) — re-upload with
 `scripts/upload_interim_to_hf.sh` if it does not.
+
+### The Scale Ladder Mirror
+
+**Read this first if you are coming back to the project after a long gap.**
+
+Before settling on 200,000 raters, we ran the clustering at many scales and with
+three different eigensolvers — forty-five runs in all, of which forty-two
+produced output. Table 1 of the paper reports six of them, and its footnote
+turns on the pattern across all nineteen AMG runs. Those runs lived only in
+`/work/<user>/cnotes_all/data/full_spectral_fast_*/interim_B/` on the University
+of Konstanz cluster, and a cluster account does not outlive a degree.
+
+They are now mirrored under `scale-ladder/` on the same
+`vulonviing/community-notes-rescue-interim` dataset, one folder per run:
+
+| What | Where | Size |
+|---|---|---|
+| Small diagnostics (stability, silhouette, cluster summary, graph, runtime) | committed to this repo, [`data/scale-ladder/`](data/scale-ladder/) | ~1.3 MB |
+| Per-rater cluster assignments and vote statistics (`user_clusters*`, `user_stats`) | Hugging Face `scale-ladder/<run>/` | ~845 MB |
+| `ratings_filtered`, `ratings_clustered`, `embedding` | **kept nowhere** | 373 GB on the cluster |
+
+The third row is deliberate. Those files are joins and embeddings derived from
+`master_full.parquet`, which is mirrored in the same dataset, so they can be
+rebuilt from what was kept. The first two rows cannot be rebuilt at all without
+re-running days of cluster compute against a snapshot of X that no longer
+exists — that is the whole reason for the mirror.
+
+Fetch a run:
+
+```bash
+hf download vulonviing/community-notes-rescue-interim --repo-type=dataset \
+    --include "scale-ladder/full_spectral_fast_amg_200k/*" --local-dir .
+```
+
+`scale-ladder/MANIFEST.md` in the dataset lists every run with its solver,
+selected `k`, ARI, and cluster sizes, so the mirror stays readable on its own.
+To refresh or rebuild it from the cluster, run
+[`scripts/backup_scale_ladder_to_hf.sh`](scripts/backup_scale_ladder_to_hf.sh)
+there; it uploads the whole selection in one commit, since the Hub allows only
+128 commits an hour.
 
 ### Raw Data Provenance
 
@@ -361,7 +404,7 @@ production methodology.
 
 ```bash
 python -m pip install -r requirements.txt
-python run_tests.py          # all 64 tests
+python run_tests.py          # all 68 tests
 python run_tests.py -v       # per-test names
 ```
 
