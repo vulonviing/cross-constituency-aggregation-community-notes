@@ -87,9 +87,25 @@ Each directory carries the same audit set:
 | `*_unresolved.parquet` | Notes that failed to produce a schema-valid response within three attempts. |
 | `raw_calls.jsonl.gz` | Every raw model response, unparsed. |
 | `calls.{sqlite3,parquet}` | Per-attempt call store: prompt, response, seed, attempt index, timing. |
-| `checksums.sha256` | Integrity hashes for the run's outputs. |
+| `checksums.sha256` | Integrity hashes for every file in the run directory. |
 | `summary.json` | Aggregate counts for the run. |
 | `shards/` | The per-batch checkpoints the run was assembled from, retained so the merge can be re-checked against its parts. |
+
+Verify all three manifests at once:
+
+```bash
+bash scripts/verify_llm_checksums.sh
+```
+
+Two details about those hashes are worth stating plainly. The Stage 1 and Stage
+1.5 manifests were written on the cluster when the runs finished, so their
+hashes attest that nothing has changed since; the expanded Stage 2 manifest was
+computed later, when this repository was packaged, and therefore only attests to
+the state at packaging time. And each run also produced a `calls.backup.sqlite3`
+checkpoint, roughly 96 MB across the three runs, which is an intermediate copy of
+the call store rather than a result. Those files are kept locally and left out of
+this checkout, and their entries were removed from the manifests so the
+verification runs clean.
 
 Generation is not schema-constrained; responses are parsed and validated against
 a strict contract afterward, with at most three attempts before a judgment is

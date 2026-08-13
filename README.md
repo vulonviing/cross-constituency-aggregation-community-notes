@@ -16,7 +16,7 @@ two-stage LLM check for sourcing and rescue-worthiness.
 |---|---|
 | **Read the paper** | [`paper/03-07-2026-1550-edition/main.pdf`](paper/03-07-2026-1550-edition/main.pdf) |
 | **Check a number in the paper** | [REPRODUCING.md](REPRODUCING.md) — maps every result to the file that produced it |
-| **Verify the results yourself** | `python run_tests.py` — 64 tests, no downloads needed ([last run](tests/RESULTS.md)) |
+| **Verify the results yourself** | `python run_tests.py` — 64 tests, no data downloads needed ([last run](tests/RESULTS.md)) |
 | **See the talks** | [`docs/presentations/`](docs/presentations/) |
 | **Read the method** | [`src/`](src/) for the implementation, [`notebooks/`](notebooks/) for the stages |
 | **Find a data file** | [`data/README.md`](data/README.md) |
@@ -349,16 +349,17 @@ production methodology.
 ## Tests
 
 ```bash
+python -m pip install -r requirements.txt
 python run_tests.py          # all 64 tests
 python run_tests.py -v       # per-test names
 ```
 
 Three suites run: the aggregation rule on synthetic data, the paper's headline
 numbers re-derived from the committed parquet files, and the Gemma validation
-package with every model call mocked. Only the standard library is needed —
-`pytest` is not a dependency, and nothing has to be downloaded first.
-[tests/RESULTS.md](tests/RESULTS.md) records the last full run and lists what
-each suite asserts.
+package with every model call mocked. The tests themselves need only `pandas`,
+`numpy`, and `pyarrow` from that requirements file; `pytest` is not a dependency,
+and no data has to be downloaded. [tests/RESULTS.md](tests/RESULTS.md) records
+the last full run and lists what each suite asserts.
 
 ## Licensing
 

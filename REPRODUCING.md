@@ -4,15 +4,22 @@ This document maps every headline number, table, and figure in
 [`paper/03-07-2026-1550-edition/main.pdf`](paper/03-07-2026-1550-edition/main.pdf)
 to the artifact that produced it.
 
-**The fastest check takes one command.** From the repository root:
+**The fastest check is two commands.** From the repository root:
 
 ```bash
+python -m pip install -r requirements.txt
 python run_tests.py
 ```
 
 That re-derives the paper's headline numbers from the parquet files committed
-here and reports 64 passing tests. Nothing needs to be downloaded first. See
+here and reports 64 passing tests. No data has to be downloaded first. See
 [tests/RESULTS.md](tests/RESULTS.md) for the last recorded run.
+
+To confirm the Gemma validation files are themselves unchanged:
+
+```bash
+bash scripts/verify_llm_checksums.sh
+```
 
 ## Three tiers of reproducibility
 

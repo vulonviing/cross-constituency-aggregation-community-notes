@@ -3,29 +3,30 @@
 Last recorded run of the full suite. Reproduce it from the repository root with:
 
 ```bash
-python run_tests.py          # all 60 tests
+python -m pip install -r requirements.txt
+python run_tests.py          # all 64 tests
 python run_tests.py -v       # per-test names
 ```
 
-Only the standard library is needed to run the tests; `pytest` is not a
-dependency. The data-backed tests read parquet files that ship with this
-repository, so no Hugging Face download is required.
+The tests need only `pandas`, `numpy`, and `pyarrow` from that requirements
+file. `pytest` is not a dependency, and the data-backed tests read parquet files
+that ship with this repository, so no Hugging Face download is required.
 
 ## Run summary
 
 | | |
 |---|---|
-| Date | 2026-08-13 14:45 +0200 |
+| Date | 2026-08-13 15:11 +0200 |
 | Command | `python run_tests.py` |
-| Result | **60 tests, 60 passed, 0 failed, 0 skipped** (1.07 s) |
+| Result | **64 tests, 64 passed, 0 failed, 0 skipped** (1.11 s) |
 | Python | 3.11.9 |
 | pandas / numpy / pyarrow | 3.0.0 / 2.3.0 / 23.0.1 |
 | Platform | macOS 26.5.2, arm64 |
 
 ```text
-............................................................
+................................................................
 ----------------------------------------------------------------------
-Ran 60 tests in 1.067s
+Ran 64 tests in 1.106s
 
 OK
 ```
@@ -49,7 +50,7 @@ any dataset:
 - **Selection** — a note is counted as rescued only when its bridge score clears
   0.5 *and* the platform had not already shown it.
 
-### `tests/test_paper_numbers.py` — 14 tests, committed pipeline data
+### `tests/test_paper_numbers.py` — 18 tests, committed pipeline data
 
 Re-derives each headline number from the artifact that produced it. A test skips
 with an explicit message if its input file is missing.
@@ -67,6 +68,12 @@ with an explicit message if its input file is missing.
 | Diagnostic subset (≥10 raters per camp) | 98,442 notes | same |
 | Between-camp Pearson correlation | −0.620 | same |
 | Discriminating share (gap > 0.3) | 81.4% | same |
+| Representative-picked note universe | 44,722 | `data/processed/selection_log.parquet` |
+| CN shown within those picks | 6,832 | same |
+| CCA-qualified | 20,405 | same |
+| — of which shown by CN | 6,750 | same |
+| — of which hidden (rescue pool) | 13,655 | same |
+| Below the bridge threshold | 24,317 | same |
 | Expanded Stage 2 pool | 10,376 notes | `…stage2-expanded-v1/stage2_results.parquet` |
 | Admission routes | 10,096 strict + 280 recall | same |
 | **Final rescue set** | **8,558 notes** | same |
@@ -83,3 +90,15 @@ freezing, deterministic per-attempt seeds, the strict post-hoc response schema,
 the three-attempt retry limit and the `unresolved` outcome, manifest hashing,
 shard preparation and merging for Stages 1, 1.5, and 2, and the SQLite call
 store.
+
+## Related check
+
+The test suite verifies the numbers; a separate script verifies that the
+validation run files themselves are unchanged:
+
+```bash
+bash scripts/verify_llm_checksums.sh
+```
+
+It checks the SHA-256 manifest of all three Gemma run directories, 176 files in
+total.

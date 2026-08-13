@@ -23,9 +23,10 @@ superseded drafts were removed. Directory names follow `DD-MM-YYYY-<label>`.
 | Directory | File | Content |
 |---|---|---|
 | `25-06-2026-1408-class_presentation/` | `CCA_presentation.key` | The June 2026 class presentation on CCA. |
-| `11-07-2026-community-notes-final/` | `community-notes-final-presentation-v25.pptx` | The final Community Notes talk, with `speaker-notes.md` alongside it. |
+| `11-07-2026-community-notes-final/` | `community-notes-final-presentation.pptx` | The final Community Notes talk, with `speaker-notes.md` alongside it. |
 
 `11-07-2026-community-notes-final/build-scripts/` holds the Python scripts that
 generated that deck. Each one adds or revises a slide on top of the previous
 version, so they are numbered by the deck version they produced and are meant to
-be read as a build history rather than run from scratch.
+be read as a build history rather than run from scratch. The kept file is the
+v25 build those scripts end on, renamed to drop the draft number.

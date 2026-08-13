@@ -12,9 +12,10 @@ Three suites run, in this order:
   3. notebooks/llm_validation/    — the Gemma validation pipeline, with every
                                     model call mocked.
 
-Only the standard library is needed to run them; pytest is not required. The
-third suite imports its modules by bare name, so its directory is placed on
-`sys.path` before discovery.
+Install the dependencies first with `python -m pip install -r requirements.txt`;
+the tests need pandas, numpy, and pyarrow from it. pytest is not required, and no
+data has to be downloaded. The third suite imports its modules by bare name, so
+its directory is placed on `sys.path` before discovery.
 """
 
 from __future__ import annotations

@@ -9,6 +9,10 @@ authors:
     family-names: Ulu
     affiliation: University of Konstanz
   - given-names: Jingyao
+    family-names: Shi
+    affiliation: University of Konstanz
+  - given-names: Carina I.
+    family-names: Hausladen
     affiliation: University of Konstanz
 repository-code: >-
   https://github.com/vulonviing/cross-constituency-aggregation-community-notes
@@ -40,6 +44,10 @@ references:
         family-names: Ulu
         affiliation: University of Konstanz
       - given-names: Jingyao
+        family-names: Shi
+        affiliation: University of Konstanz
+      - given-names: Carina I.
+        family-names: Hausladen
         affiliation: University of Konstanz
     notes: >-
       Manuscript included in this repository at

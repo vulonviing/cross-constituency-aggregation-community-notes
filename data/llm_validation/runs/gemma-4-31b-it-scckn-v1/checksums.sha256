@@ -1,11 +1,9 @@
-5309e4a0e368f8b21a1c93d0b2389ada714930c26edd38a3bad3932eb7dfc575  ./calls.backup.sqlite3
 6d64de2b80eb3ed656da31068ba89a87995d011d8cec7b6457eb495f3c37c48a  ./calls.parquet
 5309e4a0e368f8b21a1c93d0b2389ada714930c26edd38a3bad3932eb7dfc575  ./calls.sqlite3
 35b08f11515f54359a6c70a641fb05e70095e39332258a47d751cc16a44425c3  ./input_manifest.csv
 75cc4f6b106e4fec4f36b7d634cf6c2c9d6f81d9bdf7b03c1abebecb81c5c0c7  ./input_manifest.parquet
 92e2216ac9f3720cbabc300e961204f00e246f15357295008188f4b99f376a2d  ./raw_calls.jsonl.gz
 b39fd59305f2c971ee5276151142b1fe84a43a30d507bc26e2d68bc8f53d3884  ./run_manifest.json
-ccf5af4e7ff8b7bb6d61e888096e1798833cfc86dda3428770a4f6169560381b  ./shards/stage1-batch-0002/calls.backup.sqlite3
 c1be0caedfe772ff606f8453e7f6c271742f084132870b7d6e46091a6f70f9d1  ./shards/stage1-batch-0002/calls.parquet
 966246ea7b4baa76798efc471f8de7aa8daaaa4f6cbdb62743c983a986bc5d73  ./shards/stage1-batch-0002/calls.sqlite3
 95982db20093651b2bf66ba64601ff8816e12ab2a3755649716c5fe1a5719014  ./shards/stage1-batch-0002/input_manifest.csv
@@ -19,7 +17,6 @@ f279102e93ab219c04a309412a16438a48e3e6d0da5b47b2bedcfa8226a4f585  ./shards/stage
 b47122e97b63cfcb2fe3f07817a21c635dd00de1940785e46791bb8e3a757390  ./shards/stage1-batch-0002/stage2_results.parquet
 aabba645fc2f1d1ff8831921c61e141378f9388ae8466b368f23e8631cb5a2ac  ./shards/stage1-batch-0002/summary.json
 e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855  ./shards/stage1-batch-0002/task.lock
-a73b314ca9875ceee6ab1886442c95c3d1d70200b3f15d651fe998e53fea4dee  ./shards/stage1-batch-0003/calls.backup.sqlite3
 ace14b4833ea427a7c55e371c37098a001c7117bae33ae687907cab1cc93990d  ./shards/stage1-batch-0003/calls.parquet
 24d67208d720ada0ec7dea14607e0c7af370ef0e7fe0fc174ea69bfdf88a63b7  ./shards/stage1-batch-0003/calls.sqlite3
 f84a4ee51dd6475b90e36906dd419906f7b83c3e8403d9852f4b3029f01ab7e7  ./shards/stage1-batch-0003/input_manifest.csv
@@ -33,7 +30,6 @@ f279102e93ab219c04a309412a16438a48e3e6d0da5b47b2bedcfa8226a4f585  ./shards/stage
 00060177d898bc4b5eb6061541d077a74da0f5a10e2c13e616e4bb8ab9b97fcb  ./shards/stage1-batch-0003/stage2_results.parquet
 a95c9cccbe5739698f1902f22d1f32178fb1bf61d16cb462119bd8e88315cb2c  ./shards/stage1-batch-0003/summary.json
 e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855  ./shards/stage1-batch-0003/task.lock
-9459ea500314f9ec8f4574f87f09af4050f4f9dcd1fc9333c606b4a4f955a869  ./shards/stage1-batch-0004/calls.backup.sqlite3
 0eea7bde01c806b042fd8689adf70e6de63f6aa743d8da9754d6c69ba9312c72  ./shards/stage1-batch-0004/calls.parquet
 460a1d89328a90ad7fd256125dccb748699df8ab175a7d20b116107c9fe169e0  ./shards/stage1-batch-0004/calls.sqlite3
 7d38b2827a7047a7faa673040cce21fa6b5cc2c62ac717d0309f43b158bba6ce  ./shards/stage1-batch-0004/input_manifest.csv
@@ -47,7 +43,6 @@ bdf5aa08a20951a2819579afe1b730debc2102b542a13e91fe3f4fa393e41069  ./shards/stage
 819e1e1b988f80dd83cd4526588d95279c3bca7d1fbffee5636bedd382b9a5f6  ./shards/stage1-batch-0004/stage2_results.parquet
 e649a304b31889ad978f6508677d16d1ebaead3cf383a0097b74a91299ca88d8  ./shards/stage1-batch-0004/summary.json
 e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855  ./shards/stage1-batch-0004/task.lock
-f9a7708eb7d423a3d2161a1524f8431ef142e5d1b1655434f289e8107b37f8c7  ./shards/stage1-batch-0005/calls.backup.sqlite3
 81d2baa7cf9acc19ae8dcf8d12278ce5f23e8a6a07a3697ece15d5c78cb26c39  ./shards/stage1-batch-0005/calls.parquet
 ba1ad8c5a87190ef9431c5c79bff7c1e9ff7f45ff008b5766941bcb1a03377cb  ./shards/stage1-batch-0005/calls.sqlite3
 3accf981b1822375aa01c2296d61aefccb487f110334c93dad5e8bedf2d18df6  ./shards/stage1-batch-0005/input_manifest.csv
@@ -61,7 +56,6 @@ f64140b549f9d2060a7ea04fe800914b7efe90c60ef705e668b4382020e9fe67  ./shards/stage
 3e151e3a657add81729ed76f7167e30f9cf86df9ef6df0a5c21e82a297f59cda  ./shards/stage1-batch-0005/stage2_results.parquet
 ec0f88d741e40a3efe3381d14e27b7b99c8ddcb4ced066b2acff34d0601e472d  ./shards/stage1-batch-0005/summary.json
 e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855  ./shards/stage1-batch-0005/task.lock
-267f8626ecba7dddc0d982b3c15469f315b01935f0bda64ffb8a7fe4a53819d9  ./shards/stage1-batch-0006/calls.backup.sqlite3
 6572c582db27940991769e16d986965814fb7eb4ae53ff7f1a9de86a968c32ab  ./shards/stage1-batch-0006/calls.parquet
 6506eb54fc1bb16da382008f1796602dbd40eaf9198fd6faa5a38de8d7c4387f  ./shards/stage1-batch-0006/calls.sqlite3
 0765745b631846ed1ff513015058cb6c0c21ae1dd794163af044b8e427426df2  ./shards/stage1-batch-0006/input_manifest.csv
@@ -75,7 +69,6 @@ f279102e93ab219c04a309412a16438a48e3e6d0da5b47b2bedcfa8226a4f585  ./shards/stage
 d85369b24cdcb1b953a1a595b58ed4029ce17df0345a0c90ad8ff71977baa753  ./shards/stage1-batch-0006/stage2_results.parquet
 7c6093cf0ab689c1fc0de34fcfcc5d39af852d0c32b0c09f29969acde0e7317d  ./shards/stage1-batch-0006/summary.json
 e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855  ./shards/stage1-batch-0006/task.lock
-2720c3f3aec49cb0a2a500bd478c205351ce1dc5e788c260da038be3e7170605  ./shards/stage1-batch-0007/calls.backup.sqlite3
 1299e210d4704c5fcd10ddc1ff0a18e8c5104c4146e3e47809b5e396d604cc87  ./shards/stage1-batch-0007/calls.parquet
 c5037bbefcdb8d3c67d374ff87d7b01f6eaad3e8aa9e4619b0556735a5c70a05  ./shards/stage1-batch-0007/calls.sqlite3
 810366549896740246ac06bca34dcbe9caff5a87e12d83ee969ed040f4e46d1d  ./shards/stage1-batch-0007/input_manifest.csv
