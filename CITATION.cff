@@ -1,0 +1,46 @@
+cff-version: 1.2.0
+title: Cross-Constituency Aggregation for Community Notes
+message: >-
+  If you use this software, data, or analysis, please cite both the repository
+  and the paper.
+type: software
+authors:
+  - given-names: Emrecan
+    family-names: Ulu
+    affiliation: University of Konstanz
+  - given-names: Jingyao
+    affiliation: University of Konstanz
+repository-code: >-
+  https://github.com/vulonviing/cross-constituency-aggregation-community-notes
+abstract: >-
+  A reproducible pipeline and manuscript for Cross-Constituency Aggregation
+  (CCA), an aggregation rule for X's Community Notes that requires a note to
+  earn approval from every behavioral constituency rather than from a
+  majority. The repository contains the 100k-note, 200k-rater spectral
+  clustering pipeline, the scoring and topic-modeling stages, the two-stage
+  Gemma 4 31B validation of the rescue set, and every committed artifact needed
+  to re-derive the paper's results.
+keywords:
+  - community notes
+  - crowdsourced fact-checking
+  - social choice
+  - spectral clustering
+  - content moderation
+  - bridging algorithms
+license: MIT
+license-url: >-
+  https://github.com/vulonviing/cross-constituency-aggregation-community-notes/blob/main/LICENSE
+date-released: '2026-08-13'
+references:
+  - type: unpublished
+    title: Cross-Constituency Aggregation for Community Notes
+    year: 2026
+    authors:
+      - given-names: Emrecan
+        family-names: Ulu
+        affiliation: University of Konstanz
+      - given-names: Jingyao
+        affiliation: University of Konstanz
+    notes: >-
+      Manuscript included in this repository at
+      paper/03-07-2026-1550-edition/main.pdf

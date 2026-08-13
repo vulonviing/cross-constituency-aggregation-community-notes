@@ -7,13 +7,15 @@
 \usepackage{booktabs}
 \usepackage{amsmath}
 \usepackage{enumitem}
-\usepackage{natbib}
+\usepackage[numbers,sort&compress]{natbib}
 \usepackage[hidelinks]{hyperref}
 \usepackage{tcolorbox}
 \usepackage{xcolor}
 \usepackage{tikz}
 \usepackage{tabularx}
+\usepackage{fancyvrb}
 \urlstyle{same}
+\renewcommand{\ttdefault}{cmtt}
 
 % ── Flag macros (TikZ inline) ─────────────────────────────────────────────────
 \newcommand{\flagCH}{%
@@ -98,9 +100,9 @@ co-rating patterns among 200,000 active raters, compute each note's approval
 rate inside each constituency, and combine those rates with a geometric mean
 under a minimum-coverage rule. In a 100,000-note analytical slice, Community
 Notes displays 6,832 of 44,722 representative-picked notes (15\%). Our rule
-identifies a 13,655-note rescue pool, raising potential visibility to 20,487
-notes (46\%) before validation. A second-stage validation screen classifies
-3,896 candidates as sourced, factual, and rescue-worthy. These results suggest
+identifies a 13,655-note rescue pool, raising potential visibility to 20,405
+notes (46\%) before validation. A second-stage validation screen judges 8,558
+candidates, 63\% of the pool, to be sourced and rescue-worthy. These results suggest
 that useful notes can remain hidden when cross-group support is modeled only
 indirectly.
 \end{abstract}
@@ -159,13 +161,18 @@ relevant parts of the public, not only the largest or most active part
 limited way. Community Notes is not a state, and displaying a note is not passing
 a law. Still, both settings face the same aggregation problem under disagreement.
 
-This logic yields four criteria for the display decision. Every constituency must
-be present in the decision (P1). One constituency's rejection should not be fully
-compensated by another's enthusiasm (P2). Constituencies should enter the rule
-symmetrically, so that no group is privileged by default (P3). And, since no
-constituencies are given in advance, they must be recovered from observed rating
-behavior rather than assigned from outside labels such as party, country, or
-ideology (P4).
+This logic yields four criteria for the display decision:
+\begin{itemize}[leftmargin=*,itemsep=2pt,topsep=3pt]
+    \item \textbf{P1 (Presence).} Every constituency must be present in the
+    decision.
+    \item \textbf{P2 (Non-compensation).} One constituency's rejection should
+    not be fully compensated by another's enthusiasm.
+    \item \textbf{P3 (Symmetry).} Constituencies should enter the rule
+    symmetrically, so that no group is privileged by default.
+    \item \textbf{P4 (Behavioral recovery).} Since no constituencies are given
+    in advance, they must be recovered from observed rating behavior rather than
+    assigned from outside labels such as party, country, or ideology.
+\end{itemize}
 
 We operationalize these criteria as cross-constituency aggregation. Using the
 active 200k Representative pipeline, we cluster active raters from co-rating
@@ -175,7 +182,7 @@ geometric mean under a minimum-coverage requirement. The geometric mean creates 
 soft veto: if either constituency strongly rejects a note, the final score falls,
 even if the other constituency is highly supportive. We then use this score to
 identify hidden Community Notes that deserve a second look, and we validate those
-candidates separately for factuality, sourcing, relevance, and usefulness.
+candidates separately for sourcing, content type, and rescue-worthiness.
 
 \paragraph{Contributions.} We make three contributions. First, we recast the
 Community Notes display decision as a cross-constituency legitimacy problem, and
@@ -185,8 +192,8 @@ over 200,000 raters and 100,000 notes, and operationalize cross-constituency
 aggregation as a geometric-mean rule under a minimum-coverage requirement. Third,
 on a 100,000-note slice of the live sample, our rule surfaces a 13,655-note rescue
 pool the platform currently leaves hidden, raising potential visibility from 15\%
-to 46\% before validation, and a second-stage screen keeps 3,896 as sourced,
-factual, and rescue-worthy. These results suggest that Community Notes has an
+to 46\% before validation, and a second-stage screen keeps 8,558 as sourced and
+rescue-worthy. These results suggest that Community Notes has an
 aggregation problem as well as a rating problem: useful public-interest notes can
 remain hidden when cross-group support is modeled only indirectly.
 
@@ -209,7 +216,7 @@ This equation breaks a rating down into four distinct components to isolate the 
 \end{itemize}
 
 \subsection*{A Critique of Matrix Normalization: Profiling Over Consensus}
-The terms $i_u$ and $f_u \cdot f_n$ do not directly measure ``bad faith''; rather, they act as normalization tools. However, by relying on these terms, the core action of Community Notes shifts from evaluating the \textit{content} of a note to estimating the \textit{intent} of the user. Simulation studies of the open-source algorithm make this concrete: when helpfulness is inferred from cross-group agreement patterns, a coordinated minority of just 5--20\% of biased raters can suppress genuinely helpful notes outright \citep{truong2025vulnerable}. Observers have named the underlying trade plainly: the pipeline rewards cross-group \textit{agreement} over \textit{truth} \citep{jude2025narrow}.
+The terms $i_u$ and $f_u \cdot f_n$ do not directly measure ``bad faith''; rather, they act as normalization tools. However, by relying on these terms, the core action of Community Notes shifts from evaluating the \textit{content} of a note to estimating the \textit{intent} of the user. Simulation studies of the open-source algorithm make this concrete: when helpfulness is inferred from cross-group agreement patterns, a coordinated minority of just 5--20\% of biased raters can suppress genuinely helpful notes outright \citep{truong2025vulnerable}. Observers have questioned the system's narrow reliance on cross-group consensus \citep{jude2025narrow}; our concern is more specific: the model identifies that consensus by first estimating users' general rating tendencies and viewpoint alignment, thereby grounding its judgment of the note in inferences about the users who rated it.
 
 To isolate note quality ($i_n$), the algorithm treats rater tendencies and viewpoint compatibility as structural noise. In doing so, it inherently attempts to profile users and read their intentions: Is this user voting based on objective truth, or are they just cheering for their side? Consequently, the system creates an implicit hierarchy of raters. It assumes that identifying and disproportionately weighting the votes of ``high-quality,'' unbiased evaluators is the most effective way to govern visibility.
 
@@ -221,7 +228,7 @@ Our Cross-Constituency Aggregation (CCA) approach fundamentally rejects this pro
 
 \begin{figure*}[t]
   \centering
-  \includegraphics[width=0.93\textwidth]{../../figures/script_figures/07_fig1_cluster_signatures.pdf}
+  \includegraphics[width=0.93\textwidth]{../../figures/script_figures/fig1-rater-dominance.pdf}
   \caption{Repeated participation gives a small set of highly active raters more
   leverage over the latent space fitted by matrix factorization. The model does
   not assign these users an explicit vote weight. Instead, their longer rating
@@ -262,35 +269,40 @@ The resulting action is intent inference rather than content evaluation. The alg
 
 \subsection*{Evidence from Our Own Pipeline}
 
-\begin{table}[h]
+\begin{table}[t]
 \centering
 \small
-\caption{Clustering stability across scale. Metrics reported after spectral AMG clustering; the 200k variant uses Method B vote-profile reassignment as the production partition. ``Hyperactive outlier'' reports the sub-population the algorithm separates at each scale and its median vote count relative to the main camps.}
-\label{tab:scaleup}
 \resizebox{\columnwidth}{!}{%
-\begin{tabular}{lrrrp{4.2cm}}
-\hline
-Scale & ARI & Pearson & Discrim. & Hyperactive outlier \\
-\hline
-60k  & 0.989 & $-$0.69 & 86\% & absorbed (none) \\
-150k & 0.977 & $-$0.65 & 83\% & 62 users ($\sim$7$\times$ more active) \\
-200k\textsuperscript{$\dagger$} & 0.971 & $-$0.62 & 82\% & 64 users ($\sim$11$\times$) \\
-210k & 0.969 & $-$0.62 & 81\% & 66 users ($\sim$12$\times$) \\
-240k & 0.955 & $-$0.60 & 80\% & 60 + 1{,}431 users ($\sim$25$\times$) \\
-250k & 0.997\textsuperscript{$\ddagger$} & --- & --- & degenerate: 249{,}933~/~67 \\
-\hline
+\begin{tabular}{lcrrrrrl}
+\toprule
+& & \multicolumn{3}{c}{Initial spectral partition} & \multicolumn{2}{c}{After Method B} & \\
+\cmidrule(lr){3-5}\cmidrule(lr){6-7}
+Scale & $k$ & ARI & Pearson & Discrim. & Pearson & Discrim. & Hyperactive outlier \\
+\midrule
+60k  & 2 & 0.989 & $-$0.69 & 86\% & --- & --- & absorbed (none) \\
+150k & 3 & 0.977 & $-$0.65 & 83\% & $-$0.644 & 82.9\% & 62 users ($\sim$7$\times$) \\
+200k\textsuperscript{$\dagger$} & 3 & 0.971 & $-$0.62 & 82\% & $-$0.620 & 81.4\% & 64 users ($\sim$11$\times$) \\
+210k & 3 & 0.969 & $-$0.62 & 81\% & $-$0.617 & 81.2\% & 66 users ($\sim$12$\times$) \\
+240k & 4 & 0.955 & $-$0.60 & 80\% & $-$0.596 & 80.0\% & 60 + 1{,}431 ($\sim$25$\times$) \\
+250k & 2 & 0.997\textsuperscript{$\ddagger$} & --- & --- & --- & --- & degenerate: 249{,}933~/~67 \\
+\bottomrule
 \end{tabular}}
-\vspace{2pt}
+\caption{Clustering stability across scale. The initial columns report the partition the algorithm selects on the raw co-rating graph, before reassignment: $k$ is the cluster count chosen by bootstrap stability, ARI the mean bootstrap ARI at that $k$. Above 60k this partition still holds the hyperactive raters apart. The Method B columns report the final two-camp partition after vote-profile reassignment, measured on notes with at least ten raters per camp. Pearson correlates the two main camps' note-level approval rates; Discrim.\ is the share of notes whose between-camp gap exceeds 0.3. The last column gives the separated sub-population and its median vote count relative to the main camps; at 60k nothing falls below the outlier threshold, so reassignment does not apply.}
+\label{tab:scaleup}
 \begin{flushleft}
 \footnotesize
-\textsuperscript{$\dagger$}Production setting; vote-profile reassignment gives Pearson $-$0.620, discriminating notes 81.4\%.\\
-\textsuperscript{$\ddagger$}High ARI is an artefact: isolating the reproducible power-voter outlier as its own cluster maximizes stability while making the partition interpretively degenerate.
+\textsuperscript{$\dagger$}Production setting.\\
+\textsuperscript{$\ddagger$}Stability by itself certifies nothing. Eight of the 19 AMG variants on the ladder selected a $k=2$ that separates 55 to 70 power-voters from every other rater, at bootstrap ARI between 0.976 and 1.000; the 250k row is that failure mode at its clearest.
 \end{flushleft}
 \end{table}
 
-To test whether scale resolves the participation problem, we ran a clustering ladder from 60k to 250k users across 19 variants. Table~\ref{tab:scaleup} reports the key metrics. Two findings emerge. First, the two-camp structure holds at every scale: bootstrap ARI remains above 0.95 and the between-camp Pearson correlation stays strongly negative throughout. Second, a hyperactive outlier reappears at every scale above 60k: a small group of power-voters, 7 to 25 times more active than ordinary raters, whom the algorithm consistently isolates as a distinct cluster. Larger samples do not dissolve this group; they rediscover it.
+To test whether scale resolves the participation problem, we ran a clustering ladder of 19 AMG variants from 70k to 250k users, anchored by two slower ARPACK baselines at 50k and 60k. Table~\ref{tab:scaleup} reports the metrics for the scales we discuss. Wherever the algorithm's own selection produces two comparably sized camps, that structure is robust: bootstrap ARI stays above 0.95 and the between-camp Pearson correlation remains strongly negative. A hyperactive outlier also reappears at every scale above 60k, a small group of power-voters 7 to 25 times more active than ordinary raters, which the algorithm isolates as a cluster of its own. Larger samples do not dissolve this group; they rediscover it.
 
-At 200k users the ladder reaches a stable equilibrium, found only after dozens of clustering and reassignment iterations. This is the production partition: it is the largest scale at which the two-camp structure remains clean and interpretable. Pushing to 250k breaks that equilibrium. The algorithm selects $k=2$ with a split of 249{,}933 versus 67, not because the two groups are genuinely comparable, but because isolating the reproducible power-voter outlier maximizes the bootstrap stability score. The partition is algorithmically optimal and interpretively useless.
+The ladder also shows why a stability score cannot be read as a certificate. Eight of the 19 variants (90k, 100k, 160k through 180k, 220k, 230k, 250k) selected $k=2$ and then used both clusters to separate roughly 60 power-voters from everyone else, scoring bootstrap ARI between 0.976 and 1.000 for it. Such a partition is perfectly reproducible and analytically worthless: 250k splits 249{,}933 against 67, and asking whether those two ``constituencies'' agree on a note is not a meaningful question. High stability here records the opposite of what the metric is usually taken to mean, since the most reproducible object in the rating record is the power-voter clique rather than the division between camps.
+
+Three scales survived that filter with two large camps and at most one small outlier cluster: 60k, 200k, and 210k. We take 200k as the production setting because it offers the best balance between coverage and diagnostic quality; 210k includes more users but reproduces the same structure at slightly weaker values. The choice is a joint reading of stability, camp balance, the negative between-camp correlation, and the share of discriminating notes, not a maximization of any one of them.
+
+Even at 200k the algorithm does not hand us two camps. Bootstrap stability selects $k=3$ there, and the third cluster holds 64 raters with a median of 1{,}269 votes each, against 121 and 101 in the two main camps. Leaving that cluster in place would grant a 64-person clique the same standing as two constituencies of roughly a hundred thousand raters; dropping it would discard the votes that most heavily shape the co-rating graph. We therefore reassign its members to the camp whose note-level voting they track more closely, which yields the final split of 107{,}734 and 92{,}266 raters used throughout the paper. Table~\ref{tab:scaleup} reports the partition before and after this step, and the cost is small: at every scale where reassignment applies, the between-camp correlation and the discriminating share each move by less than a percentage point, and their ordering across scales does not change. Absorbing the power-voters leaves the two-camp structure intact rather than manufacturing it.
 
 \subsection*{The Problem, Stated}
 Two failures sit beneath this gap, and only one is about data. The first is a matter of design: the algorithm profiles individuals instead of consulting communities, estimating whether a given rater's approval was predictable rather than whether the groups that genuinely disagree have each consented. This flaw is independent of sample size: with complete, perfectly balanced participation, the model would still be reading intent rather than evaluating cross-community consent. The second failure is empirical, and our ladder demonstrates it: the latent axis on which the entire bridging check rests is fixed by a hyperactive minority, so even the ``cross-group agreement'' the algorithm rewards is agreement across a distorted pair of poles. \citet{razuvayevskaya2025timeliness} measure this skew from the outside (the top 10\% of contributors produce 58\% of all notes), and our experiments confirm it from the inside, at every scale we can stably analyze. The gap is not a shortage of ratings. It is an aggregation rule that reads individual intent and then mistakes the most active raters' consensus for the community's.
@@ -306,49 +318,40 @@ rules that honor it.
 
 \subsection*{The Display Decision and Legitimacy}
 
-Whether that gap matters, and how much, depends on what the display decision
-ought to satisfy. Our answer is that when the platform aggregates many ratings
-into a single show/hide decision, it makes a collective decision that requires
-legitimacy. Three layers of argument support this.
+Whether that gap matters depends on what the display decision is for. Each time
+the platform turns thousands of ratings into a single show/hide call, it does
+more than rank content: it attaches a public correction to someone's post and
+presents it as coming from ``the community.'' Readers cannot opt out of the
+result. A displayed note changes what everyone sees, including the people who
+think it is wrong, and its force comes from that shared environment rather than
+from any legal power \citep{klonick2018governors}.
 
-First, display is a decision made in a collective name. A displayed note
-attaches to the original post in the form ``readers added context,'' and the
-platform thereby announces publicly, in the name of ``the community,'' that the
-post is misleading. A decision made in a collective name and imposed on everyone
-faces a minimal justification requirement: those affected should have reason to
-accept the procedure that produced it \citep{klonick2018governors}. Second, no
-user can opt out. A displayed note changes the informational environment of all
-users, including the bloc that disagrees; no one can choose not to be affected by
-it. Its binding force comes not from legal compulsion but from a non-excludable
-change to a shared informational environment. Third, and most important here,
-Community Notes itself already concedes this requirement. The mere existence of
-the bridging criterion shows that the platform accepts that a note with
-one-sided support should not be displayed; cross-ideological acceptability is
-already its display standard, only realized in a latent-estimation form that
-cannot express groups directly. Empirical evidence supports the instrumental
-value of this commitment as well: relative to simple, context-free misleading
-flags, community-style notes increase users' trust in fact-checking
-\citep{drolsbach2024trust}. Asking about the legitimacy of the display decision
-is therefore not the imposition of an alien political-philosophy requirement on a
-recommender system; it makes explicit a commitment the system already holds,
-turning it into checkable procedural criteria, and then asks which aggregation
-rule should be used once that commitment is taken seriously.
+Framed this way, the design question is not which note is best but which rule
+should decide when the crowd disagrees. That question is much older than the
+platform. Any group that has to act as one while its members pull in different
+directions runs into it: a plain majority always returns an answer, though not
+always one the losing side has reason to accept. Assemblies, federations, and
+referendum systems have worked on this for a long time, and their answers are
+institutional rather than statistical. They change the counting rule instead of
+trying to identify better voters.
 
-The first two layers characterize the structure of the display decision: made in
-a collective name, imposed on everyone, and borne jointly by all sides. This is
-the structural signature of a constitutional decision that requires legitimacy.
-The traditions that have thought longest, and at the highest cost, about how
-groups who must live together under persistent cleavage make decisions of this
-kind are the constitutional design of divided societies and, from the formal
-side, social-choice theory. The limits of the borrowing should be drawn first:
-the platform needs only a weakened version of this logic. Displaying a note does
-not settle the normative design of state institutions, does not allocate state
-power, and does not rely on legal compulsion. Accordingly, we appeal only to a
-thin, procedural notion of legitimacy (the acceptability of a decision procedure
-to the affected groups), and we borrow only the aggregation logic itself, not the
-full normative theory of state legitimacy. For exactly this reason the
-constitutional record is a conservative reference: it answers the heaviest
-version of the problem, while the platform faces a lighter one.
+Community Notes has already accepted the premise. The bridging criterion exists
+because the platform agrees that a note supported by one side alone should not
+appear, so cross-group acceptability is its display standard today, expressed as
+a latent estimate rather than as groups. Users respond to the difference:
+compared with a context-free misleading flag, a community-written note raises
+trust in fact-checking \citep{drolsbach2024trust}. Asking about legitimacy here
+introduces no foreign requirement. It restates a commitment the system already
+holds, in a form that can be checked, and then asks which aggregation rule
+follows from it.
+
+Our inspiration comes from how states solve this problem, and from the formal
+work that models it, but we borrow in a limited way. Displaying a note allocates
+no power and compels no one, so what we take is the aggregation logic and not
+the political theory around it. Legitimacy in this paper means something thin
+and procedural: whether the groups affected by a decision have reason to accept
+the way it was made. States face a heavier version of the same problem, which is
+what makes their solutions a conservative place to look.
 
 \subsection*{Constitutional Design in Divided Societies}
 
@@ -482,7 +485,8 @@ and Table~\ref{tab:principles-map} collects the same mapping at a glance.
 absent; missing representation must not be convertible into apparent consensus.
 \emph{(Source: quorum and double-majority requirements, as in Switzerland's
 double majority; the precondition of concurrent acceptability. CCA component:
-each constituency must contribute at least three raters.)}
+each constituency must contribute at least three raters, a presence floor rather
+than a reliability threshold.)}
 
 \textbf{P2 (Non-compensation).} One constituency's strong rejection cannot be
 offset by another's enthusiasm; acceptability must hold within each constituency,
@@ -494,8 +498,9 @@ component: geometric-mean aggregation, a soft veto.)}
 \textbf{P3 (Symmetry).} Constituencies enter the decision on equal footing,
 independent of relative size or rating activity. \emph{(Source: parity rules, as
 in Belgium; concurrent acceptability treats the constituencies as equal
-conditions. CCA component: the aggregator is symmetric in its arguments and
-operates on within-constituency approval rates rather than raw counts.)}
+conditions. CCA component: the geometric mean is symmetric in its arguments, so
+relabeling the constituencies leaves the score unchanged, and it takes
+within-constituency approval rates rather than raw counts as inputs.)}
 
 \textbf{P4 (Behavioral recovery).} Since no ex-ante partition of raters exists,
 constituencies must be recovered from observed behavior transparently and
@@ -534,7 +539,7 @@ similarity, with stability diagnostics.)}
 
 The rule is stated over two behavioral constituencies, recovered from co-rating
 structure by the clustering described in Section~\ref{sec:approach}. We
-operationalize the criteria in four steps: cluster raters into $K=2$ behavioral
+operationalize the criteria in four steps: cluster raters into behavioral
 constituencies by co-rating similarity (P4); for each note, compute its approval
 rate within each constituency separately (P3); aggregate the two per-constituency
 approvals with a geometric mean (P2); and select a note only when that mean
@@ -555,14 +560,23 @@ The $0.5$ fallback marks abstention, not endorsement: a constituency that has
 never rated the note casts no vote. Presence (P1) forbids that abstention from
 ever standing in for support, so the fallback alone never selects a note; both
 constituencies must contribute at least three raters before the note is scored
-at all. For a note that clears this coverage bar, the cross-constituency score is
+at all. The bar is deliberately low, and it is a presence floor rather than an
+estimate: three ratings do not measure a constituency's approval precisely, they
+establish that the constituency was there at all. Community Notes applies
+minimums of the same shape in its own scoring, where the population-sample
+filter acts only on notes carrying at least two ratings from each side of the
+rater factor, and a topic model may change a note's status only when five or
+more raters of each sign have rated it \citep{xcommunitynotes2026ranking}. Set
+at three, the requirement rarely bites: across the 100k-note slice it leaves 185
+notes unscored (Section~\ref{sec:results}). For a note that clears this coverage
+bar, the cross-constituency score is
 the geometric mean
 \begin{equation}
     C_i = \sqrt{\max(a_{i1},\epsilon)\,\max(a_{i2},\epsilon)},
     \label{eq:cca-score}
 \end{equation}
 with $\epsilon = 10^{-6}$ guarding against a hard zero. A note is CCA-selected
-when $C_i \geq 0.5$ and the coverage requirement is met; when Community Notes
+when $C_i > 0.5$ and the coverage requirement is met; when Community Notes
 does not already display it, the selected note enters the CCA rescue pool.
 
 The geometric mean is the minimal aggregator that meets P2 and P3 at once:
@@ -602,13 +616,24 @@ algorithmically recovered clusters acquire the standing of constituencies? In
 constitutional regimes that standing comes from history, language, or identity; on
 the platform none of these is available, so it can come only from the structure of
 the disagreement itself. We require three things of a partition before it counts.
-It must persist under subsampling and across sample sizes, which the clustering
-ladder of Section~\ref{sec:the_gap} confirms with a bootstrap ARI above 0.95 at
-every scale. Each side must be large enough that cross-constituency agreement is a
-demand on two real publics rather than statistical noise; our two constituencies
-each hold tens of thousands of raters, while the 64-user power-voter cluster the
-diagnostics keep surfacing is denied standing precisely because it fails this
-test. And the two must reach different verdicts on a large share of notes; about
+It must persist, and the ladder of Section~\ref{sec:the_gap} supports two versions
+of that claim. Under resampling the algorithm keeps recovering the same object at
+every scale whose selection is not degenerate: two large camps beside a small
+hyperactive cluster, at bootstrap ARI above 0.95. Across sample sizes the two-camp
+partition itself reappears at 150k, 200k, 210k, and 240k, with the between-camp
+correlation moving only from $-0.64$ to $-0.60$ and the discriminating share from
+83\% to 80\%. Persistence is necessary and nowhere near sufficient, as the
+ladder's own failures show: the variants that merely fence off a power-voter clique
+score highest of all on stability. Each side must therefore also be large enough
+that cross-constituency agreement is a demand on two real publics rather than
+statistical noise. Our two constituencies each hold tens of thousands of raters.
+The 64 power-voters are not a third: under a symmetric rule their veto would weigh
+as much as that of a camp more than a thousand times larger. What the diagnostics
+keep surfacing is not a third public but a handful of unusually heavy voters, and
+they are treated accordingly. We correlate each one's note-level voting against the
+two camps' aggregate profiles and place them in whichever camp they track more
+closely (Section~\ref{sec:approach}), which removes the veto without removing the
+votes. And the two must reach different verdicts on a large share of notes; about
 81\% of evaluated notes fall on the discriminating side of the partition. A
 partition meeting all three is not an arbitrary artifact but the lines along which
 acceptance and rejection actually run. The standing is conditional: when rating
@@ -631,26 +656,35 @@ whereas the behavioral constituencies are recovered from raw rating behavior
 independent of that rule.
 
 A second worry concerns rescue itself: why should a note that fails the platform's
-cross-ideological test regain value under cross-constituency consent, when the two
-are two statements of the same intuition? They are, and that is precisely why the
-rescue pool is well defined: it is the set on which the two operationalizations of
-one consent standard \emph{disagree in verdict}. Three mechanisms can produce that
-disagreement. (a) The polarization safeguard may conflate ``the issue is
-contentious'' with ``the support is one-sided,'' suppressing notes on contested
-issues that both sides in fact accept. (b) A single spectrum may fail to express
-the real bloc structure: the model places each rater at a point on the axis,
-whereas the actual blocs are multidimensional, organized by which issues each
-group attends to and what evidence it accepts. Two raters at opposite ends of the
-axis need not belong to different blocs, and two placed nearby need not share one,
-so support that bridges along the axis and support that travels across blocs may
-not coincide. (c) The strongly regularized latent estimate is conservative and
-sample-inefficient by construction \citep{goyal2026qsmf}, and observable
-cross-group support need not produce the residual pattern that matrix
-factorization rewards. CCA therefore does not overturn the platform's verdict on
-some shared question; it indicates that a portion of those verdicts may be
-artifacts of the realization rather than rulings of the consent standard itself.
+cross-ideological test regain value under cross-constituency consent, when both are
+versions of one intuition? They are versions of one intuition, tested with
+different instruments. X infers a viewpoint coordinate for each rater and asks
+whether a note's support is surprising given those coordinates; CCA counts approval
+inside two groups recovered from behavior and asks whether each group approves. The
+rescue pool is what that difference produces: the notes on which the two
+measurements return different verdicts. Three things can open such a gap.
 
-These criteria are the requirements of a defensible rule under structured
+\begin{itemize}[leftmargin=*,itemsep=2pt,topsep=3pt]
+    \item \textbf{Contested is not one-sided.} The polarization safeguard can read
+    ``the issue divides people'' as ``the support is one-sided,'' suppressing notes
+    on contested issues that both sides actually accept.
+    \item \textbf{One axis, many blocs.} The model gives each rater a point on a
+    single line, while real blocs differ along several dimensions at once: which
+    issues they attend to, what evidence they accept. Two raters at opposite ends
+    of the axis need not belong to different blocs, and two placed close together
+    need not share one, so support that bridges the axis and support that travels
+    across blocs can come apart.
+    \item \textbf{A cautious estimator.} The latent estimate is strongly
+    regularized, which makes it conservative and sample-inefficient by construction
+    \citep{goyal2026qsmf}. Support that is plainly visible in the group counts need
+    not show up as the residual the factorization rewards.
+\end{itemize}
+
+CCA therefore does not overturn the platform's answer to a shared question. It
+marks the notes where the answer may come from how the standard is implemented
+rather than from the standard itself.
+
+The four criteria are the requirements of a defensible rule under structured
 disagreement, not a claim that the platform's rule is illegitimate in all
 settings. When rater disagreement is unstructured noise around a shared quality
 signal, pooled latent-quality estimation is well warranted; it is the persistence
@@ -661,42 +695,200 @@ cross-constituency question the right one here.
 \label{sec:approach}
 
 \subsection{Data and Pipeline}
+\label{sec:data-pipeline}
 
 The empirical pipeline follows the repository's active 200k Representative
-setup. Active raters are clustered from rating behavior, downstream analysis
-uses Method-B reassigned clusters, and note-level outcomes are evaluated on the
-canonical production paths documented in the repository README.
+setup. We start from 1.7M English-language notes and retain notes on tweets with
+at least three English-language candidates. Each note must also receive at
+least three eligible helpful/not-helpful ratings within 48 hours of its
+creation. We therefore use a floor of three at both the candidate-note and
+rating stages, but for distinct operational reasons: the first guarantees a
+genuine multi-note choice set, while the second follows the same
+minimum-coverage logic that X applies before cross-viewpoint evidence can
+affect a note's status. The rating floor establishes minimal observed
+participation rather than claiming a reliable estimate of approval
+\citep{xcommunitynotes2026ranking}. The 48-hour window keeps ratings tied to
+the note's active review period rather than to activity months later. These
+filters leave 510k eligible notes. From this set, we take a dense 100k-note
+slice, roughly the top 20\% by rating volume, and retain the 200k raters active
+on that slice for clustering. The slice spans 44,722 distinct tweets, the unit
+from which the Representative strategy selects one note. Restricting the
+analysis to this dense core is deliberate: co-rating similarity is informative
+only when users rate enough of the same notes to be compared.
 
 \begin{figure}[h]
   \centering
-  \includegraphics[width=\columnwidth]{../../figures/script_figures/07_fig3_pool_and_topics.pdf}
+  \includegraphics[width=\columnwidth]{../../figures/script_figures/fig2-dataset-construction.pdf}
   \caption{Construction of the analytical sample. Starting from 1.7M English
-  notes, we keep notes on tweets with at least three English notes and at least
-  three eligible helpful/not-helpful ratings cast within 48 hours of creation,
-  yielding 510k eligible notes; from these we select a 100k-note dense slice
-  (about the top 20\% by rating volume) and retain 200k active raters for
-  clustering.}
+  notes, we retain notes on tweets carrying at least three English-language
+  candidate notes, and keep a note only if it drew at least three eligible
+  helpful/not-helpful ratings within 48 hours of its creation, yielding 510k
+  eligible notes; from these we select a 100k-note dense slice (about the top
+  20\% by rating volume) and retain 200k active raters for clustering.}
   \label{fig:dataset-construction}
 \end{figure}
 
+\subsection{Recovering Constituencies}
+
+Section~\ref{sec:cca} states behavioral recovery (P4) as a criterion; this
+subsection is how we discharge it. The 200k-rater scale was selected through
+testing. The tests encountered
+the same participation imbalance identified above for Community Notes: as
+progressively less-active raters entered the sample, shared-note overlap
+thinned, while a small hyperactive core remained among the graph's most
+reproducible structures \citep{nudo2026hyperactive,razuvayevskaya2025timeliness}.
+We selected 200k as the best balance between coverage and diagnostic quality:
+210k reproduced the same two-camp structure somewhat more weakly, while larger
+configurations introduced additional activity-driven outliers or collapsed
+into a power-voter-versus-rest split. On this empirically selected slice, we
+build a sparse, mean-centered user-by-note matrix, where each entry records a
+rater's deviation from their own average rating on a note they scored. A
+symmetric 15-nearest-neighbor graph over this matrix defines co-rating
+similarity, and a spectral embedding, computed with algebraic multigrid to keep
+the procedure tractable at this scale, places each rater in a low-dimensional
+space shaped by whom they tend to agree with. We evaluate
+candidate values of $k$ from 2 to 7 by silhouette score and by stability under
+repeated resampling, and the pipeline selects the $k$ with the highest mean
+bootstrap ARI. At 200k raters that rule returns $k=3$, at ARI 0.971 against
+0.593 for $k=2$; silhouette points the other way, peaking at 0.997 for $k=2$
+against 0.735 or lower everywhere else. The two criteria diverge because a
+direct $k=2$ specification must represent two structures with only two labels:
+the division between the large camps and a recurring clique of power-voters.
+Across resamples it sometimes recovers the balanced camp split and sometimes
+uses one label to isolate that small, highly active group. Allowing the
+stability criterion to select $k=3$ makes both structures visible at once: two
+large camps and a third cluster of 64 highly active raters. The same small
+high-activity pattern reappears at neighboring scales. Clusters smaller than
+$\max(1\%$ of raters$, 500)$ are therefore treated as outliers rather than
+granted constituency standing.
+
+To resolve this three-cluster result, we apply Method B. Method B is not another
+$k=2$ spectral fit. It begins from the more stable
+$k=3$ partition, keeps the membership of both large camps fixed, and classifies
+only the 64 outliers. Each outlier's note-level vote profile is correlated
+against the two main constituencies' aggregate profiles, and the rater joins
+whichever constituency their votes track more closely. All 64 are reassigned
+this way, 54 into the larger constituency and 10 into the smaller, leaving
+final constituency sizes of 107,734 and 92,266 raters. The resulting two-camp
+partition therefore preserves the main-camp boundary recovered at $k=3$ rather
+than reproducing the unstable cut obtained by forcing the spectral model to
+use two clusters. Nothing downstream turns on how the reassignment is done. An
+embedding-centroid variant (Method A) sorts the same 64 raters differently,
+disagreeing with the vote-profile rule about 29 of them, who together cast
+0.07\% of the ratings in the slice. The two final partitions return the same
+between-camp correlation of $-0.620$ and the same 81.4\% discriminating share.
+Method B is the canonical partition used throughout the paper; the original
+spectral label survives only as a diagnostic column. Section~\ref{sec:the_gap}
+reports the scale ladder from 60k to 250k and shows where the two-camp
+partition persists and where it fails. At the selected 200k scale, Method B
+resolves the two camps at Pearson
+$-0.620$, with 81.4\% of notes discriminating between the constituencies.
+
+\subsection{Selection}
+
+For each tweet, the Representative strategy selects the single note with the
+highest cross-constituency score among its candidate notes, computed as in
+Eq.~\eqref{eq:cca-score}. A note's bridge score is defined only once both
+constituencies have contributed at least three ratings to it, following the
+minimum-coverage rationale described in Section~\ref{sec:data-pipeline}. This
+coverage rule operationalizes P1; notes that never clear this bar are not
+scored and cannot be selected under CCA. A note counts as CCA-selected when its
+bridge score is above 0.5, and as newly rescued when it is CCA-selected but
+not already shown by Community Notes.
+
 \subsection{Validation}
 
-Candidate rescued notes should be validated separately from the aggregation
-step. The validation layer should ask whether a note is sourced, factual,
-relevant to the original post, and useful enough to justify surfacing. This
-keeps the social-choice rule and the content-quality judgment analytically
-separate.
+Aggregation and content quality are different judgments, and we keep them
+analytically separate: CCA identifies notes that clear a cross-constituency
+support bar, and a second, independent stage asks whether the note itself is
+worth showing. We chose Gemma 4 31B IT as the strongest feasible open-weight
+model for this role. In the April 2, 2026 Arena snapshot, its thinking variant
+scored 1,452 and ranked third among open models, while its 30.7-billion-parameter
+dense BF16 weights could run without quantization on our two-GPU allocation
+\citep{arena2026leaderboard,google2026gemma4}. Appendix~\ref{app:gemma-runtime}
+reports the complete hardware, serving, decoding, and audit configuration.
+Each of the 13,655 notes in the frozen rescue pool is judged independently
+through a single-turn, zero-shot, rubric-based user prompt. The three canonical
+prompts appear verbatim in Appendix~\ref{app:gemma-prompts}.
+
+Rubric-based LLM-as-a-judge methods have a broader empirical precedent. Across
+1,141 human-labeled binary classification tasks, GABRIEL reports a median
+accuracy of 0.85 for GPT-5 and finds measurements generally robust to
+semantically equivalent prompt variants
+\citep{asirvatham2026gptmeasurement}. This benchmark supports the feasibility
+of large-scale qualitative judgment, but it does not validate Gemma or the
+task-specific rubric used here.
+
+The model sees only the note's own text; it does not see the tweet the note
+responds to, open any cited URL, or observe the note's upstream selection
+score. This is a real constraint on what the stage can certify, and we return
+to it in Section~\ref{sec:limitations}: the judgment concerns the note as a
+self-contained piece of writing, not the truth of its claim or its relevance
+to the specific post it was attached to.
+
+Validation begins with a content screen and ends with scoring. Stage 1 sorts
+each note into one of five content categories, requiring a visible external
+source pointer, such as a URL or a named source, before a note can be classified
+as sourced factual information. Notes classified as unsourced claims,
+irrelevant or spam, or hostile in tone stop at this screen. Opinion- or
+speculation-labeled notes receive a targeted second reading: Stage 1.5 asks
+whether they contain a substantial sourced factual core that remains
+informative on its own once the subjective framing is set aside. Notes that
+meet this criterion join the direct Stage 1 passes in a common Stage 2 pool.
+Stage 2 applies the same rescue-worthiness rubric to every note in that pool,
+scoring source traceability, the strength of the connection between the claim
+and its source, clarity and neutrality of language, and whether the note is
+presented constructively rather than as an attack. A note passes at a score of
+50 or higher. Throughout, a missing source is scored as a validation failure,
+not treated as evidence that the underlying claim is false: the screen and
+scoring rubric measure what the note visibly demonstrates about itself, not
+what an independent investigation would find.
+
+The exact model revision, prompt text, input manifest, and decoding seed are
+recorded, as are all 25,804 attempt statuses. Every returned response is stored
+with its parsed result, reasoning, and token counts; the 71 response errors
+retain their seed and error metadata but contain no output fields because no
+model response was returned. Generation is not schema-constrained; responses
+are parsed and checked against a strict contract afterward, an exact key set, a
+label drawn from the fixed list or an integer score in range, and a reason under
+forty words, with at most three attempts before a judgment is left unresolved.
+One Stage 1 note remained
+unresolved, which accounts for the difference between 25,734 logical judgments
+and 25,733 accepted outputs reported in Appendix~\ref{app:gemma-runtime}.
+This audit trail allows any individual judgment to be regenerated independently
+while preserving the distinction between model output and post-generation
+validation.
 
 \section{Results}
 \label{sec:results}
 
-This section will report the size of the rescue pool, the share of notes that
-would become visible under cross-constituency aggregation, validation outcomes,
-and the topical distribution of rescued notes.
+\subsection{Rescue Pool and Visibility}
+
+Of 44,722 representative-picked notes, Community Notes currently displays
+6,832, about 15\%. Applying the CCA rule to the same universe qualifies
+20,405 notes, 46\%, once every note that clears the coverage bar and the 0.5
+bridge threshold is counted. The two sets are not nested: 6,750 of the
+20,405 CCA-qualified notes are already shown, but the remaining 82 currently
+shown notes fail the CCA bridge threshold outright. CCA is not a strict
+superset of the platform's own display decision; it agrees with the platform
+on most shown notes and disagrees on a small number of them, in both
+directions. Setting those 82 notes aside, the 13,655 CCA-qualified notes that
+Community Notes does not display form the rescue pool that the rest of this
+section evaluates. Table~\ref{tab:rep-cn-overlap} and
+Figure~\ref{fig:rescue-panels} summarize this funnel. The remaining 24,317
+representative picks fall below the CCA threshold, and coverage is rarely
+the reason: only 71 of them never receive three ratings from both
+constituencies and so are left unscored by the rule that operationalizes P1,
+a pattern that holds across the full 100k-note slice, where only 185 notes
+of any kind go unscored for lack of coverage. The other 24,246 below-threshold
+picks are scored and simply fall short, at a median bridge score of 0.291.
+Coverage failure is a narrow, verifiable source of conservatism in the
+rescue pool, not the dominant one; most of what CCA declines, it declines on
+the merits of the ratings it has.
 
 \begin{figure}[h]
   \centering
-  \includegraphics[width=\columnwidth]{../../figures/script_figures/07_fig5_rescue_panels.pdf}
+  \includegraphics[width=\columnwidth]{../../figures/script_figures/fig3-rescue-panels.pdf}
   \caption{Cross-constituency aggregation expands the qualified set and validates
   hidden candidates. Among 44,722 representative-picked notes, 20,405 meet the
   CCA threshold: 6,750 are already shown and 13,655 form the hidden rescue pool.
@@ -714,23 +906,257 @@ and the topical distribution of rescued notes.
 \midrule
 Representative-picked note universe & 44{,}722 \\
 CN shown within representative picks & 6{,}832 \\
-CCA rescue pool & 13{,}655 \\
-CCA visible total & 20{,}487 \\
+CCA-qualified & 20{,}405 \\
+\quad shown by CN & 6{,}750 \\
+\quad hidden (rescue pool) & 13{,}655 \\
+Below CCA threshold & 24{,}317 \\
 \midrule
-CCA rescued after Gabriel validation & 3{,}896 \\
-Opinion/speculation in rescue pool & 3{,}610 \\
-Other excluded in rescue pool & 6{,}149 \\
+Rescue pool: Gemma-validated ($\geq$50) & 8{,}558 \\
+Rescue pool: below score 50 & 1{,}818 \\
+Rescue pool: stopped at content screen & 3{,}279 \\
 \bottomrule
 \end{tabular}
 \caption{Representative-picked notes shown by Community Notes versus the CCA
-rescue pool and its validation outcome.}
+rescue pool and its two-stage Gemma validation outcome.}
 \label{tab:rep-cn-overlap}
 \end{table}
 
+\subsection{Validation Outcomes}
+
+Stage 1 sorts the 13,655-note rescue pool by content type: 10,096 notes carry
+a visible external source and are read as sourced factual information, while
+1,703 read as opinion or speculation, 1,340 as irrelevant or spam, 373 as
+unsourced claims, and 142 as hostile in tone, with one note left unresolved.
+Stage 1.5 rechecks the 1,703 opinion-labeled notes for a sourced factual core
+underneath the opinion framing and recovers 280 of them, leaving 1,423 as a
+genuine content stop. The 10,096 strict passes plus the 280 recalled notes
+give an expanded Stage 2 population of 10,376 notes scored for
+rescue-worthiness. Of these, 8,558 clear the 50-point threshold, 62.7\% of
+the original rescue pool, while 1,818 score below it. The validated set contains
+8,527 direct Stage 1 passes and 31 notes recovered through Stage 1.5.
+Reconciling the three outcomes, 8,558 validated notes, 1,818 below-threshold
+notes, and 3,279 notes stopped at the content screen sum to the full
+13,655-note pool.
+
+The score distribution inside Stage 2 is not evenly spread: 4,423 notes, 43\%
+of the scored population, land in the 90-to-100 band the rubric describes as
+clear, traceable, and self-contained, and a further 2,923 land in the
+70-to-89 band of strong, well-supported notes. Only 1,547 notes score in the
+10-to-39 range and 8 score below 10. Figure~\ref{fig:validation-funnel}
+plots both stages together: most of what the content screen stops is opinion
+without a sourced core, and most of what survives to scoring scores well
+above the display threshold rather than barely over it.
+
+\begin{figure}[h]
+  \centering
+  \includegraphics[width=\columnwidth]{../../figures/script_figures/cn-gemma-validation-funnel.pdf}
+  \caption{Two-stage Gemma validation of the 13,655-note rescue pool. The upper
+  bar reports the Stage 1 content screen together with the Stage 1.5 recall,
+  which recovers 280 opinion-labeled notes with a sourced factual core. The
+  lower bar reports Stage 2: the 10,376 notes that pass are scored 0--100 for
+  rescue-worthiness against a 50-point display threshold.}
+  \label{fig:validation-funnel}
+\end{figure}
+
+\subsection{Topical Structure}
+
+Section~\ref{sec:cca} argued from the clustering ladder alone that the two
+constituencies are not simply a strict camp and a lenient one. Grouping
+2,181 topically labeled notes into 13 subject areas and computing each
+constituency's average approval within each gives that claim a direct test.
+Figure~\ref{fig:topic-signatures} plots the result: Cluster 2 approves more
+readily on 8 of the 13 topics, while Cluster 1 leads on the other five,
+including Israel/Palestine content, Iranian politics, and coverage of the
+Gaza hostages, so approval leadership is not fixed across the board. The
+size of the gap also varies substantially, from 0.090 on Israel/Palestine
+content, where the constituencies are close, to 0.651 on a fabricated claim
+about Haitians and pets, the widest split in the data. A single strictness
+axis would predict one constituency leading everywhere by a roughly constant
+margin; what the topic breakdown shows instead is two constituencies whose
+disagreement is topic-specific, consistent with recovering distinct
+viewpoints rather than one careful reader and one permissive one.
+
+\begin{figure}[h]
+  \centering
+  \includegraphics[width=\columnwidth]{../../figures/script_figures/cn-topic-signatures.pdf}
+  \caption{Average approval rate by constituency across 13 subject areas.
+  Bubble size encodes note count. Approval leadership flips between
+  constituencies across topics, and the size of the gap ranges from 0.090 on
+  Israel/Palestine content to 0.651 on a fabricated claim about Haitians and
+  pets.}
+  \label{fig:topic-signatures}
+\end{figure}
+
+\subsection{Illustrative Rescue Cases}
+
+Aggregate counts conceal two distinct ways CCA changes a display decision.
+We therefore inspect six purposively selected cases: three from the 8,339
+Gemma-validated CCA selections on tweets where Community Notes displays no
+note, and three from the 219 validated selections where the same tweet already
+has a different displayed note. The examples prioritize source
+verifiability, topical variation, and a clear decision contrast. They
+illustrate the rule's behavior rather than estimate the average quality of
+either population. Tables~\ref{tab:hidden-rescue-cases} and
+\ref{tab:better-alternatives} reproduce the selected notes and their linked
+sources in full.
+
+\urldef{\rawChickenStudyUrl}\url{https://www.fsis.usda.gov/sites/default/files/media_file/2021-02/FSCRP_Year%2B2_Final_Aug2019.pdf}
+\urldef{\mutahShownWikiUrl}\url{https://en.wikipedia.org/wiki/Battle_of_Mu%27tah#:~:text=Notes%20%5E%20The%20Byzantines%20do%20not%20appear,uncertain%2C%20but%20unlikely%20to%20have%20exceeded%2010%2C000.}
+\urldef{\mutahShownHistoryUrl}\url{https://islam365.io/topics/wars.html#:~:text=The%20Muslim%20army%20marched%20north%20to%20Mu'tah%2C,Muslims%20were%20greatly%20outnumbered%20(perhaps%20by%20ten%2Dto}
+\urldef{\mutahCcaWikiUrl}\url{https://en.wikipedia.org/wiki/Battle_of_Mu%27tah}
+
+\begin{table*}[t]
+\centering
+\footnotesize
+\setlength{\tabcolsep}{3pt}
+\renewcommand{\arraystretch}{1.12}
+\begin{tabularx}{\textwidth}{@{}p{2.4cm}>{\raggedright\arraybackslash}Xrrr@{}}
+\toprule
+\textbf{Case} & \textbf{CCA-selected note (verbatim)} &
+\textbf{Global} & \textbf{CCA score} & \textbf{Gemma} \\
+\midrule
+Raw chicken safety &
+Raw chicken does not need to be washed before cooking. Washing poultry prior
+to cooking it has been found to slightly increase bacterial contamination in
+the kitchen. \url{https://www.cdc.gov/food-safety/foods/chicken.html}
+\rawChickenStudyUrl
+& 95.1\% & 0.941 & 98 \\
+\addlinespace
+Eisenhower and Suez &
+Factual error: U.S. President Dwight D. Eisenhower insisted that Israel
+withdraw from Arab territory during the 1956 Suez Crisis.
+\url{https://www.presidency.ucsb.edu/documents/message-prime-minister-ben-gurion-urging-withdrawal-israeli-forces-egypt}
+& 84.6\% & 0.817 & 98 \\
+\addlinespace
+Trump--Colorado ballot ruling &
+The Supreme Court unanimously ruled Trump could not be taken off the ballot by
+Colorado under Section 3 of the 14th Amendment because states do not have the
+power to do so. It wasn't a matter of not ``holding him accountable'' for
+January 6. \url{https://www.supremecourt.gov/opinions/23pdf/23-719_19m2.pdf}
+& 92.1\% & 0.735 & 98 \\
+\bottomrule
+\end{tabularx}
+\caption{Validated CCA selections for three tweets on which Community Notes
+displays no note. Note wording and source URLs are reproduced in full; only
+quotation marks and spacing are normalized for typesetting.
+``Global'' is overall approval, ``CCA score'' is the geometric mean of the two
+constituency-specific approval rates, and ``Gemma'' is the Stage 2
+rescue-worthiness score.}
+\label{tab:hidden-rescue-cases}
+\end{table*}
+
+\begin{table*}[t]
+\centering
+\fontsize{7.5}{8.8}\selectfont
+\setlength{\tabcolsep}{3pt}
+\renewcommand{\arraystretch}{1.04}
+\begin{tabularx}{\textwidth}{@{}p{2.1cm}p{1.25cm}>{\raggedright\arraybackslash}Xrrr@{}}
+\toprule
+\textbf{Case} & \textbf{Decision} & \textbf{Note (verbatim)} &
+\textbf{Global} & \textbf{CCA score} & \textbf{Gemma} \\
+\midrule
+Yarmouk/Mu'tah & X shown &
+The Battle of Mu'tah was fought between the Byzantine Empire and the First
+Islamic State. The true size of the armies is considered to be around 10,000
+for the Byzantines and 3000 for the Muslims. It ended with a Byzantine
+victory.
+\mutahShownWikiUrl
+\mutahShownHistoryUrl
+& 92.2\% & 0.774 & --- \\
+& CCA &
+The post refers to the Battle of Yarmouk (636 AD), but reliable estimates put
+Muslim forces at 15,000-40,000, not 3,000, vs. 15,000-150,000 Byzantines.
+3,000 Muslims fought at the earlier Battle of Mu'tah (629 AD).
+\url{https://en.wikipedia.org/wiki/Battle_of_the_Yarmuk}
+\url{https://www.britannica.com/topic/Battle-of-Yarmouk-636}
+\mutahCcaWikiUrl
+& 91.2\% & 0.837 & 95 \\
+\addlinespace
+Anne Frank graphic adaptation & X shown &
+Diary of a Young Girl, by Anne Frank, is part of the 8th-grade curriculum of
+the Florida Department of Education.
+\url{https://www.fldoe.org/core/fileparse.php/7539/urlt/pgg-8-standards.pdf}
+\url{https://www.fldoe.org/core/fileparse.php/7539/urlt/elabeststandardsfinal.pdf}
+& 97.8\% & 0.781 & --- \\
+& CCA &
+Florida removed the graphic novel adaptation of Anne Frank's diary due to
+nudity deemed unsuitable for kids, but the original diary remains available.
+Source:
+\url{https://www.wafb.com/2023/04/10/graphic-novel-version-anne-frank-book-removed-by-florida-school/}
+& 97.8\% & 0.848 & 95 \\
+\addlinespace
+Cardinal Burke/Vigan\`o & X shown &
+Mr Vigano is a former archbishop who was excommunicated from the church in
+2024 for schism.
+\url{https://www.pillarcatholic.com/p/archbishop-vigano-excommunicated}
+& 89.9\% & 0.783 & --- \\
+& CCA &
+The image shows Cardinal Raymond Burke, not Archbishop Vigan\`o. Vigan\`o was
+excommunicated for schism in July 2024 and holds no Church office.
+\url{https://www.vaticannews.va/en/vatican-city/news/2024-07/vigano-excommunicated-for-schism.html}
+\url{https://thecatholicherald.com/article/cardinal-burke-appeals-to-pope-leo-for-restoration-of-traditional-latin-mass}
+& 94.2\% & 0.871 & 95 \\
+\bottomrule
+\end{tabularx}
+\caption{Same-tweet cases where CCA selects a stronger alternative to the note
+displayed by Community Notes. Each pair contains the tweet's only displayed
+note and the different, higher-scoring CCA selection. Text and URLs are
+reproduced in full under the same normalization described in
+Table~\ref{tab:hidden-rescue-cases}. ``Global'' is overall approval, ``CCA
+score'' is the geometric mean of the two constituency-specific approval rates,
+and ``Gemma'' is the Stage 2 rescue-worthiness score, reported only for the
+CCA-selected notes.}
+\label{tab:better-alternatives}
+\end{table*}
+
+The hidden cases show that rescue is not confined to one type of controversy.
+A public-health correction cites CDC and USDA guidance, the Suez note points
+to Eisenhower's withdrawal message, and the ballot case links directly to the
+Supreme Court opinion. All three receive Gemma scores of 98, while their bridge
+scores range from 0.735 to 0.941. Their agreement profile and source quality
+make a strong case for display despite the absence of any note currently shown
+on those tweets.
+
+Paired comparisons make the qualitative gain more concrete. The displayed
+Yarmouk note describes Mu'tah, whereas the CCA alternative identifies the
+battle depicted and distinguishes the two events. In the Anne Frank case, the
+alternative separates a removed graphic adaptation from the original diary
+instead of treating them as one title. The final pair corrects the pictured
+person's identity before explaining Vigan\`o's status. CCA raises the bridge
+score in every comparison, from 0.774 to 0.837, 0.781 to 0.848, and 0.783 to
+0.871, respectively. These purposively selected examples support a strong
+comparative judgment about directness and contextual fit, not a statistical
+ground-truth estimate for the full rescue pool.
+
 \section{Discussion}
 
-The discussion will connect the empirical results to platform legitimacy,
-social choice under disagreement, and the limits of crowdsourced moderation.
+The results bear on three questions raised earlier: whether the display
+decision's legitimacy claim can be made checkable, how CCA relates to other
+proposed fixes for Community Notes, and what a rescue pool this size says
+about crowdsourced moderation more broadly.
+
+Section~\ref{sec:learning} argued that a display decision made in a
+collective name owes the affected parties a decision procedure they have
+reason to accept, and that Community Notes already concedes cross-group
+acceptability as its standard without being able to state it directly. The
+results give that argument empirical content. P1 through P4 are no longer
+only design commitments; each is now attached to a number. Presence rarely
+has to act as a hard veto in practice, only 185 notes in the full 100k-note
+slice are left unscored for lacking three ratings from each constituency, but
+that scarcity is itself evidence the requirement is doing its job quietly:
+almost every note that reaches a bridge score reaches it having been heard
+from both sides, so the 24,317 representative picks below the CCA threshold
+fail on the merits of the ratings they received, not on a technicality.
+Non-compensation is visible in the Yarmouk comparison: the CCA alternative
+has slightly lower raw approval than the displayed note, 91.2\% against
+92.2\%, but stronger cross-constituency support raises its bridge score from
+0.774 to 0.837. Symmetry
+holds regardless of which constituency happens to be larger or more active on
+a given note. Behavioral recovery is the clustering ladder of
+Section~\ref{sec:the_gap}, which holds from 60k to 240k raters at every scale
+where the selected partition is not degenerate. Because CCA is derived from
+stated criteria, its design can be evaluated one commitment at a time against
+the empirical evidence reported here.
 
 One development is already visible in the platform's own direction. In November
 2025 X began piloting a final-scoring model that aggregates helpfulness through a
@@ -741,22 +1167,215 @@ formalizes is the obvious next one: take that geometric mean over behaviorally
 recovered constituencies, each required to be present, rather than over points
 on an estimated ideology line.
 
-\section{Limitations}
+CCA is not the only response to the profiling critique of Section~\ref{sec:how_cn_works}.
+Quality-sensitive matrix factorization \citep{goyal2026qsmf} keeps the
+rater-profiling structure but makes it more discriminating, weighting each
+rater by an estimated reliability and achieving comparable accuracy from
+26--40\% fewer ratings while resisting more attack patterns. The two
+approaches do not compete on the same axis. QSMF asks which raters are more
+reliable and trusts the aggregate more when it thinks it knows; CCA asks
+which constituencies approve and refuses to aggregate across a constituency
+that has not been heard from. A platform could run both: reliability
+weighting inside each constituency, and cross-constituency consent as the
+gate on top. That combination is future work, not a claim we test here.
 
-This section will state where the proposed rule is conservative and where it may
-fail. Anticipated limitations include the two-camp assumption embedded in the
-current clustering setup, the fact that behavioral constituencies do not map
-cleanly onto ideological or demographic categories, the reliance on LLM-based
-validation in the second stage, and the conservative effect of the
-minimum-coverage requirement on rescue pool size.
+Language-model judgment remains downstream of selection in this study: CCA
+forms the rescue pool, and Gemma evaluates its contents afterward. A future
+system could instead incorporate LLM judgment into CCA selection itself,
+although we neither specify nor test such an integration. X's current For You
+stack points in this direction. Phoenix uses a Grok-derived transformer for
+retrieval and engagement-based ranking, while Grox provides content-understanding
+classifiers for tasks including spam detection, post categorization, and policy
+enforcement \citep{xai2026algorithm}. These components do not implement the CCA
+extension proposed here, but they are one concrete instance of a broader shift
+toward placing large transformer models inside content-selection pipelines
+rather than using them only after selection.
+
+The rescue pool's size speaks to a question broader than Community Notes.
+13,655 representative picks clear cross-constituency support and stay
+hidden, and 8,558 of them also clear an independent content check. Some of
+that gap is a rating-volume problem, the sparse participation
+Section~\ref{sec:how_cn_works} describes. But the topical pattern in
+Figure~\ref{fig:topic-signatures}, where the constituencies split leadership
+unevenly and the size of the gap varies severalfold across topics, is not
+explained by volume alone; it points to an aggregation rule that treats
+uneven cross-group support as absence of consensus rather than as
+consensus expressed unevenly. Crowdsourced moderation that wants to credit
+genuine cross-group agreement needs a rule that can see the groups, not only
+a model that infers them as a byproduct of estimating something else.
+Downstream, that distinction has stakes beyond this platform: notes framed
+as community-verified context already raise user trust in fact-checking more
+than simple misleading flags do \citep{drolsbach2024trust}, so which notes
+earn that framing is not a minor implementation detail.
+
+\section{Limitations}
+\label{sec:limitations}
+
+Several substantive limits accompany the design, and the empirical exercise
+evaluates only one fully specified implementation.
+
+The constitutional experience in Section~\ref{sec:learning} clarifies a
+tradeoff rather than supplying a template to copy wholesale. Power-sharing can
+protect one group from domination while also hardening group boundaries,
+empowering actors who claim to speak for a bloc, and creating veto points that
+frustrate broadly supported decisions
+\citep{mcgarryoleary2009,schwartz2010,mcculloch2025}. CCA faces a platform-scale
+version of the same tradeoff. Treating two behavioral constituencies as the
+units of consent could preserve a division that might otherwise weaken, while
+the soft veto against one-sided capture could also block a note supported by a
+broad but not overwhelming majority. The rule therefore applies only while
+co-rating behavior supports stable, substantively sized constituencies. If that
+structure disappears, forcing a group-based decision would no longer satisfy
+P4, and pooled estimation becomes the more appropriate baseline.
+
+Our final partition is a simplification, and one we impose in part. The
+clustering selects $k=3$ at the production scale; two constituencies follow
+once the third cluster, 64 power-voters, is judged too small to hold standing
+and folded back into the main camps. That step is defensible on the grounds
+given in Section~\ref{sec:the_gap}, but it is a decision about standing rather
+than a finding about the data, and political disagreement on the platform is
+not thereby shown to be binary.
+Behavioral constituencies recovered from co-rating patterns need not track
+any external category such as party or country; we make no claim that they
+do, and a finer or differently structured partition might recover distinct
+behavior our two-camp setup collapses together.
+
+Content validation carries a different set of boundaries. Gemma judges each
+note as a self-contained piece of writing: it never sees the tweet the note
+responds to or opens a cited source, so a passing score certifies visible
+sourcing and internal coherence, not that the source supports the claim or
+that the note addresses the post. Giving a validation model both the original
+tweet and access to the cited material would broaden the task to include those
+two judgments, but we did not test a retrieval-enabled setup. Nor did we
+compare Gemma 4 31B IT with other or larger models, which could produce
+different classifications and score calibration. The run also uses one
+temperature, lacks a human-rated comparison sample and inter-rater agreement
+check, and fixes the 0.5 bridge and 50-point rescue-worthiness thresholds
+without sensitivity sweeps. Content validation is not immune to the
+manipulation risk that motivated Section~\ref{sec:how_cn_works}: an aggregation
+rule that resists a hyperactive rating minority still depends on a note-quality
+check that has not been stress-tested against adversarial writing
+\citep{truong2025vulnerable}.
+
+Coverage is bounded on several fronts at once. The dataset is
+English-only, restricted to a 48-hour rating window, and drawn from roughly
+the top 20\% of notes by rating volume, so results here describe the densest,
+most active part of the platform, not its long tail. The 200k scale is not
+an arbitrary convenience: Section~\ref{sec:the_gap} shows that pushing past
+it degrades the partition rather than improving it, so the production
+setting sits at a ceiling the data imposes. Finally, the minimum-coverage
+requirement that discharges P1 leaves thinly rated notes unscored rather than
+risk a decision on too little evidence. We set that presence floor at three
+ratings per constituency but did not test alternatives such as four, five, or
+higher. Raising it could reduce sampling noise within each constituency while
+also leaving more notes unscored. At the chosen floor, the rule excludes only
+185 notes across the full 100k-note slice and therefore contributes marginally
+to the size of the rescue pool. Broader participation could make some of those
+notes scorable, but it would not change the verdict on the tens of thousands
+that already have sufficient coverage and fall below the bridge threshold.
+
+Resource constraints limited the comparisons run here: coverage and
+score-threshold sweeps, alternative or larger validation models, a human
+benchmark, and validation with tweet and source access. The reported
+configuration should therefore be read as a fully documented implementation,
+not as evidence that these settings are optimal.
 
 \section{Conclusion}
 
-The paper will argue that visibility decisions in crowdsourced fact-checking
-should preserve the structure of disagreement instead of compressing it into a
-single pooled consensus score too early.
+Community Notes already commits to cross-group acceptability as its display
+standard; it just cannot state that standard directly, because its rating
+model never forms the constituencies the standard is about. This paper
+recovers those constituencies from rating behavior and makes the standard
+explicit: a geometric mean of within-constituency approval, gated by a
+coverage requirement that keeps any single constituency from being counted
+without being heard. Applied to the platform's own representative picks, the
+rule surfaces 13,655 notes that clear cross-constituency support and remain
+hidden, of which 8,558 also pass an independent content check. Neither
+number is the platform's final answer on any of these notes; both are
+evidence that a meaningful share of what disappears into Needs More Ratings
+disappears for a reason the aggregation rule creates, not only for lack of
+attention. The broader claim is not specific to Community Notes: any system
+that decides visibility, in a collective name, over a durably divided
+audience faces the same choice we describe in Section~\ref{sec:learning},
+between compressing disagreement into one pooled score and preserving its
+structure long enough for every relevant part of the audience to be heard
+from. We think cross-constituency aggregation should be treated as an
+alternative design feature of crowdsourced moderation systems.
 
 \bibliographystyle{plainnat}
 \bibliography{references}
+
+\onecolumn
+\appendix
+\section{Gemma Validation Runtime}
+\label{app:gemma-runtime}
+
+\begin{table}[ht]
+\centering
+\small
+\begin{tabularx}{\textwidth}{@{}p{2.7cm}>{\raggedright\arraybackslash}X@{}}
+\toprule
+\textbf{Component} & \textbf{Canonical configuration} \\
+\midrule
+Model & \texttt{google/gemma-4-31B-it}; 30.7B dense parameters; revision
+\texttt{518276fb130dc81caf9a4f772e65e63ef2526493}; instruction-tuned thinking
+variant; BF16; no quantization. \\
+Hardware & Two NVIDIA L40S GPUs, 46,068 MiB reported memory each; tensor
+parallelism 2. SCCKN AMD EPYC host with eight allocated CPU slots; SGE request
+of 64 GB \texttt{h\_vmem} per slot and approximately 52 GB observed peak
+\texttt{maxvmem} (host memory, not GPU memory). \\
+Serving & Locally hosted vLLM 0.25.0 inference server, bound to
+\texttt{127.0.0.1} and accessed through its \texttt{/v1} HTTP endpoint; CUDA
+13.2; PyTorch 2.11.0+cu130; Transformers 5.13.1; asynchronous scheduling;
+prefix caching; 64 concurrent requests and maximum sequences; 32,768 maximum
+batched tokens; 90\% GPU-memory-utilization target. \\
+Decoding & Thinking enabled with the Gemma 4 reasoning parser; temperature
+0.2; 8,192-token context cap; 4,096-token completion cap; deterministic seed
+from SHA-256 of base seed 42, stage, note ID, and attempt number. \\
+Prompt contract & One note per independent user prompt; no system prompt,
+few-shot examples, guided generation, tweet context, URL fetching, retrieval,
+embeddings, vector store, upstream selection score, or Gabriel label. The model
+receives only the note text and stage-specific instructions. \\
+Validation and retry & Unconstrained generation followed by strict JSON output
+validation; maximum three attempts. Every attempt retains its seed and status;
+returned outputs are stored with the parsed result, reasoning, and token counts,
+while response failures retain error metadata. \\
+Run scale & 25,734 logical judgments across Stages 1, 1.5, and 2; 25,733
+accepted judgments from 25,804 attempts; 99.75\% valid on the first attempt;
+32,113,128 prompt-and-completion tokens; 12h 28m summed active-phase time and
+15h 51m from first to final output, including inter-stage gaps. \\
+\bottomrule
+\end{tabularx}
+\caption{Canonical Gemma validation configuration. Model-family properties and
+the Arena snapshot come from the official model materials and Arena
+leaderboard \citep{arena2026leaderboard,google2026gemma4,google2026gemma4card};
+run-specific values come from the frozen manifests, SCCKN scheduler records,
+worker configuration, and per-attempt audit logs; vLLM is described by
+\citet{kwon2023vllm}.}
+\label{tab:gemma-runtime}
+\end{table}
+
+\section{Canonical Gemma Validation Prompts}
+\label{app:gemma-prompts}
+
+The prompts below are included directly from the tracked artifacts used by the
+canonical run. At inference time, \verb|{note_text}| was replaced by the
+text of one Community Note; no system prompt or additional contextual message
+was supplied. The manifest hashes were computed over the template text before
+the tracked artifact's terminal newline:
+\begin{itemize}[nosep,leftmargin=1.7cm]
+  \item[Stage 1:] \texttt{fbbd4bd93fb419ad66cce097bb18a8705fd331f38ec1a9bf433aa783281023d2}
+  \item[Stage 1.5:] \texttt{26114bb8632357166cf4cee9a4f0ce356ed1e9e527477d56c842e53415bc930f}
+  \item[Stage 2:] \texttt{8c98c54b9c413ee70c161f40ec8e89f0b19ac6420b2bfe669e7ee1f9b136c644}
+\end{itemize}
+
+\subsection{Stage 1: Content Classification}
+\VerbatimInput[fontsize=\scriptsize]{../../data/llm_validation/runs/gemma-4-31b-it-scckn-v1/stage1_prompt.txt}
+
+\subsection{Stage 1.5: Sourced-Factual-Core Recall}
+\VerbatimInput[fontsize=\scriptsize]{../../data/llm_validation/runs/gemma-4-31b-it-scckn-stage1-5-opinion-v1/stage1_5_prompt.txt}
+
+\subsection{Stage 2: Rescue-Worthiness Scoring}
+\VerbatimInput[fontsize=\scriptsize]{../../data/llm_validation/runs/gemma-4-31b-it-scckn-stage2-expanded-v1/stage2_prompt.txt}
 
 \end{document}

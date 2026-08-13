@@ -17,9 +17,15 @@ Relevant academic works and official X/Community Notes documents.
 
 ## presentations/
 
-Conference and class presentations. Subdirectory names follow the format `DD-MM-YYYY-HHMM-<label>`.
+Two talks were given on this work. Only the final version of each is kept here;
+superseded drafts were removed. Directory names follow `DD-MM-YYYY-<label>`.
 
-| Directory | Content |
-|---|---|
-| `25-06-2026-1408-class_presentation/` | CCA class presentation (June 2026) |
-| `11-07-2026-community-notes-final/` | Final Community Notes presentation, all build versions (v2-v25) and their generating `build_*.py` scripts, plus speaker notes |
+| Directory | File | Content |
+|---|---|---|
+| `25-06-2026-1408-class_presentation/` | `CCA_presentation.key` | The June 2026 class presentation on CCA. |
+| `11-07-2026-community-notes-final/` | `community-notes-final-presentation-v25.pptx` | The final Community Notes talk, with `speaker-notes.md` alongside it. |
+
+`11-07-2026-community-notes-final/build-scripts/` holds the Python scripts that
+generated that deck. Each one adds or revises a slide on top of the previous
+version, so they are numbered by the deck version they produced and are meant to
+be read as a build history rather than run from scratch.

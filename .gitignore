@@ -105,3 +105,4 @@ data/master_full.parquet
 
 # AI work log kept local only; not part of the public checkout.
 /ai-usage/
+*.blg

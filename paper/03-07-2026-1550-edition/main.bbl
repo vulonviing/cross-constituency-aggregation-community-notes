@@ -1,0 +1,243 @@
+\begin{thebibliography}{32}
+\providecommand{\natexlab}[1]{#1}
+\providecommand{\url}[1]{\texttt{#1}}
+\expandafter\ifx\csname urlstyle\endcsname\relax
+  \providecommand{\doi}[1]{doi: #1}\else
+  \providecommand{\doi}{doi: \begingroup \urlstyle{rm}\Url}\fi
+
+\bibitem[{Arena AI}(2026)]{arena2026leaderboard}
+{Arena AI}.
+\newblock Arena leaderboard.
+\newblock \url{https://arena.ai/leaderboard}, 2026.
+\newblock Text leaderboard snapshot reported April 2, 2026; accessed August 12,
+  2026.
+
+\bibitem[Asirvatham et~al.(2026)Asirvatham, Mokski, and
+  Shleifer]{asirvatham2026gptmeasurement}
+Hemanth Asirvatham, Elliott Mokski, and Andrei Shleifer.
+\newblock {GPT} as a measurement tool.
+\newblock Working Paper 34834, National Bureau of Economic Research, 2026.
+
+\bibitem[Aziz et~al.(2015)Aziz, Brill, Conitzer, Elkind, Freeman, and
+  Walsh]{aziz2015justified}
+Haris Aziz, Markus Brill, Vincent Conitzer, Edith Elkind, Rupert Freeman, and
+  Toby Walsh.
+\newblock Justified representation in approval-based committee voting.
+\newblock In \emph{Proceedings of the Twenty-Ninth AAAI Conference on
+  Artificial Intelligence}, pages 784--790. AAAI Press, 2015.
+\newblock \doi{10.1609/aaai.v29i1.9324}.
+
+\bibitem[Bieber(2006)]{bieber2006}
+Florian Bieber.
+\newblock \emph{Post-War Bosnia: Ethnicity, Inequality and Public Sector
+  Governance}.
+\newblock Palgrave Macmillan, Basingstoke, 2006.
+\newblock \doi{10.1057/9780230501379}.
+
+\bibitem[Buterin(2023)]{buterin2023what}
+Vitalik Buterin.
+\newblock What do i think about community notes?
+\newblock
+  \url{https://vitalik.eth.limo/general/2023/08/16/communitynotes.html}, 2023.
+\newblock Accessed: 2026-06-26.
+
+\bibitem[Conitzer et~al.(2017)Conitzer, Freeman, and Shah]{conitzer2017fair}
+Vincent Conitzer, Rupert Freeman, and Nisarg Shah.
+\newblock Fair public decision making.
+\newblock In \emph{Proceedings of the 2017 ACM Conference on Economics and
+  Computation}, pages 629--646. ACM, 2017.
+\newblock \doi{10.1145/3033274.3085125}.
+
+\bibitem[Drolsbach et~al.(2024)Drolsbach, Solovev, and
+  Pr{\"o}llochs]{drolsbach2024trust}
+Chiara~Patricia Drolsbach, Kirill Solovev, and Nicolas Pr{\"o}llochs.
+\newblock Community notes increase trust in fact-checking on social media.
+\newblock \emph{PNAS Nexus}, 3\penalty0 (7):\penalty0 pgae217, 2024.
+\newblock \doi{10.1093/pnasnexus/pgae217}.
+
+\bibitem[{Google DeepMind}(2026{\natexlab{a}})]{google2026gemma4}
+{Google DeepMind}.
+\newblock Gemma 4: Our most capable open models to date.
+\newblock
+  \url{https://blog.google/innovation-and-ai/technology/developers-tools/gemma-4/},
+  April 2026{\natexlab{a}}.
+\newblock Accessed August 12, 2026.
+
+\bibitem[{Google DeepMind}(2026{\natexlab{b}})]{google2026gemma4card}
+{Google DeepMind}.
+\newblock Gemma 4 model card.
+\newblock \url{https://ai.google.dev/gemma/docs/core/model_card_4},
+  2026{\natexlab{b}}.
+\newblock Accessed August 12, 2026.
+
+\bibitem[Goyal et~al.(2026)Goyal, Arora, and Goel]{goyal2026qsmf}
+Mohak Goyal, Nishka Arora, and Ashish Goel.
+\newblock Quality-sensitive matrix factorization for community notes: Towards
+  sample efficiency and manipulation resistance.
+\newblock \emph{arXiv preprint arXiv:2604.11224}, 2026.
+\newblock \doi{10.48550/arXiv.2604.11224}.
+
+\bibitem[Horowitz(1991)]{horowitz1991makingmoderation}
+Donald~L. Horowitz.
+\newblock Making moderation pay: The comparative politics of ethnic conflict
+  management.
+\newblock In Joseph~V. Montville, editor, \emph{Conflict and Peacemaking in
+  Multiethnic Societies}, pages 451--476. Lexington Books, Lexington, MA, 1991.
+
+\bibitem[Jude and Matamoros-Fern{\'a}ndez(2025)]{jude2025narrow}
+Nadia Jude and Ariadna Matamoros-Fern{\'a}ndez.
+\newblock Community notes and its narrow understanding of disinformation.
+\newblock
+  \url{https://www.techpolicy.press/community-notes-and-its-narrow-understanding-of-disinformation/},
+  2025.
+\newblock Accessed: 2026-06-26.
+
+\bibitem[Klonick(2018)]{klonick2018governors}
+Kate Klonick.
+\newblock The new governors: The people, rules, and processes governing online
+  speech.
+\newblock \emph{Harvard Law Review}, 131\penalty0 (6):\penalty0 1598--1670,
+  2018.
+
+\bibitem[Kwon et~al.(2023)Kwon, Li, Zhuang, Sheng, Zheng, Yu, Gonzalez, Zhang,
+  and Stoica]{kwon2023vllm}
+Woosuk Kwon, Zhuohan Li, Siyuan Zhuang, Ying Sheng, Lianmin Zheng, Cody~Hao Yu,
+  Joseph Gonzalez, Hao Zhang, and Ion Stoica.
+\newblock Efficient memory management for large language model serving with
+  pagedattention.
+\newblock In \emph{Proceedings of the 29th Symposium on Operating Systems
+  Principles}, pages 611--626. ACM, 2023.
+\newblock \doi{10.1145/3600006.3613165}.
+
+\bibitem[Lackner(2020)]{lackner2020perpetual}
+Martin Lackner.
+\newblock Perpetual voting: Fairness in long-term decision making.
+\newblock In \emph{Proceedings of the Thirty-Fourth AAAI Conference on
+  Artificial Intelligence}, pages 2103--2110. AAAI Press, 2020.
+\newblock \doi{10.1609/aaai.v34i02.5584}.
+
+\bibitem[Lijphart(1977)]{lijphart1977democracy}
+Arend Lijphart.
+\newblock \emph{Democracy in Plural Societies: A Comparative Exploration}.
+\newblock Yale University Press, New Haven, 1977.
+
+\bibitem[Linder and Mueller(2021)]{lindermueller2021}
+Wolf Linder and Sean Mueller.
+\newblock \emph{Swiss Democracy: Possible Solutions to Conflict in
+  Multicultural Societies}.
+\newblock Palgrave Macmillan, Cham, 4 edition, 2021.
+
+\bibitem[McCulloch(2025)]{mcculloch2025}
+Allison McCulloch.
+\newblock Getting things done?: Process, performance, and decision-evasion in
+  consociational systems.
+\newblock \emph{The British Journal of Politics and International Relations},
+  27\penalty0 (3):\penalty0 799--816, 2025.
+\newblock \doi{10.1177/13691481241304314}.
+
+\bibitem[McGarry and O'Leary(2009)]{mcgarryoleary2009}
+John McGarry and Brendan O'Leary.
+\newblock Power shared after the deaths of thousands.
+\newblock In Rupert Taylor, editor, \emph{Consociational Theory: McGarry and
+  O'Leary and the Northern Ireland Conflict}, pages 15--84. Routledge, London,
+  2009.
+
+\bibitem[Nudo et~al.(2026)Nudo, Nemmi, Loru, Mei, Quattrociocchi, and
+  Cinelli]{nudo2026hyperactive}
+Jacopo Nudo, Eugenio~Nerio Nemmi, Edoardo Loru, Alessandro Mei, Walter
+  Quattrociocchi, and Matteo Cinelli.
+\newblock Hyperactive minority alters the stability of community notes.
+\newblock \emph{arXiv preprint arXiv:2602.08970}, 2026.
+\newblock \doi{10.48550/arXiv.2602.08970}.
+
+\bibitem[Peters(2018)]{peters2019proportionality}
+Dominik Peters.
+\newblock Proportionality and strategyproofness in multiwinner elections.
+\newblock In \emph{Proceedings of the 17th International Conference on
+  Autonomous Agents and MultiAgent Systems}, pages 1549--1557. International
+  Foundation for Autonomous Agents and Multiagent Systems, 2018.
+
+\bibitem[Peters et~al.(2021)Peters, Pierczynski, and
+  Skowron]{peters2021proportional}
+Dominik Peters, Grzegorz Pierczynski, and Piotr Skowron.
+\newblock Proportional participatory budgeting with additive utilities.
+\newblock In \emph{Advances in Neural Information Processing Systems},
+  volume~34, pages 12726--12737, 2021.
+
+\bibitem[Qiu(2025)]{qiu2025representative}
+Tianyi Qiu.
+\newblock Representative social choice: From learning theory to ai alignment.
+\newblock \emph{arXiv preprint arXiv:2410.23953}, 2025.
+
+\bibitem[Razuvayevskaya et~al.(2025)Razuvayevskaya, Tayebi, S{\o}rensen,
+  Bontcheva, and Rogers]{razuvayevskaya2025timeliness}
+Olesya Razuvayevskaya, Adel Tayebi, Ulrikke~Dybdal S{\o}rensen, Kalina
+  Bontcheva, and Richard Rogers.
+\newblock Timeliness, consensus, and composition of the crowd: Community notes
+  on x.
+\newblock \emph{Working Paper}, 2025.
+
+\bibitem[Reilly(2002)]{reilly2002electoral}
+Benjamin Reilly.
+\newblock Electoral systems for divided societies.
+\newblock \emph{Journal of Democracy}, 13\penalty0 (2):\penalty0 156--170,
+  2002.
+
+\bibitem[Sanchez-Fernandez et~al.(2017)Sanchez-Fernandez, Elkind, Lackner,
+  Fernandez, Fisteus, Basanta~Val, and Skowron]{sanchez2017proportional}
+Luis Sanchez-Fernandez, Edith Elkind, Martin Lackner, Norberto Fernandez,
+  Jesus~A. Fisteus, Pablo Basanta~Val, and Piotr Skowron.
+\newblock Proportional justified representation.
+\newblock In \emph{Proceedings of the Thirty-First AAAI Conference on
+  Artificial Intelligence}, pages 670--676. AAAI Press, 2017.
+\newblock \doi{10.1609/aaai.v31i1.10611}.
+
+\bibitem[Schwartz(2010)]{schwartz2010}
+Alex Schwartz.
+\newblock How unfair is cross-community consent? voting power in the northern
+  ireland assembly.
+\newblock \emph{Northern Ireland Legal Quarterly}, 61\penalty0 (4):\penalty0
+  349--362, 2010.
+\newblock \doi{10.53386/nilq.v61i4.459}.
+
+\bibitem[Skowron and G{\'o}recki(2022)]{skowron2022proportional}
+Piotr Skowron and Adrian G{\'o}recki.
+\newblock Proportional public decisions.
+\newblock In \emph{Proceedings of the Thirty-Sixth AAAI Conference on
+  Artificial Intelligence}, pages 5191--5198. AAAI Press, 2022.
+\newblock \doi{10.1609/aaai.v36i5.20454}.
+
+\bibitem[Truong et~al.(2025)Truong, Wu, Flammini, Menczer, and
+  Stewart]{truong2025vulnerable}
+Bao~Tran Truong, Siqi Wu, Alessandro Flammini, Filippo Menczer, and
+  Alexander~J. Stewart.
+\newblock Community notes are vulnerable to rater bias and manipulation.
+\newblock \emph{arXiv preprint arXiv:2511.02615}, 2025.
+\newblock \doi{10.48550/arXiv.2511.02615}.
+
+\bibitem[Wojcik et~al.(2022)Wojcik, Hilgard, Judd, Mocanu, Ragain, Hunzaker,
+  Coleman, and Baxter]{wojcik2022birdwatch}
+Stefan Wojcik, Sophie Hilgard, Nick Judd, Delia Mocanu, Stephen Ragain,
+  M.B.~Fallin Hunzaker, Keith Coleman, and Jay Baxter.
+\newblock Birdwatch: Crowd wisdom and bridging algorithms can inform
+  understanding and reduce the spread of misinformation.
+\newblock \emph{arXiv preprint arXiv:2210.15723}, 2022.
+
+\bibitem[{X Community Notes}(2026)]{xcommunitynotes2026ranking}
+{X Community Notes}.
+\newblock Community notes guide: Note ranking algorithm.
+\newblock
+  \url{https://communitynotes.x.com/guide/en/under-the-hood/ranking-notes},
+  2026.
+\newblock Living documentation; changelog includes April 30, 2026 update.
+  Accessed: 2026-06-26.
+
+\bibitem[{xAI}(2026)]{xai2026algorithm}
+{xAI}.
+\newblock {X} for you feed algorithm.
+\newblock Official source repository,
+  \url{https://github.com/xai-org/x-algorithm}, 2026.
+\newblock Phoenix recommendation-system and Grox content-understanding
+  documentation; accessed August 12, 2026.
+
+\end{thebibliography}
