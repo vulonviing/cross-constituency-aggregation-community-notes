@@ -1,14 +1,25 @@
 # Cross-Constituency Aggregation for Community Notes
 
-Cross-Constituency Aggregation (CCA) asks a note to earn approval from every
-behavioral constituency in the crowd rather than from a majority of it. This
-repository holds the analysis behind that claim: a 100k-note, 200k-rater
-pipeline built on sparse spectral clustering, vote-profile reassignment, and
-geometric-mean aggregation, validated end to end with Gemma 4 31B IT.
+On X, ordinary users write fact-checks on posts and rate each other's work. Only
+the notes the crowd agrees on ever appear under a post. Defining that agreement
+is the whole problem: count raw votes and the larger side wins every time, so a
+note can be buried by the group it makes uncomfortable rather than by anything
+wrong with it.
 
-Applied to X's Community Notes, the rule qualifies **20,405** notes the platform
-picked, **13,655** of which X never showed. Of those, **8,558** survive a
-two-stage LLM check for sourcing and rescue-worthiness.
+Cross-Constituency Aggregation (CCA) settles it differently. Readers are first
+sorted into groups by how they actually vote, and a note then has to earn
+approval from each group separately. Enthusiasm from one camp cannot make up for
+rejection by another, no matter how large that camp is.
+
+Run against real Community Notes data covering 44,722 posts, the rule qualifies
+**20,405** notes — and **13,655** of them are notes X never showed to anyone. Of
+those hidden notes, **8,558** still hold up when an independent language model
+checks them for sourcing and quality.
+
+Underneath, this is a 100k-note, 200k-rater pipeline: spectral clustering over a
+co-rating graph, vote-profile reassignment of outlier raters, and a
+geometric-mean score, validated end to end with Gemma 4 31B IT. Every number
+above can be re-derived from the files in this repository.
 
 ## Start here
 

@@ -17,13 +17,15 @@ authors:
 repository-code: >-
   https://github.com/vulonviing/cross-constituency-aggregation-community-notes
 abstract: >-
-  A reproducible pipeline and manuscript for Cross-Constituency Aggregation
-  (CCA), an aggregation rule for X's Community Notes that requires a note to
-  earn approval from every behavioral constituency rather than from a
-  majority. The repository contains the 100k-note, 200k-rater spectral
-  clustering pipeline, the scoring and topic-modeling stages, the two-stage
-  Gemma 4 31B validation of the rescue set, and every committed artifact needed
-  to re-derive the paper's results.
+  X's Community Notes shows a crowd-written fact-check only once the crowd
+  agrees on it, and how that agreement is measured decides what the public
+  sees. Cross-Constituency Aggregation (CCA) sorts readers into groups by how
+  they vote and requires a note to earn approval from each group rather than
+  from the crowd as a whole, so one camp's enthusiasm cannot outweigh another's
+  rejection. This repository holds the full analysis: the 100k-note,
+  200k-rater clustering and scoring pipeline, the topic models, the two-stage
+  Gemma 4 31B validation of the rescue set, the manuscript, and every committed
+  artifact needed to re-derive its results.
 keywords:
   - community notes
   - crowdsourced fact-checking
