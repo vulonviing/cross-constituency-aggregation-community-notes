@@ -26,9 +26,10 @@ above can be re-derived from the files in this repository.
 | If you want to | Go to |
 |---|---|
 | **Read the paper** | [`paper/main.pdf`](paper/main.pdf) |
+| **See the final talk** (July 2026) | [`community-notes-final-presentation.pdf`](docs/presentations/11-07-2026-community-notes-final/community-notes-final-presentation.pdf) |
+| **See the class talk** (June 2026) | [`CCA_presentation.pdf`](docs/presentations/25-06-2026-1408-class_presentation/CCA_presentation.pdf) |
 | **Check a number in the paper** | [REPRODUCING.md](REPRODUCING.md) — maps every result to the file that produced it |
 | **Verify the results yourself** | `python run_tests.py` — 68 tests, no data downloads needed ([last run](tests/RESULTS.md)) |
-| **See the talks** | [`docs/presentations/`](docs/presentations/) |
 | **Read the method** | [`src/`](src/) for the implementation, [`notebooks/`](notebooks/) for the stages |
 | **Find a data file** | [`data/README.md`](data/README.md) |
 | **Reuse this work** | [Licensing](#licensing) |
