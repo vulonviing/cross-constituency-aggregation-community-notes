@@ -1,5 +1,7 @@
 # Cross-Constituency Aggregation for Community Notes
 
+Emrecan Ulu and Jingyao Shi — University of Konstanz
+
 On X, ordinary users write fact-checks on posts and rate each other's work. Only
 the notes the crowd agrees on ever appear under a post. Defining that agreement
 is the whole problem: count raw votes and the larger side wins every time, so a
