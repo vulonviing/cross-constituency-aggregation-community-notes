@@ -362,14 +362,11 @@ Democracies that govern divided societies repeatedly decline to resolve
 persistent disagreement by averaging over it; instead they institutionalize the
 cleavage structure itself and set the validity condition of a collective
 decision as concurrent acceptability across its component parts
-\citep{lijphart1977democracy}. Table~\ref{tab:divided-societies} summarizes four
-canonical cases: Switzerland's double-majority referendum requires both a
-nationwide majority of voters and a majority of cantons \citep{lindermueller2021};
-Belgium's consociational arrangements enforce parity between linguistic blocs
-\citep{lijphart1977democracy}; Bosnia's post-Dayton constitution grants its
-constituent peoples cross-group veto rights \citep{bieber2006}; and Northern
-Ireland's parallel-consent rule requires that key Assembly decisions secure
-support from both unionist and nationalist representatives
+\citep{lijphart1977democracy}. Table~\ref{tab:divided-societies} summarizes
+four canonical cases: the Swiss double majority
+\citep{lindermueller2021}, Belgian parity between linguistic blocs
+\citep{lijphart1977democracy}, Bosnian cross-group veto rights
+\citep{bieber2006}, and Northern Irish parallel consent
 \citep{mcgarryoleary2009}.
 
 \begin{table}[t]
@@ -486,31 +483,22 @@ and Table~\ref{tab:principles-map} collects the same mapping at a glance.
 
 \textbf{P1 (Presence).} No display decision may be made while any constituency is
 absent; missing representation must not be convertible into apparent consensus.
-\emph{(Source: quorum and double-majority requirements, as in Switzerland's
-double majority; the precondition of concurrent acceptability. CCA component:
-each constituency must contribute at least three raters, a presence floor rather
-than a reliability threshold.)}
+\emph{(CCA component: each constituency must contribute at least three
+raters, a presence floor rather than a reliability threshold.)}
 
 \textbf{P2 (Non-compensation).} One constituency's strong rejection cannot be
 offset by another's enthusiasm; acceptability must hold within each constituency,
-not merely in the cross-constituency average. \emph{(Source: mutual veto and
-parallel consent, as in Bosnia and Northern Ireland; acceptability must hold
-within a single note across the constituencies, ruling out compensation. CCA
-component: geometric-mean aggregation, a soft veto.)}
+not merely in the cross-constituency average. \emph{(CCA component: geometric-mean aggregation, a soft veto.)}
 
 \textbf{P3 (Symmetry).} Constituencies enter the decision on equal footing,
-independent of relative size or rating activity. \emph{(Source: parity rules, as
-in Belgium; concurrent acceptability treats the constituencies as equal
-conditions. CCA component: the geometric mean is symmetric in its arguments, so
-relabeling the constituencies leaves the score unchanged, and it takes
-within-constituency approval rates rather than raw counts as inputs.)}
+independent of relative size or rating activity. \emph{(CCA component: the geometric mean is symmetric in its arguments, and
+takes within-constituency approval rates rather than raw counts as inputs.)}
 
 \textbf{P4 (Behavioral recovery).} Since no ex-ante partition of raters exists,
 constituencies must be recovered from observed behavior transparently and
-reproducibly. \emph{(Source: representative social choice, conclusion (ii) above;
-no direct constitutional analogue; this is where the platform setting departs
-from constitutional design. CCA component: spectral clustering on co-rating
-similarity, with stability diagnostics.)}
+reproducibly. \emph{(This is the one criterion with no constitutional analogue, and where
+the platform setting departs from constitutional design. CCA component:
+spectral clustering on co-rating similarity, with stability diagnostics.)}
 
 \newcolumntype{Y}{>{\raggedright\arraybackslash}X}
 \begin{table}[t]
@@ -844,11 +832,9 @@ representative picks fall below the CCA threshold, and coverage is rarely
 the reason: only 71 of them never receive three ratings from both
 constituencies and so are left unscored by the rule that operationalizes P1,
 a pattern that holds across the full 100k-note slice, where only 185 notes
-of any kind go unscored for lack of coverage. The other 24,246 below-threshold
-picks are scored and simply fall short, at a median bridge score of 0.291.
-Coverage failure is a narrow, verifiable source of conservatism in the
-rescue pool, not the dominant one; most of what CCA declines, it declines on
-the merits of the ratings it has.
+of any kind go unscored for lack of coverage. The other 24,246 are scored and
+simply fall short, at a median bridge score of 0.291. Most of what CCA
+declines, it declines on the merits of the ratings it has.
 
 \begin{figure}[h]
   \centering
@@ -896,20 +882,15 @@ underneath the opinion framing and recovers 280 of them, leaving 1,423 as a
 genuine content stop. The 10,096 strict passes plus the 280 recalled notes
 give an expanded Stage 2 population of 10,376 notes scored for
 rescue-worthiness. Of these, 8,558 clear the 50-point threshold, 62.7\% of
-the original rescue pool, while 1,818 score below it. The validated set contains
-8,527 direct Stage 1 passes and 31 notes recovered through Stage 1.5.
-Reconciling the three outcomes, 8,558 validated notes, 1,818 below-threshold
-notes, and 3,279 notes stopped at the content screen sum to the full
-13,655-note pool.
+the original rescue pool, while 1,818 score below it and 3,279 stop at the
+content screen. Only 31 of the validated notes were recovered through Stage
+1.5; the other 8,527 passed Stage 1 directly.
 
-The score distribution inside Stage 2 is not evenly spread: 4,423 notes, 43\%
-of the scored population, land in the 90-to-100 band the rubric describes as
-clear, traceable, and self-contained, and a further 2,923 land in the
-70-to-89 band of strong, well-supported notes. Only 1,547 notes score in the
-10-to-39 range and 8 score below 10. Figure~\ref{fig:validation-funnel}
-plots both stages together: most of what the content screen stops is opinion
-without a sourced core, and most of what survives to scoring scores well
-above the display threshold rather than barely over it.
+The score distribution inside Stage 2 is not evenly spread.
+Figure~\ref{fig:validation-funnel} plots both stages together: most of what
+the content screen stops is opinion without a sourced core, and most of what
+survives to scoring scores well above the display threshold rather than barely
+over it, with 43\% of the scored population in the top 90-to-100 band.
 
 \begin{figure}[h]
   \centering
@@ -1073,13 +1054,10 @@ CCA-selected notes.}
 \label{tab:better-alternatives}
 \end{table*}
 
-The hidden cases show that rescue is not confined to one type of controversy.
-A public-health correction cites CDC and USDA guidance, the Suez note points
-to Eisenhower's withdrawal message, and the ballot case links directly to the
-Supreme Court opinion. All three receive Gemma scores of 98, while their bridge
-scores range from 0.735 to 0.941. Their agreement profile and source quality
-make a strong case for display despite the absence of any note currently shown
-on those tweets.
+The hidden cases show that rescue is not confined to one type of controversy:
+a public-health correction, a diplomatic-history note, and a ballot-eligibility
+note, each citing a primary source and each on a tweet that currently displays
+nothing.
 
 Paired comparisons make the qualitative gain more concrete. The displayed
 Yarmouk note describes Mu'tah, whereas the CCA alternative identifies the
@@ -1087,8 +1065,7 @@ battle depicted and distinguishes the two events. In the Anne Frank case, the
 alternative separates a removed graphic adaptation from the original diary
 instead of treating them as one title. The final pair corrects the pictured
 person's identity before explaining Vigan\`o's status. CCA raises the bridge
-score in every comparison, from 0.774 to 0.837, 0.781 to 0.848, and 0.783 to
-0.871, respectively. These purposively selected examples support a strong
+score in all three pairs. These purposively selected examples support a strong
 comparative judgment about directness and contextual fit, not a statistical
 ground-truth estimate for the full rescue pool.
 
