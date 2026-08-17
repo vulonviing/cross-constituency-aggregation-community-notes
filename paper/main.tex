@@ -230,18 +230,28 @@ Recent literature highlights the fatal flaw in this intent-reading framework. \c
 \end{figure*}
 
 \subsection*{The Algorithm in Practice: A Conceptual Map}
-To illustrate how the mathematical components interact to deduce intent, we can map the algorithm's logic using three practical analogies:
+Two of the algorithm's cases are easy to state. A partisan rater who approves a
+note flattering their own side earns it nothing: the viewpoint match
+$f_u \cdot f_n$ already predicted that vote, so $i_n$ stays flat and the note
+stays hidden \cite{wojcik2022birdwatch}. The reverse case is where the model
+earns its keep. When two raters at opposite poles independently mark the same
+note ``Helpful,'' viewpoint alignment can explain nothing, the surplus has
+nowhere to land but $i_n$, and the note surfaces as carrying something true
+enough to cross partisan lines \cite{buterin2023what}.
 
-\begin{enumerate}
-    \item \textbf{The ``Amigo'' Knowledge Consumer ($f_u \cdot f_n$):}
-    Imagine a highly partisan user who acts as a political ``amigo,'' a cheerleader for their ideological camp. Faced with a heavily biased note that flatters their own side, they vote ``Helpful'' without a second thought. The algorithm shrugs. It already computed the viewpoint match ($f_u \cdot f_n$) between this rater and this note, so the vote reads as \textit{``predictable cheerleading I could have called in advance.''} An approval that ideological alignment fully accounts for earns the note no extra credit: its helpfulness score ($i_n$) stays flat, and the note stays hidden \cite{wojcik2022birdwatch}.
-
-    \item \textbf{Enemies Shaking Hands ($f_u \cdot f_n \approx 0$, $i_n$ spikes):}
-    The reverse case is where the model earns its keep. Picture two raters at opposite poles of the spectrum, the kind who reliably pan whatever the other side applauds. When both of them, independently, mark the same note ``Helpful,'' viewpoint alignment can explain nothing: their agreement runs straight across the very axis used to predict their ratings. With that channel exhausted, the surplus has nowhere to land but $i_n$. The note registers as carrying something true enough to cross partisan lines \cite{buterin2023what}, and it surfaces.
-
-    \item \textbf{The Hyperactive Minority ($f_u$ space distorted):}
-    Both stories above assume the algorithm holds an honest map of where each rater sits in the latent space. It does not start with one; it draws the map from the rating record, and a few hands draw most of it. Think of a class graded on participation where the teacher keeps asking ``what does the class think?'' but the same handful of students answer every session; their voices quietly become the teacher's idea of the whole room. Community Notes inherits this distortion: a small, hyperactive, politically polarized minority supplies most ratings, so their behavior fixes where the axis of ``viewpoint'' lies and which votes look ``surprising'' \cite{nudo2026hyperactive}. That is what makes this third problem corrosive rather than additive. The first two diagnoses only hold if the map is honest; once a narrow crowd has drawn it, the ``enemies'' whose handshake looked so convincing may be two wings of the same overheated faction, and the bridge the model celebrates spans a gap most users were never placed on.
-\end{enumerate}
+The third case is corrosive rather than additive. Both stories above assume the
+algorithm holds an honest map of where each rater sits in the latent space. It
+does not start with one; it draws the map from the rating record, and a few
+hands draw most of it. Think of a class graded on participation where the
+teacher keeps asking ``what does the class think?'' but the same handful of
+students answer every session; their voices quietly become the teacher's idea
+of the whole room. Community Notes inherits this distortion: a small,
+hyperactive, politically polarized minority supplies most ratings, so their
+behavior fixes where the axis of ``viewpoint'' lies and which votes look
+``surprising'' \cite{nudo2026hyperactive}. Once a narrow crowd has drawn the
+map, the ``enemies'' whose handshake looked so convincing may be two wings of
+the same overheated faction, and the bridge the model celebrates spans a gap
+most users were never placed on.
 
 \section{The Gap in Community Notes}
 \label{sec:the_gap}
@@ -506,14 +516,7 @@ spectral clustering on co-rating similarity, with stability diagnostics.)}
 \subsection*{Rule Definition}
 
 The rule is stated over two behavioral constituencies, recovered from co-rating
-structure by the clustering described in Section~\ref{sec:approach}. We
-operationalize the criteria in four steps: cluster raters into behavioral
-constituencies by co-rating similarity (P4); for each note, compute its approval
-rate within each constituency separately (P3); aggregate the two per-constituency
-approvals with a geometric mean (P2); and select a note only when that mean
-clears the display threshold and both constituencies are present (P1).
-
-Let $a_{ic}$ be note $i$'s approval rate inside constituency $c$, the share of
+structure by the clustering described in Section~\ref{sec:approach}. Let $a_{ic}$ be note $i$'s approval rate inside constituency $c$, the share of
 helpful ratings among that constituency's ratings of the note. Writing $H_{ic}$
 and $N_{ic}$ for the helpful and total ratings note $i$ receives from
 constituency $c$,
@@ -531,12 +534,9 @@ constituencies must contribute at least three raters before the note is scored
 at all. The bar is deliberately low, and it is a presence floor rather than an
 estimate: three ratings do not measure a constituency's approval precisely, they
 establish that the constituency was there at all. Community Notes applies
-minimums of the same shape in its own scoring, where the population-sample
-filter acts only on notes carrying at least two ratings from each side of the
-rater factor, and a topic model may change a note's status only when five or
-more raters of each sign have rated it \citep{xcommunitynotes2026ranking}. Set
-at three, the requirement rarely bites: across the 100k-note slice it leaves 185
-notes unscored (Section~\ref{sec:results}). For a note that clears this coverage
+minimums of the same shape in its own scoring
+\citep{xcommunitynotes2026ranking}, and set at three the requirement rarely
+bites (Section~\ref{sec:results}). For a note that clears this coverage
 bar, the cross-constituency score is
 the geometric mean
 \begin{equation}
@@ -551,14 +551,11 @@ The geometric mean is the minimal aggregator that meets P2 and P3 at once:
 symmetric in its arguments, increasing in each on $(0,1]^2$, and collapsing to
 zero as either rate does. A plain minimum would also veto, but it ignores the
 stronger side entirely; a weighted average would let one side's surplus offset
-the other's shortfall, which P2 forbids. The mean carries a further robustness
-worth naming: if one constituency scores systematically more strictly, approving
-the same notes at lower rates, it rescales every note by roughly the same factor,
-which the display threshold absorbs uniformly and which leaves the order of notes
-near the display line unchanged. The direction of construction is the point: the rule is the product of the four criteria, not reverse-engineered to fit the data.
-We do not claim the geometric mean is the unique function with these properties;
-for a rule aimed at improving the display decision, what is needed is that the
-chosen rule delivers them.
+the other's shortfall, which P2 forbids. A systematically stricter constituency
+rescales every note by roughly the same factor, which the display threshold
+absorbs uniformly. The direction of construction is the point: the rule is the
+product of the four criteria, not reverse-engineered to fit the data, and we do
+not claim it is the unique function with these properties.
 
 \subsection*{Objections and Scope}
 
@@ -584,24 +581,21 @@ algorithmically recovered clusters acquire the standing of constituencies? In
 constitutional regimes that standing comes from history, language, or identity; on
 the platform none of these is available, so it can come only from the structure of
 the disagreement itself. We require three things of a partition before it counts.
-It must persist, and the ladder of Section~\ref{sec:the_gap} supports two versions
-of that claim. Under resampling the algorithm keeps recovering the same object at
-every scale whose selection is not degenerate: two large camps beside a small
-hyperactive cluster, at bootstrap ARI above 0.95. Across sample sizes the two-camp
-partition itself reappears at 150k, 200k, 210k, and 240k, with the between-camp
-correlation moving only from $-0.64$ to $-0.60$ and the discriminating share from
-83\% to 80\%. Persistence is necessary and nowhere near sufficient, as the
+It must persist, and the ladder of Section~\ref{sec:the_gap} supports two
+versions of that claim: under resampling the algorithm keeps recovering two
+large camps beside a small hyperactive cluster at every non-degenerate scale,
+and the two-camp partition itself reappears across sample sizes with the
+between-camp correlation and discriminating share barely moving
+(Table~\ref{tab:scaleup}). Persistence is necessary and nowhere near sufficient, as the
 ladder's own failures show: the variants that merely fence off a power-voter clique
 score highest of all on stability. Each side must therefore also be large enough
 that cross-constituency agreement is a demand on two real publics rather than
 statistical noise. Our two constituencies each hold tens of thousands of raters.
 The 64 power-voters are not a third: under a symmetric rule their veto would weigh
-as much as that of a camp more than a thousand times larger. What the diagnostics
-keep surfacing is not a third public but a handful of unusually heavy voters, and
-they are treated accordingly. We correlate each one's note-level voting against the
-two camps' aggregate profiles and place them in whichever camp they track more
-closely (Section~\ref{sec:approach}), which removes the veto without removing the
-votes. And the two must reach different verdicts on a large share of notes; about
+as much as that of a camp more than a thousand times larger. They are a handful
+of unusually heavy voters rather than a third public, and are placed in the camp
+their voting tracks (Section~\ref{sec:approach}), which removes the veto without
+removing the votes. And the two must reach different verdicts on a large share of notes; about
 81\% of evaluated notes fall on the discriminating side of the partition. A
 partition meeting all three is not an arbitrary artifact but the lines along which
 acceptance and rejection actually run. The standing is conditional: when rating
@@ -630,33 +624,22 @@ different instruments. X infers a viewpoint coordinate for each rater and asks
 whether a note's support is surprising given those coordinates; CCA counts approval
 inside two groups recovered from behavior and asks whether each group approves. The
 rescue pool is what that difference produces: the notes on which the two
-measurements return different verdicts. Three things can open such a gap.
-
-\begin{itemize}[leftmargin=*,itemsep=2pt,topsep=3pt]
-    \item \textbf{Contested is not one-sided.} The polarization safeguard can read
-    ``the issue divides people'' as ``the support is one-sided,'' suppressing notes
-    on contested issues that both sides actually accept.
-    \item \textbf{One axis, many blocs.} The model gives each rater a point on a
-    single line, while real blocs differ along several dimensions at once: which
-    issues they attend to, what evidence they accept. Two raters at opposite ends
-    of the axis need not belong to different blocs, and two placed close together
-    need not share one, so support that bridges the axis and support that travels
-    across blocs can come apart.
-    \item \textbf{A cautious estimator.} The latent estimate is strongly
-    regularized, which makes it conservative and sample-inefficient by construction
-    \citep{goyal2026qsmf}. Support that is plainly visible in the group counts need
-    not show up as the residual the factorization rewards.
-\end{itemize}
+measurements return different verdicts. Three things can open such a gap. The
+polarization safeguard can read ``the issue divides people'' as ``the support is
+one-sided.'' The model gives each rater a point on a single line, while real
+blocs differ along several dimensions at once, so support that bridges the axis
+and support that travels across blocs can come apart. And the latent estimate is
+strongly regularized, hence conservative by construction
+\citep{goyal2026qsmf}, so support plainly visible in the group counts need not
+show up as the residual the factorization rewards.
 
 CCA therefore does not overturn the platform's answer to a shared question. It
 marks the notes where the answer may come from how the standard is implemented
 rather than from the standard itself.
 
-The four criteria are the requirements of a defensible rule under structured
-disagreement, not a claim that the platform's rule is illegitimate in all
-settings. When rater disagreement is unstructured noise around a shared quality
-signal, pooled latent-quality estimation is well warranted; it is the persistence
-of behavioral blocs, documented in Section~\ref{sec:the_gap}, that makes the
+When rater disagreement is unstructured noise around a shared quality signal,
+pooled latent-quality estimation is well warranted; it is the persistence of
+behavioral blocs, documented in Section~\ref{sec:the_gap}, that makes the
 cross-constituency question the right one here.
 
 \section{Approach}
