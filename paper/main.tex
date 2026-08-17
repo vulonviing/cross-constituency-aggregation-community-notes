@@ -704,20 +704,16 @@ The empirical pipeline follows the repository's active 200k Representative
 setup. We start from 1.7M English-language notes and retain notes on tweets with
 at least three English-language candidates. Each note must also receive at
 least three eligible helpful/not-helpful ratings within 48 hours of its
-creation. We therefore use a floor of three at both the candidate-note and
-rating stages, but for distinct operational reasons: the first guarantees a
-genuine multi-note choice set, while the second follows the same
-minimum-coverage logic that X applies before cross-viewpoint evidence can
-affect a note's status. The rating floor establishes minimal observed
-participation rather than claiming a reliable estimate of approval
-\citep{xcommunitynotes2026ranking}. The 48-hour window keeps ratings tied to
-the note's active review period rather than to activity months later. These
-filters leave 510k eligible notes. From this set, we take a dense 100k-note
-slice, roughly the top 20\% by rating volume, and retain the 200k raters active
-on that slice for clustering. The slice spans 44,722 distinct tweets, the unit
-from which the Representative strategy selects one note. Restricting the
-analysis to this dense core is deliberate: co-rating similarity is informative
-only when users rate enough of the same notes to be compared.
+creation. The two floors of three serve distinct purposes, a genuine
+multi-note choice set and minimum observed coverage before cross-viewpoint
+evidence counts (Appendix~\ref{app:filters}); the 48-hour window keeps ratings
+tied to the note's active review period rather than to activity months later.
+These filters leave 510k eligible notes. From this set, we take a dense
+100k-note slice, roughly the top 20\% by rating volume, and retain the 200k
+raters active on that slice for clustering. The slice spans 44,722 distinct
+tweets, the unit from which the Representative strategy selects one note.
+Restricting the analysis to this dense core is deliberate: co-rating similarity
+is informative only when users rate enough of the same notes to be compared.
 
 \begin{figure}[h]
   \centering
@@ -734,68 +730,49 @@ only when users rate enough of the same notes to be compared.
 \subsection{Recovering Constituencies}
 
 Section~\ref{sec:cca} states behavioral recovery (P4) as a criterion; this
-subsection is how we discharge it. The 200k-rater scale was selected through
-testing. The tests encountered
-the same participation imbalance identified above for Community Notes: as
+subsection is how we discharge it. The 200k-rater scale was selected
+empirically as the best balance between coverage and diagnostic quality: as
 progressively less-active raters entered the sample, shared-note overlap
 thinned, while a small hyperactive core remained among the graph's most
 reproducible structures \citep{nudo2026hyperactive,razuvayevskaya2025timeliness}.
-We selected 200k as the best balance between coverage and diagnostic quality:
-210k reproduced the same two-camp structure somewhat more weakly, while larger
-configurations introduced additional activity-driven outliers or collapsed
-into a power-voter-versus-rest split. On this empirically selected slice, we
-build a sparse, mean-centered user-by-note matrix, where each entry records a
-rater's deviation from their own average rating on a note they scored. A
-symmetric 15-nearest-neighbor graph over this matrix defines co-rating
-similarity, and a spectral embedding, computed with algebraic multigrid to keep
-the procedure tractable at this scale, places each rater in a low-dimensional
-space shaped by whom they tend to agree with. We evaluate
-candidate values of $k$ from 2 to 7 by silhouette score and by stability under
-repeated resampling, and the pipeline selects the $k$ with the highest mean
-bootstrap ARI. At 200k raters that rule returns $k=3$, at ARI 0.971 against
-0.593 for $k=2$; silhouette points the other way, peaking at 0.997 for $k=2$
-against 0.735 or lower everywhere else. The two criteria diverge because a
-direct $k=2$ specification must represent two structures with only two labels:
-the division between the large camps and a recurring clique of power-voters.
-Across resamples it sometimes recovers the balanced camp split and sometimes
-uses one label to isolate that small, highly active group. Allowing the
-stability criterion to select $k=3$ makes both structures visible at once: two
-large camps and a third cluster of 64 highly active raters. The same small
-high-activity pattern reappears at neighboring scales. Clusters smaller than
-$\max(1\%$ of raters$, 500)$ are therefore treated as outliers rather than
-granted constituency standing.
+Table~\ref{tab:scaleup} reports the ladder from 60k to 250k and
+Appendix~\ref{app:scale-selection} the selection argument.
 
-To resolve this three-cluster result, we apply Method B. Method B is not another
-$k=2$ spectral fit. It begins from the more stable
-$k=3$ partition, keeps the membership of both large camps fixed, and classifies
-only the 64 outliers. Each outlier's note-level vote profile is correlated
-against the two main constituencies' aggregate profiles, and the rater joins
-whichever constituency their votes track more closely. All 64 are reassigned
-this way, 54 into the larger constituency and 10 into the smaller, leaving
-final constituency sizes of 107,734 and 92,266 raters. The resulting two-camp
-partition therefore preserves the main-camp boundary recovered at $k=3$ rather
-than reproducing the unstable cut obtained by forcing the spectral model to
-use two clusters. Nothing downstream turns on how the reassignment is done. An
-embedding-centroid variant (Method A) sorts the same 64 raters differently,
-disagreeing with the vote-profile rule about 29 of them, who together cast
-0.07\% of the ratings in the slice. The two final partitions return the same
-between-camp correlation of $-0.620$ and the same 81.4\% discriminating share.
-Method B is the canonical partition used throughout the paper; the original
-spectral label survives only as a diagnostic column. Section~\ref{sec:the_gap}
-reports the scale ladder from 60k to 250k and shows where the two-camp
-partition persists and where it fails. At the selected 200k scale, Method B
-resolves the two camps at Pearson
-$-0.620$, with 81.4\% of notes discriminating between the constituencies.
+On that slice we build a sparse, mean-centered user-by-note matrix, where each
+entry records a rater's deviation from their own average rating on a note they
+scored, and embed a symmetric nearest-neighbor co-rating graph spectrally
+(Appendix~\ref{app:spectral}). Constituencies are therefore recovered from
+rating behavior alone, independently of any quantity X's model estimates. We
+evaluate candidate values of $k$ from 2 to 7 and select the one with the
+highest mean bootstrap ARI. At 200k raters that rule returns $k=3$, at ARI
+0.971 against 0.593 for $k=2$; silhouette points the other way, peaking at
+0.997 for $k=2$ against 0.735 or lower everywhere else. The two criteria
+diverge because a direct $k=2$ specification must represent two structures with
+only two labels: the division between the large camps and a recurring clique of
+power-voters. Allowing the stability criterion to select $k=3$ makes both
+structures visible at once: two large camps and a third cluster of 64 highly
+active raters, too small to be granted constituency standing.
+
+We therefore keep both large camps fixed and reassign only those 64, each to
+whichever constituency their note-level vote profile tracks more closely
+(Method B), 54 into the larger and 10 into the smaller, leaving final
+constituency sizes of 107,734 and 92,266 raters. This preserves the main-camp
+boundary recovered at $k=3$ rather than reproducing the unstable cut obtained
+by forcing the spectral model to use two clusters. Nothing downstream turns on
+how the reassignment is done: an embedding-centroid variant (Method A) sorts 29
+of the 64 differently, and both partitions return the same between-camp
+correlation of $-0.620$ and the same 81.4\% discriminating share
+(Appendix~\ref{app:methods-ab}).
 
 \subsection{Selection}
 
 For each tweet, the Representative strategy selects the single note with the
 highest cross-constituency score among its candidate notes, computed as in
 Eq.~\eqref{eq:cca-score}. A note's bridge score is defined only once both
-constituencies have contributed at least three ratings to it, following the
-minimum-coverage rationale described in Section~\ref{sec:data-pipeline}. This
-coverage rule operationalizes P1; notes that never clear this bar are not
-scored and cannot be selected under CCA. A note counts as CCA-selected when its
+constituencies have contributed at least three ratings to it
+(Section~\ref{sec:data-pipeline}); this coverage rule operationalizes P1, and
+notes that never clear the bar cannot be selected under CCA. A note counts as
+CCA-selected when its
 bridge score is above 0.5, and as newly rescued when it is CCA-selected but
 not already shown by Community Notes.
 
@@ -804,23 +781,16 @@ not already shown by Community Notes.
 Aggregation and content quality are different judgments, and we keep them
 analytically separate: CCA identifies notes that clear a cross-constituency
 support bar, and a second, independent stage asks whether the note itself is
-worth showing. We chose Gemma 4 31B IT as the strongest feasible open-weight
-model for this role. In the April 2, 2026 Arena snapshot, its thinking variant
-scored 1,452 and ranked third among open models, while its 30.7-billion-parameter
-dense BF16 weights could run without quantization on our two-GPU allocation
-\citep{arena2026leaderboard,google2026gemma4}. Appendix~\ref{app:gemma-runtime}
-reports the complete hardware, serving, decoding, and audit configuration.
-Each of the 13,655 notes in the frozen rescue pool is judged independently
-through a single-turn, zero-shot, rubric-based user prompt. The three canonical
-prompts appear verbatim in Appendix~\ref{app:gemma-prompts}.
-
-Rubric-based LLM-as-a-judge methods have a broader empirical precedent. Across
-1,141 human-labeled binary classification tasks, GABRIEL reports a median
-accuracy of 0.85 for GPT-5 and finds measurements generally robust to
-semantically equivalent prompt variants
-\citep{asirvatham2026gptmeasurement}. This benchmark supports the feasibility
-of large-scale qualitative judgment, but it does not validate Gemma or the
-task-specific rubric used here.
+worth showing. We use Gemma 4 31B IT, the strongest open-weight model that runs
+unquantized on our two-GPU allocation
+\citep{arena2026leaderboard,google2026gemma4};
+Appendix~\ref{app:gemma-runtime} reports the complete hardware, serving,
+decoding, and audit configuration. Each of the 13,655 notes in the frozen
+rescue pool is judged independently through a single-turn, zero-shot,
+rubric-based user prompt. The three canonical prompts appear verbatim in
+Appendix~\ref{app:gemma-prompts}. Rubric-based LLM-as-a-judge measurement has
+broader empirical precedent \citep{asirvatham2026gptmeasurement}, though none
+that validates this model or this rubric (Appendix~\ref{app:llm-judge}).
 
 The model sees only the note's own text; it does not see the tweet the note
 responds to, open any cited URL, or observe the note's upstream selection
@@ -848,19 +818,10 @@ scoring rubric measure what the note visibly demonstrates about itself, not
 what an independent investigation would find.
 
 The exact model revision, prompt text, input manifest, and decoding seed are
-recorded, as are all 25,804 attempt statuses. Every returned response is stored
-with its parsed result, reasoning, and token counts; the 71 response errors
-retain their seed and error metadata but contain no output fields because no
-model response was returned. Generation is not schema-constrained; responses
-are parsed and checked against a strict contract afterward, an exact key set, a
-label drawn from the fixed list or an integer score in range, and a reason under
-forty words, with at most three attempts before a judgment is left unresolved.
-One Stage 1 note remained
-unresolved, which accounts for the difference between 25,734 logical judgments
-and 25,733 accepted outputs reported in Appendix~\ref{app:gemma-runtime}.
-This audit trail allows any individual judgment to be regenerated independently
-while preserving the distinction between model output and post-generation
-validation.
+recorded, as are all 25,804 attempt statuses, so any individual judgment can be
+regenerated independently (Appendix~\ref{app:audit-trail}). One Stage 1 note
+remained unresolved, which accounts for the difference between 25,734 logical
+judgments and 25,733 accepted outputs.
 
 \section{Results}
 \label{sec:results}
@@ -1315,6 +1276,65 @@ core facility SCCKN (\url{https://scc.uni-konstanz.de}).
 
 \onecolumn
 \appendix
+\section{Pipeline and Constituency Recovery}
+\label{app:pipeline}
+
+This appendix holds the operational detail behind
+Section~\ref{sec:approach}. Every threshold and variant reported here is also
+implemented in the accompanying repository.
+
+\subsection{Filter thresholds and the two three-rater floors}
+\label{app:filters}
+
+A floor of three applies at both the candidate-note and the rating stage, but
+for distinct operational reasons: the first guarantees a genuine multi-note
+choice set, while the second follows the same minimum-coverage logic that X
+applies before cross-viewpoint evidence can affect a note's status. The rating
+floor establishes minimal observed participation rather than claiming a
+reliable estimate of approval \citep{xcommunitynotes2026ranking}.
+
+\subsection{Selecting the 200k rater scale}
+\label{app:scale-selection}
+
+The scale was chosen by testing rather than assumed. The tests encountered the
+same participation imbalance identified for Community Notes in
+Section~\ref{sec:the_gap}: as progressively less-active raters entered the
+sample, shared-note overlap thinned, while a small hyperactive core remained
+among the graph's most reproducible structures. We selected 200k as the best
+balance between coverage and diagnostic quality. 210k reproduced the same
+two-camp structure somewhat more weakly, while larger configurations
+introduced additional activity-driven outliers or collapsed into a
+power-voter-versus-rest split.
+
+\subsection{Spectral embedding and outlier handling}
+\label{app:spectral}
+
+A symmetric 15-nearest-neighbor graph over the mean-centered user-by-note
+matrix defines co-rating similarity, and a spectral embedding, computed with
+algebraic multigrid to keep the procedure tractable at this scale, places each
+rater in a low-dimensional space shaped by whom they tend to agree with.
+Candidate values of $k$ from 2 to 7 are evaluated by silhouette score and by
+stability under repeated resampling. Where a direct $k=2$ specification is
+forced, it sometimes recovers the balanced camp split across resamples and
+sometimes uses one label to isolate the small, highly active group; the same
+high-activity pattern reappears at neighboring scales. Clusters smaller than
+$\max(1\%$ of raters$, 500)$ are treated as outliers rather than granted
+constituency standing.
+
+\subsection{Reassignment: Method A versus Method B}
+\label{app:methods-ab}
+
+Method B is not another $k=2$ spectral fit. It begins from the more stable
+$k=3$ partition, keeps the membership of both large camps fixed, and
+classifies only the 64 outliers, correlating each outlier's note-level vote
+profile against the two main constituencies' aggregate profiles. Method A, an
+embedding-centroid variant, sorts the same 64 raters by distance in the
+spectral embedding instead. The two rules disagree about 29 of the 64, who
+together cast 0.07\% of the ratings in the slice, and the resulting partitions
+return the same between-camp correlation of $-0.620$ and the same 81.4\%
+discriminating share. Method B is the canonical partition used throughout the
+paper; the original spectral label survives only as a diagnostic column.
+
 \section{Gemma Validation Runtime}
 \label{app:gemma-runtime}
 
@@ -1362,6 +1382,37 @@ worker configuration, and per-attempt audit logs; vLLM is described by
 \citet{kwon2023vllm}.}
 \label{tab:gemma-runtime}
 \end{table}
+
+\subsection{Model selection and serving constraints}
+\label{app:gemma-selection}
+
+Gemma 4 31B IT was the strongest feasible open-weight model for this role. In
+the April 2, 2026 Arena snapshot, its thinking variant scored 1,452 and ranked
+third among open models, while its 30.7-billion-parameter dense BF16 weights
+could run without quantization on our two-GPU allocation
+\citep{arena2026leaderboard,google2026gemma4}.
+
+\subsection{Rubric-based LLM-as-a-judge precedent}
+\label{app:llm-judge}
+
+Across 1,141 human-labeled binary classification tasks, GABRIEL reports a
+median accuracy of 0.85 for GPT-5 and finds measurements generally robust to
+semantically equivalent prompt variants \citep{asirvatham2026gptmeasurement}.
+This benchmark supports the feasibility of large-scale qualitative judgment,
+but it does not validate Gemma or the task-specific rubric used here.
+
+\subsection{Audit trail and output validation}
+\label{app:audit-trail}
+
+Every returned response is stored with its parsed result, reasoning, and token
+counts; the 71 response errors retain their seed and error metadata but
+contain no output fields because no model response was returned. Generation is
+not schema-constrained. Responses are parsed and checked against a strict
+contract afterward: an exact key set, a label drawn from the fixed list or an
+integer score in range, and a reason under forty words, with at most three
+attempts before a judgment is left unresolved. This audit trail allows any
+individual judgment to be regenerated independently while preserving the
+distinction between model output and post-generation validation.
 
 \section{Canonical Gemma Validation Prompts}
 \label{app:gemma-prompts}
