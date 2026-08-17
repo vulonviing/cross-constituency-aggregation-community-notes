@@ -314,28 +314,23 @@ more than rank content: it attaches a public correction to someone's post and
 presents it as coming from ``the community.'' Readers cannot opt out. A
 displayed note changes what everyone sees, including the people who think it is
 wrong, and its force comes from that shared environment rather than from any
-legal power \citep{klonick2018governors}.
-
-Framed this way, the design question is not which note is best but which rule
-should decide when the crowd disagrees. A plain majority always returns an
-answer, though not always one the losing side has reason to accept, and the
-institutions that have worked longest on this answer it by changing the
-counting rule rather than by trying to identify better voters.
+legal power \citep{klonick2018governors}. The design question is therefore not
+which note is best but which rule should decide when the crowd disagrees \textemdash{}
+and a plain majority always returns an answer, though not always one the losing
+side has reason to accept.
 
 Community Notes has already accepted the premise. The bridging criterion exists
 because the platform agrees that a note supported by one side alone should not
 appear, so cross-group acceptability is its display standard today, expressed as
 a latent estimate rather than as groups. Users respond to the difference:
 compared with a context-free misleading flag, a community-written note raises
-trust in fact-checking \citep{drolsbach2024trust}. Asking about legitimacy here
+trust in fact-checking \citep{drolsbach2024trust}. Asking about legitimacy
 introduces no foreign requirement; it restates a commitment the system already
 holds, in a form that can be checked.
 
 What we take from states is the aggregation logic, not the political theory
 around it. Legitimacy here means something thin and procedural: whether the
-groups affected by a decision have reason to accept the way it was made. States
-face a heavier version of the same problem, which is what makes their solutions
-a conservative place to look.
+groups affected by a decision have reason to accept the way it was made.
 
 \subsection*{Constitutional Design in Divided Societies}
 
@@ -384,50 +379,41 @@ four canonical cases: the Swiss double majority
 The rules differ, some territorial, some linguistic, some ethno-national, but
 they share one logic: these democracies treat the existence of their cluster
 structure as politically meaningful in its own right. That logic is also the
-source of non-compensatoriness. Each decision subject to parallel consent is
-settled in the present: a key vote of the Northern Ireland Assembly requires
-unionist and nationalist support at once, and support from one side cannot be
-traded for a victory on some other bill. Acceptability must hold within that
-decision, across the groups, with neither side dispensable, exactly the
-structure a
-geometric-mean soft veto encodes, rather than a weighted average that offsets a
-shortfall in one place with a surplus elsewhere. Power-sharing of this kind is
-not costless, and Section~\ref{sec:limitations} returns to the limits of the
-borrowing.
+source of non-compensatoriness. A key vote of the Northern Ireland Assembly
+requires unionist and nationalist support at once, and support from one side
+cannot be traded for a victory on some other bill. Acceptability must hold
+within that decision, with neither side dispensable, exactly the structure a
+geometric-mean soft veto encodes rather than a weighted average. Power-sharing
+of this kind is not costless, and Section~\ref{sec:limitations} returns to the
+limits of the borrowing.
 
-Seen through this lens, the carry-over to crowdsourced moderation is not to
-estimate what each constituency latently thinks or wants (that would be quality
-recovery displaced from notes to clusters) but to honor the cluster structure
-itself, making each cluster's acceptability an independent condition for the
-display decision on a single note.
+The carry-over to crowdsourced moderation is therefore not to estimate what each
+constituency latently thinks, which would be quality recovery displaced from
+notes to clusters, but to honor the cluster structure itself, making each
+cluster's acceptability an independent condition for the display decision.
 
 \subsection*{Proportional and Representative Social Choice}
 
 The constitutional record is qualitative; social-choice theory gives the same
-logic from the formal side. The proportionality literature holds that a
-legitimate collective decision should remain responsive to the distinct
-constituencies rather than collapsing them into a single pooled electorate
+logic formally. A legitimate collective decision should remain responsive to the
+distinct constituencies rather than collapsing them into one pooled electorate
 \citep{peters2019proportionality,peters2021proportional}, and approval-based
-proportional representation makes the same point axiomatically: sufficiently
-large cohesive coalitions must not be washed out by majority aggregation
+proportional representation makes the point axiomatically: sufficiently large
+cohesive coalitions must not be washed out by majority aggregation
 \citep{aziz2015justified,sanchez2017proportional}. Most directly relevant is
-Qiu's formalization of \emph{representative social choice}
-\citep{qiu2025representative}, which targets exactly the setting where
-constituencies must be inferred from behavior rather than given ex ante: the
-platform's situation, and the basis in the literature for the behavioral-recovery
-criterion we state below.
+Qiu's \emph{representative social choice} \citep{qiu2025representative}, which
+targets exactly the setting where constituencies must be inferred from behavior
+rather than given ex ante \textemdash{} the platform's situation, and the basis
+for the behavioral-recovery criterion.
 
-In its problem structure, Community Notes is a repeated single-item acceptance
-setting: for each note, whether it clears a cross-group acceptability bar.
-Repeated accept/reject decisions of this kind are the object of the fair public
-decision-making literature
+Community Notes is, structurally, a repeated single-item acceptance setting, the
+object of the fair public decision-making literature
 \citep{conitzer2017fair,lackner2020perpetual,skowron2022proportional}. Unlike
-that literature, which places fairness at the sequential level (a constituency
-outvoted on one issue can be compensated by influence on later ones), the display
+that literature, which places fairness at the sequential level, so that a
+constituency outvoted on one issue can be compensated on later ones, the display
 decision is an unexitable individual act made in the community's name. There is
-no sequence across which to amortize, so acceptability must hold within each
-note, which reinforces the non-compensatoriness already obtained from parallel
-consent.
+no sequence across which to amortize, which reinforces the non-compensatoriness
+already obtained from parallel consent.
 
 Together the two literatures fix the validity condition: acceptability must be
 \emph{concurrent} across constituencies rather than averaged over a pooled
@@ -442,33 +428,33 @@ imply, as four operational criteria.
 
 \subsection*{Design Criteria}
 
-The argument above narrows the design space to a few requirements on any rule
-that decides under structured disagreement. We state four, each answering to one
-component of the CCA rule. Behavioral rater clusters are not nations in the
-constitutional sense and we do not claim they hold such groups' normative
-standing; the criteria are \emph{weakened} aggregation requirements, drawn from
-the institutional and social-choice record and adapted to platform governance.
-Table~\ref{tab:principles-map} collects each criterion with its source and the
+The argument above narrows the design space to four requirements on any rule
+that decides under structured disagreement, each answering to one component of
+the CCA rule. Behavioral rater clusters are not nations in the constitutional
+sense and we do not claim they hold such groups' normative standing; the
+criteria are \emph{weakened} aggregation requirements adapted to platform
+governance. Table~\ref{tab:principles-map} collects each with its source and the
 component that discharges it.
 
-\textbf{P1 (Presence).} No display decision may be made while any constituency is
-absent; missing representation must not be convertible into apparent consensus.
-\emph{(CCA component: each constituency must contribute at least three
-raters, a presence floor rather than a reliability threshold.)}
+\textbf{P1 (Presence).} No display decision may be made while any constituency
+is absent; missing representation must not be convertible into apparent
+consensus. \emph{(Discharged by a presence floor of three raters per
+constituency, not a reliability threshold.)}
 
 \textbf{P2 (Non-compensation).} One constituency's strong rejection cannot be
-offset by another's enthusiasm; acceptability must hold within each constituency,
-not merely in the cross-constituency average. \emph{(CCA component: geometric-mean aggregation, a soft veto.)}
+offset by another's enthusiasm; acceptability must hold within each
+constituency, not merely in the cross-constituency average. \emph{(Discharged by
+geometric-mean aggregation, a soft veto.)}
 
 \textbf{P3 (Symmetry).} Constituencies enter the decision on equal footing,
-independent of relative size or rating activity. \emph{(CCA component: the geometric mean is symmetric in its arguments, and
-takes within-constituency approval rates rather than raw counts as inputs.)}
+independent of relative size or rating activity. \emph{(The geometric mean is
+symmetric in its arguments and takes approval rates, not raw counts.)}
 
 \textbf{P4 (Behavioral recovery).} Since no ex-ante partition of raters exists,
 constituencies must be recovered from observed behavior transparently and
-reproducibly. \emph{(This is the one criterion with no constitutional analogue, and where
-the platform setting departs from constitutional design. CCA component:
-spectral clustering on co-rating similarity, with stability diagnostics.)}
+reproducibly. \emph{(The one criterion with no constitutional analogue.
+Discharged by spectral clustering on co-rating similarity, with stability
+diagnostics.)}
 
 \newcolumntype{Y}{>{\raggedright\arraybackslash}X}
 \begin{table}[t]
@@ -510,18 +496,14 @@ H_{ic}/N_{ic}, & N_{ic} > 0,\\
 0.5, & N_{ic} = 0.
 \end{cases}
 \end{equation}
-The $0.5$ fallback marks abstention, not endorsement: a constituency that has
-never rated the note casts no vote. Presence (P1) forbids that abstention from
-ever standing in for support, so the fallback alone never selects a note; both
-constituencies must contribute at least three raters before the note is scored
-at all. The bar is deliberately low, and it is a presence floor rather than an
-estimate: three ratings do not measure a constituency's approval precisely, they
-establish that the constituency was there at all. Community Notes applies
-minimums of the same shape in its own scoring
-\citep{xcommunitynotes2026ranking}, and set at three the requirement rarely
-bites (Section~\ref{sec:results}). For a note that clears this coverage
-bar, the cross-constituency score is
-the geometric mean
+The $0.5$ fallback marks abstention, not endorsement. Presence (P1) forbids
+that abstention from ever standing in for support, so both constituencies must
+contribute at least three raters before the note is scored at all. Three
+ratings do not measure a constituency's approval precisely; they establish that
+it was there. Community Notes applies minimums of the same shape in its own
+scoring \citep{xcommunitynotes2026ranking}, and set at three the requirement
+rarely bites (Section~\ref{sec:results}). For a note that clears this coverage
+bar, the cross-constituency score is the geometric mean
 \begin{equation}
     C_i = \sqrt{\max(a_{i1},\epsilon)\,\max(a_{i2},\epsilon)},
     \label{eq:cca-score}
@@ -534,90 +516,76 @@ The geometric mean is the minimal aggregator that meets P2 and P3 at once:
 symmetric in its arguments, increasing in each on $(0,1]^2$, and collapsing to
 zero as either rate does. A plain minimum would also veto, but it ignores the
 stronger side entirely; a weighted average would let one side's surplus offset
-the other's shortfall, which P2 forbids. A systematically stricter constituency
-rescales every note by roughly the same factor, which the display threshold
-absorbs uniformly. The direction of construction is the point: the rule is the
-product of the four criteria, not reverse-engineered to fit the data, and we do
-not claim it is the unique function with these properties.
+the other's shortfall, which P2 forbids. The rule is thus the product of the
+four criteria rather than reverse-engineered to fit the data, though we do not
+claim it is the unique function with these properties.
 
 \subsection*{Objections and Scope}
 
-Reading the production model against these criteria, the gap between its
-commitment and its realization can be stated precisely. Eq.~\eqref{eq:cn-model}
-does contain a kind of counterpart to P2: the bridging term penalizes support
-drawn from only one end of the spectrum, crediting a note's helpfulness ($i_n$)
-only for approval that the viewpoint match $f_u \cdot f_n$ cannot explain. But the
-constituency form of P2, that acceptability hold separately within each group,
-cannot be stated in the model, because groups are not model objects. P1 has no
-counterpart at all: pooled estimation has no notion of ``a group being absent,''
-and raters from a single group can wholly dominate the estimate of $i_n$. P3 is
-likewise absent, since a larger or more active bloc simply contributes more
-terms to the loss, and the polarization safeguard conflicts directly with P2,
-discounting notes on \emph{polarizing issues} rather than notes with
-\emph{one-sided support}. The reliability-weighted extension
-\citep{goyal2026qsmf} inherits the same representational structure. This is the
-design failure of Section~\ref{sec:the_gap}: the rule reads individual intent
-where the criteria ask for community consent.
+Read against these criteria, the production model's gap can be stated
+precisely. Eq.~\eqref{eq:cn-model} contains a counterpart to P2, since the
+bridging term credits helpfulness ($i_n$) only for approval the viewpoint match
+cannot explain; but the constituency form of P2, that acceptability hold
+separately within each group, cannot be stated at all, because groups are not
+model objects. P1 has no counterpart either: pooled estimation has no notion of
+``a group being absent.'' P3 is likewise absent, since a larger or more active
+bloc simply contributes more terms to the loss, and the polarization safeguard
+conflicts directly with P2, discounting notes on \emph{polarizing issues} rather
+than notes with \emph{one-sided support}. The reliability-weighted extension
+\citep{goyal2026qsmf} inherits the same structure. This is the design failure of
+Section~\ref{sec:the_gap}: the rule reads individual intent where the criteria
+ask for community consent.
 
-Our own rule invites objections in turn. The first concerns P4: by what right do
-algorithmically recovered clusters acquire the standing of constituencies? In
-constitutional regimes that standing comes from history, language, or identity; on
-the platform none of these is available, so it can come only from the structure of
-the disagreement itself. We require three things of a partition before it counts.
-It must persist, and the ladder of Section~\ref{sec:the_gap} supports two
-versions of that claim: under resampling the algorithm keeps recovering two
+Our own rule invites objections in turn. The first concerns P4: by what right
+do algorithmically recovered clusters acquire the standing of constituencies?
+In constitutional regimes that standing comes from history, language, or
+identity; on the platform it can come only from the structure of the
+disagreement itself. We require three things of a partition before it counts.
+It must \emph{persist}: under resampling the algorithm keeps recovering two
 large camps beside a small hyperactive cluster at every non-degenerate scale,
-and the two-camp partition itself reappears across sample sizes with the
-between-camp correlation and discriminating share barely moving
-(Table~\ref{tab:scaleup}). Persistence is necessary and nowhere near sufficient, as the ladder's own
-failures show: the variants that merely fence off a power-voter clique score
-highest of all on stability. Each side must therefore also be large enough that
+and the two-camp partition reappears across sample sizes with the between-camp
+correlation and discriminating share barely moving (Table~\ref{tab:scaleup}).
+Persistence is nowhere near sufficient, as the ladder's own failures show: the
+variants that merely fence off a power-voter clique score highest of all on
+stability. Each side must therefore be \emph{large} enough that
 cross-constituency agreement is a demand on two real publics rather than
-statistical noise, and ours each hold tens of thousands of raters. The 64
-power-voters are not a third: under a symmetric rule their veto would weigh as
-much as that of a camp more than a thousand times larger, so they are placed in
-the camp their voting tracks (Section~\ref{sec:approach}), which removes the
-veto without removing the votes. And the two must reach different verdicts on a
-large share of notes; about 81\% of evaluated notes fall on the discriminating
-side of the partition. A partition meeting all three is not an arbitrary
-artifact but the lines along which acceptance and rejection actually run. The standing is conditional: when rating
-behavior no longer shows a stable cluster structure, CCA's precondition fails and
-pooled estimation regains its warrant.
+statistical noise, and ours each hold tens of thousands of raters; the 64
+power-voters are not a third, since under a symmetric rule their veto would
+weigh as much as that of a camp a thousand times larger. And the two must
+\emph{discriminate}, reaching different verdicts on a large share of notes;
+about 81\% do. A partition meeting all three is not an arbitrary artifact but
+the lines along which acceptance and rejection actually run. The standing is
+conditional: when rating behavior no longer shows a stable cluster structure,
+CCA's precondition fails and pooled estimation regains its warrant.
 
-An immediate worry follows: once the behavioral partition is reduced to two
-classes, is it not the same as splitting the model's one-dimensional ideology axis
-in two at the sign of $f_u$? Even when both are binary, they are different
-objects. The $f_u$ split requires a cut point on a single jointly fitted line;
-the behavioral split comes from the full co-rating similarity structure, and its
-boundary need not correspond to any threshold on that line. Topic-level
-diagnostics point away from coincidence: neither constituency is uniformly more
-approving across issues. There is also a procedural reason to keep them apart:
-$f_u$ is an internal quantity estimated by the very model under audit, and using
-the audited rule's own instrument to delineate the parties would be improper,
-whereas the behavioral constituencies are recovered from raw rating behavior
-independent of that rule.
+An immediate worry follows: is a two-class behavioral partition not just the
+model's ideology axis split at the sign of $f_u$? Even when both are binary,
+they are different objects. The $f_u$ split requires a cut point on a single
+jointly fitted line; the behavioral split comes from the full co-rating
+similarity structure, and its boundary need not correspond to any threshold on
+that line. Topic-level diagnostics point away from coincidence, since neither
+constituency is uniformly more approving across issues. There is also a
+procedural reason to keep them apart: $f_u$ is estimated by the very model under
+audit, and using the audited rule's own instrument to delineate the parties
+would be improper.
 
 A second worry concerns rescue itself: why should a note that fails the
 platform's cross-ideological test regain value under cross-constituency
 consent? They are versions of one intuition tested with different instruments.
-X infers a viewpoint coordinate for each rater and asks whether a note's support
-is surprising given those coordinates; CCA counts approval inside two groups
-recovered from behavior and asks whether each group approves. The rescue pool is
-what that difference produces. Three things can open such a gap. The
+X asks whether a note's support is surprising given the viewpoint coordinates it
+infers; CCA asks whether each of two behaviorally recovered groups approves. The
+rescue pool is what that difference produces, and three things open it: the
 polarization safeguard can read ``the issue divides people'' as ``the support is
-one-sided.'' The model gives each rater a point on a single line, while real
-blocs differ along several dimensions at once, so support that bridges the axis
-and support that travels across blocs can come apart. And the latent estimate is
-strongly regularized, hence conservative by construction
-\citep{goyal2026qsmf}, so support plainly visible in the group counts need not
-show up as the residual the factorization rewards.
+one-sided''; real blocs differ along several dimensions where the model gives
+each rater one coordinate, so bridging the axis and travelling across blocs come
+apart; and the latent estimate is strongly regularized, hence conservative by
+construction \citep{goyal2026qsmf}.
 
 CCA therefore does not overturn the platform's answer to a shared question; it
 marks the notes where the answer may come from how the standard is implemented
 rather than from the standard itself. When rater disagreement is unstructured
-noise around a shared quality signal,
-pooled latent-quality estimation is well warranted; it is the persistence of
-behavioral blocs, documented in Section~\ref{sec:the_gap}, that makes the
+noise around a shared quality signal, pooled estimation is well warranted; it is
+the persistence of behavioral blocs (Section~\ref{sec:the_gap}) that makes the
 cross-constituency question the right one here.
 
 \section{Approach}
