@@ -120,31 +120,29 @@ to decide which context becomes visible
 \citep{wojcik2022birdwatch,xcommunitynotes2026ranking}.
 
 The key innovation is a bridging algorithm. A simple majority vote would be easy
-for one political side or one active group to capture, so X's 2026 official guide
-scores notes with a matrix factorization over the sparse note-rater matrix
-(Section~\ref{sec:how_cn_works}), giving a note a high helpfulness score only when
-its support cannot be explained by viewpoint compatibility alone. This
-factorization is the core ranking layer, not the full pipeline: around it the
-guide adds agreement safeguards, engagement and independence checks, and a
-November 2025 geometric-mean pilot \citep{xcommunitynotes2026ranking}.
+for one political side or one active group to capture, so X scores notes with a
+matrix factorization over the sparse note-rater matrix
+(Section~\ref{sec:how_cn_works}), crediting a note only for support that
+viewpoint compatibility cannot explain. That factorization is the core ranking
+layer rather than the full pipeline, which adds agreement safeguards,
+engagement and independence checks, and a November 2025 geometric-mean pilot
+\citep{xcommunitynotes2026ranking}.
 
-The design is powerful but incomplete. Once viewpoint is modeled, note
-helpfulness is still estimated from sparse, uneven ratings, which recent work
-shows is sensitive to noisy, strategic, and hyperactive raters
-\citep{goyal2026qsmf,nudo2026hyperactive}, and participation is steeply unequal
-(Section~\ref{sec:the_gap}), so a formally open crowd can still turn on a small,
-active core. More basically, the model keeps group support inside a fitted
-estimate. It never forms direct quantities such as ``approval inside constituency
-A'' versus ``approval inside constituency B,'' so cross-group acceptance is
-present only indirectly.
+The design is powerful but incomplete. Note helpfulness is still estimated from
+sparse, uneven ratings, which recent work shows is sensitive to noisy,
+strategic, and hyperactive raters \citep{goyal2026qsmf,nudo2026hyperactive},
+and participation is steeply unequal (Section~\ref{sec:the_gap}), so a formally
+open crowd can still turn on a small, active core. More basically, the model
+keeps group support inside a fitted estimate: it never forms a quantity such as
+``approval inside constituency A'' versus ``approval inside constituency B,''
+so cross-group acceptance is present only indirectly.
 
-We start from a different premise. Instead of estimating which raters are better
-or more reliable as individuals, we treat recovered behavioral constituencies as
+We start from a different premise. Instead of estimating which raters are more
+reliable as individuals, we treat recovered behavioral constituencies as
 legitimate parts of the crowd and ask whether a note is acceptable across them.
 This turns Community Notes from a prediction problem into a crowd-agreement
 problem: the platform is deciding, in the name of ``the community,'' whether a
-note should attach to a public post. The question this paper asks follows
-directly:
+note should attach to a public post. The question follows directly:
 
 \begin{quote}
 When ratings come from behaviorally distinct constituencies, which aggregation
@@ -152,16 +150,15 @@ rule should decide whether a Community Note becomes visible?
 \end{quote}
 
 The inspiration is political science and social choice rather than another
-rater-quality model. Divided societies often use power sharing, double majorities,
-parallel consent, vote pooling, or veto-like rules so that collective decisions
-depend on support traveling across groups, not only on the strongest or most
-active side \citep{lijphart1977democracy,mcgarryoleary2009,
-horowitz1991makingmoderation,reilly2002electoral}. Social-choice theory gives a
-formal version of the same idea: legitimate collective decisions should represent
-relevant parts of the public, not only the largest or most active part
-\citep{peters2019proportionality,qiu2025representative}. We borrow this logic in a
-limited way. Community Notes is not a state, and displaying a note is not passing
-a law. Still, both settings face the same aggregation problem under disagreement.
+rater-quality model. Divided societies use power sharing, double majorities,
+parallel consent, or veto-like rules so that collective decisions depend on
+support traveling across groups, not only on the strongest or most active side
+\citep{lijphart1977democracy,mcgarryoleary2009,horowitz1991makingmoderation,reilly2002electoral},
+and social-choice theory gives a formal version of the same idea
+\citep{peters2019proportionality,qiu2025representative}. We borrow this logic in
+a limited way. Community Notes is not a state, and displaying a note is not
+passing a law. Still, both settings face the same aggregation problem under
+disagreement.
 
 This logic yields four criteria for the display decision:
 \begin{itemize}[leftmargin=*,itemsep=2pt,topsep=3pt]
@@ -211,7 +208,7 @@ This equation breaks a rating down into four distinct components to isolate the 
 \end{itemize}
 
 \subsection*{A Critique of Matrix Normalization: Profiling Over Consensus}
-The terms $i_u$ and $f_u \cdot f_n$ do not directly measure ``bad faith''; rather, they act as normalization tools. However, by relying on these terms, the core action of Community Notes shifts from evaluating the \textit{content} of a note to estimating the \textit{intent} of the user. Simulation studies of the open-source algorithm make this concrete: when helpfulness is inferred from cross-group agreement patterns, a coordinated minority of just 5--20\% of biased raters can suppress genuinely helpful notes outright \citep{truong2025vulnerable}. Observers have questioned the system's narrow reliance on cross-group consensus \citep{jude2025narrow}; our concern is more specific: the model identifies that consensus by first estimating users' general rating tendencies and viewpoint alignment, thereby grounding its judgment of the note in inferences about the users who rated it.
+The terms $i_u$ and $f_u \cdot f_n$ do not measure ``bad faith''; they act as normalization tools. But by relying on them, the core action of Community Notes shifts from evaluating the \textit{content} of a note to estimating the \textit{intent} of the user. Simulation studies of the open-source algorithm make this concrete: a coordinated minority of just 5--20\% of biased raters can suppress genuinely helpful notes outright \citep{truong2025vulnerable}. Observers have questioned the system's narrow reliance on cross-group consensus \citep{jude2025narrow}; our concern is more specific: the model identifies that consensus by first estimating users' rating tendencies and viewpoint alignment, grounding its judgment of the note in inferences about the users who rated it.
 
 To isolate note quality ($i_n$), the algorithm treats rater tendencies and viewpoint compatibility as structural noise, and in doing so profiles users and reads their intentions: is this user voting on objective truth, or cheering for their side? The result is an implicit hierarchy of raters, on the assumption that weighting ``high-quality,'' unbiased evaluators is the most effective way to govern visibility.
 
@@ -299,11 +296,11 @@ Scale & $k$ & ARI & Pearson & Discrim. & Pearson & Discrim. & Hyperactive outlie
 
 To test whether scale resolves the participation problem, we ran a clustering ladder of 19 AMG variants from 70k to 250k users, anchored by two slower ARPACK baselines at 50k and 60k (Table~\ref{tab:scaleup}). Wherever the algorithm's own selection produces two comparably sized camps, that structure is robust: bootstrap ARI stays above 0.95 and the between-camp correlation remains strongly negative. A hyperactive outlier also reappears at every scale above 60k, a small group of power-voters 7 to 25 times more active than ordinary raters. Larger samples do not dissolve this group; they rediscover it.
 
-The ladder also shows why a stability score cannot be read as a certificate. Eight of the 19 variants scored bootstrap ARI between 0.976 and 1.000 for a partition that merely fences off roughly 60 power-voters, at 250k splitting 249{,}933 against 67 (Table~\ref{tab:scaleup}). Such a partition is perfectly reproducible and analytically worthless: the most reproducible object in the rating record is the power-voter clique, not the division between camps.
+The ladder also shows why a stability score cannot be read as a certificate. Eight of the 19 variants scored bootstrap ARI between 0.976 and 1.000 for a partition that merely fences off roughly 60 power-voters, at 250k splitting 249{,}933 against 67 (Table~\ref{tab:scaleup}): perfectly reproducible and analytically worthless.
 
-Three scales survived that filter with two large camps and at most one small outlier cluster: 60k, 200k, and 210k. We take 200k as the production setting because it offers the best balance between coverage and diagnostic quality; 210k includes more users but reproduces the same structure at slightly weaker values. The choice is a joint reading of stability, camp balance, the negative between-camp correlation, and the share of discriminating notes, not a maximization of any one of them.
+Three scales survived that filter with two large camps and at most one small outlier cluster: 60k, 200k, and 210k. We take 200k as the production setting, on a joint reading of stability, camp balance, the negative between-camp correlation, and the share of discriminating notes rather than a maximization of any one of them; 210k includes more users but reproduces the same structure at slightly weaker values.
 
-Even at 200k the algorithm does not hand us two camps. Bootstrap stability selects $k=3$ there, and the third cluster holds 64 raters with a median of 1{,}269 votes each, against 121 and 101 in the two main camps. Leaving it in place would grant a 64-person clique the same standing as two constituencies of roughly a hundred thousand raters; dropping it would discard the votes that most heavily shape the co-rating graph. We therefore reassign its members to the camp whose note-level voting they track more closely, yielding the final split of 107{,}734 and 92{,}266 raters used throughout the paper. The cost is small: wherever reassignment applies, the between-camp correlation and the discriminating share each move by less than a percentage point (Table~\ref{tab:scaleup}). Absorbing the power-voters leaves the two-camp structure intact rather than manufacturing it.
+Even at 200k the algorithm does not hand us two camps. Bootstrap stability selects $k=3$ there, and the third cluster holds 64 raters with a median of 1{,}269 votes each, against 121 and 101 in the two main camps. Leaving it in place would grant a 64-person clique the same standing as two constituencies of roughly a hundred thousand raters; dropping it would discard the votes that most heavily shape the co-rating graph. We therefore reassign its members to the camp whose note-level voting they track more closely, yielding the final split of 107{,}734 and 92{,}266 raters used throughout the paper. The cost is small: the between-camp correlation and the discriminating share each move by less than a percentage point (Table~\ref{tab:scaleup}), so absorbing the power-voters leaves the two-camp structure intact rather than manufacturing it.
 
 \subsection*{The Problem, Stated}
 Two failures sit beneath this gap, and only one is about data. The first is a matter of design: the algorithm profiles individuals instead of consulting communities, estimating whether a given rater's approval was predictable rather than whether the groups that genuinely disagree have each consented. This flaw is independent of sample size: with complete, perfectly balanced participation, the model would still be reading intent rather than evaluating cross-community consent. The second failure is empirical, and our ladder demonstrates it: the latent axis on which the entire bridging check rests is fixed by a hyperactive minority, so even the ``cross-group agreement'' the algorithm rewards is agreement across a distorted pair of poles. \citet{razuvayevskaya2025timeliness} measure this skew from the outside (the top 10\% of contributors produce 58\% of all notes), and our experiments confirm it from the inside, at every scale we can stably analyze. The gap is not a shortage of ratings. It is an aggregation rule that reads individual intent and then mistakes the most active raters' consensus for the community's.
@@ -454,15 +451,14 @@ imply, as four operational criteria.
 
 \subsection*{Design Criteria}
 
-The legitimacy argument and the three conclusions above narrow the design space
-to a few requirements on any rule that decides under structured disagreement. We
-state four, each answering to one component of the CCA rule. The behavioral rater
-clusters are not nations in the constitutional sense, and we do not claim they
-hold such groups' normative standing; the criteria are \emph{weakened}
-aggregation requirements, drawn from the institutional and social-choice record
-and adapted to platform governance. Each criterion is stated below with the
-institutional source it is drawn from and the CCA component that discharges it,
-and Table~\ref{tab:principles-map} collects the same mapping at a glance.
+The argument above narrows the design space to a few requirements on any rule
+that decides under structured disagreement. We state four, each answering to one
+component of the CCA rule. Behavioral rater clusters are not nations in the
+constitutional sense and we do not claim they hold such groups' normative
+standing; the criteria are \emph{weakened} aggregation requirements, drawn from
+the institutional and social-choice record and adapted to platform governance.
+Table~\ref{tab:principles-map} collects each criterion with its source and the
+component that discharges it.
 
 \textbf{P1 (Presence).} No display decision may be made while any constituency is
 absent; missing representation must not be convertible into apparent consensus.
@@ -564,10 +560,10 @@ constituency form of P2, that acceptability hold separately within each group,
 cannot be stated in the model, because groups are not model objects. P1 has no
 counterpart at all: pooled estimation has no notion of ``a group being absent,''
 and raters from a single group can wholly dominate the estimate of $i_n$. P3 is
-likewise absent: a larger or more active bloc simply contributes more terms to the
-loss. The polarization safeguard conflicts directly with P2, discounting notes on
-\emph{polarizing issues} rather than notes with \emph{one-sided support}, so it
-can veto a note that both groups accept. The reliability-weighted extension
+likewise absent, since a larger or more active bloc simply contributes more
+terms to the loss, and the polarization safeguard conflicts directly with P2,
+discounting notes on \emph{polarizing issues} rather than notes with
+\emph{one-sided support}. The reliability-weighted extension
 \citep{goyal2026qsmf} inherits the same representational structure. This is the
 design failure of Section~\ref{sec:the_gap}: the rule reads individual intent
 where the criteria ask for community consent.
@@ -582,19 +578,18 @@ versions of that claim: under resampling the algorithm keeps recovering two
 large camps beside a small hyperactive cluster at every non-degenerate scale,
 and the two-camp partition itself reappears across sample sizes with the
 between-camp correlation and discriminating share barely moving
-(Table~\ref{tab:scaleup}). Persistence is necessary and nowhere near sufficient, as the
-ladder's own failures show: the variants that merely fence off a power-voter clique
-score highest of all on stability. Each side must therefore also be large enough
-that cross-constituency agreement is a demand on two real publics rather than
-statistical noise. Our two constituencies each hold tens of thousands of raters.
-The 64 power-voters are not a third: under a symmetric rule their veto would weigh
-as much as that of a camp more than a thousand times larger. They are a handful
-of unusually heavy voters rather than a third public, and are placed in the camp
-their voting tracks (Section~\ref{sec:approach}), which removes the veto without
-removing the votes. And the two must reach different verdicts on a large share of notes; about
-81\% of evaluated notes fall on the discriminating side of the partition. A
-partition meeting all three is not an arbitrary artifact but the lines along which
-acceptance and rejection actually run. The standing is conditional: when rating
+(Table~\ref{tab:scaleup}). Persistence is necessary and nowhere near sufficient, as the ladder's own
+failures show: the variants that merely fence off a power-voter clique score
+highest of all on stability. Each side must therefore also be large enough that
+cross-constituency agreement is a demand on two real publics rather than
+statistical noise, and ours each hold tens of thousands of raters. The 64
+power-voters are not a third: under a symmetric rule their veto would weigh as
+much as that of a camp more than a thousand times larger, so they are placed in
+the camp their voting tracks (Section~\ref{sec:approach}), which removes the
+veto without removing the votes. And the two must reach different verdicts on a
+large share of notes; about 81\% of evaluated notes fall on the discriminating
+side of the partition. A partition meeting all three is not an arbitrary
+artifact but the lines along which acceptance and rejection actually run. The standing is conditional: when rating
 behavior no longer shows a stable cluster structure, CCA's precondition fails and
 pooled estimation regains its warrant.
 
@@ -645,19 +640,17 @@ cross-constituency question the right one here.
 \label{sec:data-pipeline}
 
 The empirical pipeline follows the repository's active 200k Representative
-setup. We start from 1.7M English-language notes and retain notes on tweets with
-at least three English-language candidates. Each note must also receive at
-least three eligible helpful/not-helpful ratings within 48 hours of its
-creation. The two floors of three serve distinct purposes, a genuine
-multi-note choice set and minimum observed coverage before cross-viewpoint
-evidence counts (Appendix~\ref{app:filters}); the 48-hour window keeps ratings
-tied to the note's active review period rather than to activity months later.
-These filters leave 510k eligible notes. From this set, we take a dense
-100k-note slice, roughly the top 20\% by rating volume, and retain the 200k
-raters active on that slice for clustering. The slice spans 44,722 distinct
-tweets, the unit from which the Representative strategy selects one note.
-Restricting the analysis to this dense core is deliberate: co-rating similarity
-is informative only when users rate enough of the same notes to be compared.
+setup, and Figure~\ref{fig:dataset-construction} gives its filter chain: from
+1.7M English-language notes down to a dense 100k-note slice and the 200k raters
+active on it. The two floors of three, on candidate notes per tweet and on
+ratings per note, serve distinct purposes, a genuine multi-note choice set and
+minimum observed coverage before cross-viewpoint evidence counts
+(Appendix~\ref{app:filters}); the 48-hour rating window keeps ratings tied to
+the note's active review period rather than to activity months later. The slice
+spans 44,722 distinct tweets, the unit from which the Representative strategy
+selects one note. Restricting the analysis to this dense core is deliberate:
+co-rating similarity is informative only when users rate enough of the same
+notes to be compared.
 
 \begin{figure}[h]
   \centering
@@ -689,13 +682,12 @@ scored, and embed a symmetric nearest-neighbor co-rating graph spectrally
 rating behavior alone, independently of any quantity X's model estimates. We
 evaluate candidate values of $k$ from 2 to 7 and select the one with the
 highest mean bootstrap ARI. At 200k raters that rule returns $k=3$, at ARI
-0.971 against 0.593 for $k=2$; silhouette points the other way, peaking at
-0.997 for $k=2$ against 0.735 or lower everywhere else. The two criteria
-diverge because a direct $k=2$ specification must represent two structures with
-only two labels: the division between the large camps and a recurring clique of
-power-voters. Allowing the stability criterion to select $k=3$ makes both
-structures visible at once: two large camps and a third cluster of 64 highly
-active raters, too small to be granted constituency standing.
+0.971 against 0.593 for $k=2$, while silhouette points the other way. The two
+criteria diverge because a direct $k=2$ specification must represent two
+structures with only two labels: the division between the large camps and a
+recurring clique of power-voters. Selecting $k=3$ makes both visible at once:
+two large camps and a third cluster of 64 highly active raters, too small to be
+granted constituency standing.
 
 We therefore keep both large camps fixed and reassign only those 64, each to
 whichever constituency their note-level vote profile tracks more closely
@@ -723,18 +715,16 @@ not already shown by Community Notes.
 \subsection{Validation}
 
 Aggregation and content quality are different judgments, and we keep them
-analytically separate: CCA identifies notes that clear a cross-constituency
-support bar, and a second, independent stage asks whether the note itself is
-worth showing. We use Gemma 4 31B IT, the strongest open-weight model that runs
-unquantized on our two-GPU allocation
-\citep{arena2026leaderboard,google2026gemma4};
-Appendix~\ref{app:gemma-runtime} reports the complete hardware, serving,
-decoding, and audit configuration. Each of the 13,655 notes in the frozen
-rescue pool is judged independently through a single-turn, zero-shot,
-rubric-based user prompt. The three canonical prompts appear verbatim in
-Appendix~\ref{app:gemma-prompts}. Rubric-based LLM-as-a-judge measurement has
-broader empirical precedent \citep{asirvatham2026gptmeasurement}, though none
-that validates this model or this rubric (Appendix~\ref{app:llm-judge}).
+separate: CCA identifies notes that clear a cross-constituency support bar, and
+an independent stage asks whether the note itself is worth showing. We use
+Gemma 4 31B IT, the strongest open-weight model that runs unquantized on our
+two-GPU allocation \citep{arena2026leaderboard,google2026gemma4}, judging each
+of the 13,655 notes in the frozen rescue pool independently through a
+single-turn, zero-shot, rubric-based prompt. Appendix~\ref{app:gemma-runtime}
+reports the full configuration and Appendix~\ref{app:gemma-prompts} the three
+canonical prompts verbatim. Rubric-based LLM-as-a-judge measurement has broader
+empirical precedent \citep{asirvatham2026gptmeasurement}, though none that
+validates this model or this rubric (Appendix~\ref{app:llm-judge}).
 
 The model sees only the note's own text; it does not see the tweet the note
 responds to, open any cited URL, or observe the note's upstream selection
