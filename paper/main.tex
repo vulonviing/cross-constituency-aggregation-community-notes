@@ -81,24 +81,21 @@ contextual notes, other contributors rate them, and a bridging algorithm decides
 which notes become visible. The algorithm is designed to avoid simple majority
 capture by estimating note quality separately from ideological alignment, so a
 note should gain support across disagreement rather than only within one side
-\citep{wojcik2022birdwatch,xcommunitynotes2026ranking}. This design is powerful,
-but it also creates a visibility problem. Because the system works through
-sparse and unequal participation, display decisions can depend heavily on the
-ratings supplied by a relatively small active core, and many notes remain in
-Needs More Ratings when the algorithm does not find enough diverse support
+\citep{wojcik2022birdwatch,xcommunitynotes2026ranking}. Because the system
+works through sparse and unequal participation, display decisions can depend
+heavily on a relatively small active core, and many notes remain in Needs More
+Ratings when the algorithm does not find enough diverse support
 \citep{goyal2026qsmf,razuvayevskaya2025timeliness}. We argue that this is not
-only a data-sparsity problem. It is also an aggregation problem: Community Notes
-treats cross-group agreement indirectly, through a fitted model, rather than as
-an explicit decision rule over constituencies.
+only a data-sparsity problem but an aggregation problem: Community Notes treats
+cross-group agreement indirectly, through a fitted model, rather than as an
+explicit decision rule over constituencies.
 
-We take inspiration from political science and social choice. In systems such
-as Switzerland's double-majority referendum rule, important decisions must gain
-support not only from a national majority but also from a majority of cantons;
-the system treats cross-group support as part of the decision's legitimacy. Our
-philosophy is simple: a note should not become visible because one active group
-overwhelms the rest; it should become visible when each relevant constituency
-has a real chance to support it. We operationalize this idea as
-cross-constituency aggregation. We recover behavioral constituencies from
+We take inspiration from political science and social choice, where systems
+such as Switzerland's double-majority referendum rule treat cross-group support
+as part of a decision's legitimacy. A note should not become visible because
+one active group overwhelms the rest; it should become visible when each
+relevant constituency has a real chance to support it. We operationalize this
+as cross-constituency aggregation, recovering behavioral constituencies from
 co-rating patterns among 200,000 active raters, compute each note's approval
 rate inside each constituency, and combine those rates with a geometric mean
 under a minimum-coverage rule. In a 100,000-note analytical slice, Community
@@ -210,7 +207,7 @@ This equation breaks a rating down into four distinct components to isolate the 
 \subsection*{A Critique of Matrix Normalization: Profiling Over Consensus}
 The terms $i_u$ and $f_u \cdot f_n$ do not measure ``bad faith''; they act as normalization tools. But by relying on them, the core action of Community Notes shifts from evaluating the \textit{content} of a note to estimating the \textit{intent} of the user. Simulation studies of the open-source algorithm make this concrete: a coordinated minority of just 5--20\% of biased raters can suppress genuinely helpful notes outright \citep{truong2025vulnerable}. Observers have questioned the system's narrow reliance on cross-group consensus \citep{jude2025narrow}; our concern is more specific: the model identifies that consensus by first estimating users' rating tendencies and viewpoint alignment, grounding its judgment of the note in inferences about the users who rated it.
 
-To isolate note quality ($i_n$), the algorithm treats rater tendencies and viewpoint compatibility as structural noise, and in doing so profiles users and reads their intentions: is this user voting on objective truth, or cheering for their side? The result is an implicit hierarchy of raters, on the assumption that weighting ``high-quality,'' unbiased evaluators is the most effective way to govern visibility.
+To isolate note quality ($i_n$), the algorithm treats rater tendencies and viewpoint compatibility as structural noise (Figure~\ref{fig:rater-dominance-schematic}), and in doing so profiles users and reads their intentions: is this user voting on objective truth, or cheering for their side? The result is an implicit hierarchy of raters, on the assumption that weighting ``high-quality,'' unbiased evaluators is the most effective way to govern visibility.
 
 Recent literature highlights the fatal flaw in this intent-reading framework. \citet{goyal2026qsmf} and \citet{nudo2026hyperactive} demonstrate that such quality-estimation structures are highly vulnerable to manipulation by strategic voters and ``hyperactive minorities.'' Inferring rater quality from a sparse matrix, the model comes to lean on whoever rates most often: if a hyperactive minority dominates the rating record, their voting patterns dictate the latent space, and an algorithm hunting for ``quality raters'' inside such a lopsided pool amplifies that core rather than capturing community consensus.
 
@@ -241,14 +238,14 @@ algorithm holds an honest map of where each rater sits in the latent space. It
 does not start with one; it draws the map from the rating record, and a few
 hands draw most of it. Think of a class graded on participation where the
 teacher keeps asking ``what does the class think?'' but the same handful of
-students answer every session; their voices quietly become the teacher's idea
-of the whole room. Community Notes inherits this distortion: a small,
-hyperactive, politically polarized minority supplies most ratings, so their
-behavior fixes where the axis of ``viewpoint'' lies and which votes look
-``surprising'' \cite{nudo2026hyperactive}. Once a narrow crowd has drawn the
-map, the ``enemies'' whose handshake looked so convincing may be two wings of
-the same overheated faction, and the bridge the model celebrates spans a gap
-most users were never placed on.
+students answer every session, until their voices become the teacher's idea of
+the whole room. Community Notes inherits this distortion: a hyperactive,
+politically polarized minority supplies most ratings, so their behavior fixes
+where the axis of ``viewpoint'' lies and which votes look ``surprising''
+\cite{nudo2026hyperactive}. Once a narrow crowd has drawn the map, the
+``enemies'' whose handshake looked so convincing may be two wings of the same
+faction, and the bridge the model celebrates spans a gap most users were never
+placed on.
 
 \section{The Gap in Community Notes}
 \label{sec:the_gap}
@@ -257,13 +254,9 @@ most users were never placed on.
 X officially defends its algorithm using a ``bridging'' analogy \cite{xcommunitynotes2026ranking}: a note supported only from one side of the polarization axis stays hidden, and visibility requires positive ratings from raters the model places at opposite ends of the latent viewpoint dimension. Platform engineers argue this prevents majority tyranny and resists coordinated manipulation by any single faction.
 
 \subsection*{Why the Defense Does Not Hold}
-The bridging claim rests on a prior step that undermines it. Before any cross-group comparison can take place, the formula described in Section~\ref{sec:how_cn_works} must situate every rater in a two-dimensional space of inferred identity. Two terms do this work:
+The bridging claim rests on a prior step that undermines it. Before any cross-group comparison can take place, the formula of Section~\ref{sec:how_cn_works} must situate every rater in a two-dimensional space of inferred identity. Two terms do this work. $i_u$ collapses each rater to a leniency or strictness tendency, from which a rater who is critical because they apply high standards cannot be distinguished from one who systematically opposes certain content. The viewpoint term $f_u \cdot f_n$ goes further, pinning each rater to a coordinate on an axis the model derives entirely from co-voting patterns; a ``Helpful'' rating counts as cross-group signal only when the model could not have predicted it from that coordinate. Bridging, operationally, means ``this approval was surprising given where we placed this rater,'' not ``two independent communities both endorsed this note.''
 
-$i_u$ collapses each rater to a single scalar, a leniency or strictness tendency estimated from their full history of votes. Whether a rater is critical because they apply high standards or because they systematically oppose certain content is not distinguishable from this number alone.
-
-The viewpoint term $f_u \cdot f_n$ goes further: it pins each rater to a coordinate on an axis the model derives entirely from co-voting patterns. A ``Helpful'' rating is counted as cross-group signal only when the model could not have predicted it from that coordinate. Bridging, operationally, means ``this approval was surprising given where we placed this rater,'' not ``two independent communities both endorsed this note.''
-
-The resulting action is intent inference rather than content evaluation. The algorithm asks not \textit{what} a note says, but \textit{who} tends to approve notes like this and whether an approver was the sort of person expected to do so. Sparse, unequal participation makes this inference even less reliable: when a small hyperactive minority supplies most of the votes that fix the latent axis, the coordinate system itself reflects their behavioral patterns, not the broader community's.
+The resulting action is intent inference rather than content evaluation. The algorithm asks not \textit{what} a note says, but \textit{who} tends to approve notes like this. Sparse, unequal participation makes the inference less reliable still: when a small hyperactive minority supplies most of the votes that fix the latent axis, the coordinate system reflects their behavioral patterns, not the broader community's.
 
 \subsection*{Evidence from Our Own Pipeline}
 
@@ -300,29 +293,28 @@ The ladder also shows why a stability score cannot be read as a certificate. Eig
 
 Three scales survived that filter with two large camps and at most one small outlier cluster: 60k, 200k, and 210k. We take 200k as the production setting, on a joint reading of stability, camp balance, the negative between-camp correlation, and the share of discriminating notes rather than a maximization of any one of them; 210k includes more users but reproduces the same structure at slightly weaker values.
 
-Even at 200k the algorithm does not hand us two camps. Bootstrap stability selects $k=3$ there, and the third cluster holds 64 raters with a median of 1{,}269 votes each, against 121 and 101 in the two main camps. Leaving it in place would grant a 64-person clique the same standing as two constituencies of roughly a hundred thousand raters; dropping it would discard the votes that most heavily shape the co-rating graph. We therefore reassign its members to the camp whose note-level voting they track more closely, yielding the final split of 107{,}734 and 92{,}266 raters used throughout the paper. The cost is small: the between-camp correlation and the discriminating share each move by less than a percentage point (Table~\ref{tab:scaleup}), so absorbing the power-voters leaves the two-camp structure intact rather than manufacturing it.
+Even at 200k the algorithm does not hand us two camps. Bootstrap stability selects $k=3$, and the third cluster holds 64 raters with a median of 1{,}269 votes each, against 121 and 101 in the two main camps. Leaving it in place would grant a 64-person clique the standing of two constituencies of roughly a hundred thousand raters; dropping it would discard the votes that most heavily shape the co-rating graph. We therefore reassign its members to the camp whose note-level voting they track more closely, yielding the final split of 107{,}734 and 92{,}266 raters used throughout the paper. The cost is small: the between-camp correlation and the discriminating share each move by less than a percentage point (Table~\ref{tab:scaleup}), so absorbing the power-voters leaves the two-camp structure intact rather than manufacturing it.
 
 \subsection*{The Problem, Stated}
-Two failures sit beneath this gap, and only one is about data. The first is a matter of design: the algorithm profiles individuals instead of consulting communities, estimating whether a given rater's approval was predictable rather than whether the groups that genuinely disagree have each consented. This flaw is independent of sample size: with complete, perfectly balanced participation, the model would still be reading intent rather than evaluating cross-community consent. The second failure is empirical, and our ladder demonstrates it: the latent axis on which the entire bridging check rests is fixed by a hyperactive minority, so even the ``cross-group agreement'' the algorithm rewards is agreement across a distorted pair of poles. \citet{razuvayevskaya2025timeliness} measure this skew from the outside (the top 10\% of contributors produce 58\% of all notes), and our experiments confirm it from the inside, at every scale we can stably analyze. The gap is not a shortage of ratings. It is an aggregation rule that reads individual intent and then mistakes the most active raters' consensus for the community's.
+Two failures sit beneath this gap, and only one is about data. The first is a matter of design: the algorithm profiles individuals instead of consulting communities, estimating whether a given rater's approval was predictable rather than whether the groups that genuinely disagree have each consented. This flaw is independent of sample size; with perfectly balanced participation, the model would still be reading intent rather than evaluating cross-community consent. The second is empirical, and our ladder demonstrates it: the latent axis on which the bridging check rests is fixed by a hyperactive minority, so even the ``cross-group agreement'' the algorithm rewards is agreement across a distorted pair of poles. \citet{razuvayevskaya2025timeliness} measure this skew from the outside, where the top 10\% of contributors produce 58\% of all notes, and our experiments confirm it from the inside at every scale we can stably analyze. The gap is not a shortage of ratings. It is an aggregation rule that reads individual intent and then mistakes the most active raters' consensus for the community's.
 
 \section{Learning from Divided Societies}
 \label{sec:learning}
 
 Section~\ref{sec:the_gap} left the production rule trying to bridge groups it
 cannot name. If cross-group acceptability is going to be the display standard,
-then the institutions built to decide across durable division are the natural
-place to look for an aggregation rule. We draw the standard out first, then the
-rules that honor it.
+the institutions built to decide across durable division are the natural place
+to look for an aggregation rule.
 
 \subsection*{The Display Decision and Legitimacy}
 
 Whether that gap matters depends on what the display decision is for. Each time
 the platform turns thousands of ratings into a single show/hide call, it does
 more than rank content: it attaches a public correction to someone's post and
-presents it as coming from ``the community.'' Readers cannot opt out of the
-result. A displayed note changes what everyone sees, including the people who
-think it is wrong, and its force comes from that shared environment rather than
-from any legal power \citep{klonick2018governors}.
+presents it as coming from ``the community.'' Readers cannot opt out. A
+displayed note changes what everyone sees, including the people who think it is
+wrong, and its force comes from that shared environment rather than from any
+legal power \citep{klonick2018governors}.
 
 Framed this way, the design question is not which note is best but which rule
 should decide when the crowd disagrees. A plain majority always returns an
@@ -336,9 +328,8 @@ appear, so cross-group acceptability is its display standard today, expressed as
 a latent estimate rather than as groups. Users respond to the difference:
 compared with a context-free misleading flag, a community-written note raises
 trust in fact-checking \citep{drolsbach2024trust}. Asking about legitimacy here
-introduces no foreign requirement. It restates a commitment the system already
-holds, in a form that can be checked, and then asks which aggregation rule
-follows from it.
+introduces no foreign requirement; it restates a commitment the system already
+holds, in a form that can be checked.
 
 What we take from states is the aggregation logic, not the political theory
 around it. Legitimacy here means something thin and procedural: whether the
@@ -595,27 +586,24 @@ pooled estimation regains its warrant.
 
 An immediate worry follows: once the behavioral partition is reduced to two
 classes, is it not the same as splitting the model's one-dimensional ideology axis
-in two at the sign of $f_u$? Even when both are binary, they are different objects.
-The $f_u$ split requires choosing a cut point on a single jointly fitted line; the
-behavioral split comes from the full co-rating similarity structure, and its
+in two at the sign of $f_u$? Even when both are binary, they are different
+objects. The $f_u$ split requires a cut point on a single jointly fitted line;
+the behavioral split comes from the full co-rating similarity structure, and its
 boundary need not correspond to any threshold on that line. Topic-level
-diagnostics already point away from coincidence: neither constituency is
-uniformly more approving across issues, while the between-camp correlation stays
-strongly negative throughout the clustering ladder (Table~\ref{tab:scaleup}).
-There is also a procedural reason to keep them apart:
+diagnostics point away from coincidence: neither constituency is uniformly more
+approving across issues. There is also a procedural reason to keep them apart:
 $f_u$ is an internal quantity estimated by the very model under audit, and using
 the audited rule's own instrument to delineate the parties would be improper,
 whereas the behavioral constituencies are recovered from raw rating behavior
 independent of that rule.
 
-A second worry concerns rescue itself: why should a note that fails the platform's
-cross-ideological test regain value under cross-constituency consent, when both are
-versions of one intuition? They are versions of one intuition, tested with
-different instruments. X infers a viewpoint coordinate for each rater and asks
-whether a note's support is surprising given those coordinates; CCA counts approval
-inside two groups recovered from behavior and asks whether each group approves. The
-rescue pool is what that difference produces: the notes on which the two
-measurements return different verdicts. Three things can open such a gap. The
+A second worry concerns rescue itself: why should a note that fails the
+platform's cross-ideological test regain value under cross-constituency
+consent? They are versions of one intuition tested with different instruments.
+X infers a viewpoint coordinate for each rater and asks whether a note's support
+is surprising given those coordinates; CCA counts approval inside two groups
+recovered from behavior and asks whether each group approves. The rescue pool is
+what that difference produces. Three things can open such a gap. The
 polarization safeguard can read ``the issue divides people'' as ``the support is
 one-sided.'' The model gives each rater a point on a single line, while real
 blocs differ along several dimensions at once, so support that bridges the axis
@@ -624,11 +612,10 @@ strongly regularized, hence conservative by construction
 \citep{goyal2026qsmf}, so support plainly visible in the group counts need not
 show up as the residual the factorization rewards.
 
-CCA therefore does not overturn the platform's answer to a shared question. It
+CCA therefore does not overturn the platform's answer to a shared question; it
 marks the notes where the answer may come from how the standard is implemented
-rather than from the standard itself.
-
-When rater disagreement is unstructured noise around a shared quality signal,
+rather than from the standard itself. When rater disagreement is unstructured
+noise around a shared quality signal,
 pooled latent-quality estimation is well warranted; it is the persistence of
 behavioral blocs, documented in Section~\ref{sec:the_gap}, that makes the
 cross-constituency question the right one here.
@@ -640,7 +627,9 @@ cross-constituency question the right one here.
 \label{sec:data-pipeline}
 
 The empirical pipeline follows the repository's active 200k Representative
-setup, and Figure~\ref{fig:dataset-construction} gives its filter chain: from
+setup, with its thresholds and variants set out in
+Appendix~\ref{app:pipeline}. Figure~\ref{fig:dataset-construction} gives the
+filter chain: from
 1.7M English-language notes down to a dense 100k-note slice and the 200k raters
 active on it. The two floors of three, on candidate notes per tweet and on
 ratings per note, serve distinct purposes, a genuine multi-note choice set and
@@ -669,10 +658,10 @@ notes to be compared.
 Section~\ref{sec:cca} states behavioral recovery (P4) as a criterion; this
 subsection is how we discharge it. The 200k-rater scale was selected
 empirically as the best balance between coverage and diagnostic quality: as
-progressively less-active raters entered the sample, shared-note overlap
-thinned, while a small hyperactive core remained among the graph's most
-reproducible structures \citep{nudo2026hyperactive,razuvayevskaya2025timeliness}.
-Table~\ref{tab:scaleup} reports the ladder from 60k to 250k and
+less-active raters entered the sample, shared-note overlap thinned while a
+small hyperactive core remained among the graph's most reproducible structures
+\citep{nudo2026hyperactive,razuvayevskaya2025timeliness}.
+Table~\ref{tab:scaleup} reports the ladder and
 Appendix~\ref{app:scale-selection} the selection argument.
 
 On that slice we build a sparse, mean-centered user-by-note matrix, where each
@@ -691,25 +680,23 @@ granted constituency standing.
 
 We therefore keep both large camps fixed and reassign only those 64, each to
 whichever constituency their note-level vote profile tracks more closely
-(Method B), 54 into the larger and 10 into the smaller, leaving final
-constituency sizes of 107,734 and 92,266 raters. This preserves the main-camp
-boundary recovered at $k=3$ rather than reproducing the unstable cut obtained
-by forcing the spectral model to use two clusters. Nothing downstream turns on
-how the reassignment is done: an embedding-centroid variant (Method A) sorts 29
-of the 64 differently, and both partitions return the same between-camp
-correlation of $-0.620$ and the same 81.4\% discriminating share
+(Method B), leaving final sizes of 107,734 and 92,266 raters. This preserves the
+main-camp boundary recovered at $k=3$ rather than reproducing the unstable cut
+obtained by forcing two clusters. Nothing downstream turns on how the
+reassignment is done: an embedding-centroid variant (Method A) sorts 29 of the
+64 differently, and both partitions return the same between-camp correlation of
+$-0.620$ and the same 81.4\% discriminating share
 (Appendix~\ref{app:methods-ab}).
 
 \subsection{Selection}
 
 For each tweet, the Representative strategy selects the single note with the
-highest cross-constituency score among its candidate notes, computed as in
-Eq.~\eqref{eq:cca-score}. A note's bridge score is defined only once both
-constituencies have contributed at least three ratings to it
-(Section~\ref{sec:data-pipeline}); this coverage rule operationalizes P1, and
-notes that never clear the bar cannot be selected under CCA. A note counts as
-CCA-selected when its
-bridge score is above 0.5, and as newly rescued when it is CCA-selected but
+highest cross-constituency score among its candidate notes
+(Eq.~\eqref{eq:cca-score}). That score is defined only once both constituencies
+have contributed at least three ratings (Section~\ref{sec:data-pipeline}), the
+coverage rule that operationalizes P1, so notes below the bar cannot be selected
+at all. A note is CCA-selected
+when its bridge score exceeds 0.5, and newly rescued when it is CCA-selected but
 not already shown by Community Notes.
 
 \subsection{Validation}
@@ -718,7 +705,7 @@ Aggregation and content quality are different judgments, and we keep them
 separate: CCA identifies notes that clear a cross-constituency support bar, and
 an independent stage asks whether the note itself is worth showing. We use
 Gemma 4 31B IT, the strongest open-weight model that runs unquantized on our
-two-GPU allocation \citep{arena2026leaderboard,google2026gemma4}, judging each
+two-GPU allocation (Appendix~\ref{app:gemma-selection}), judging each
 of the 13,655 notes in the frozen rescue pool independently through a
 single-turn, zero-shot, rubric-based prompt. Appendix~\ref{app:gemma-runtime}
 reports the full configuration and Appendix~\ref{app:gemma-prompts} the three
@@ -1083,10 +1070,10 @@ protect one group from domination while also hardening group boundaries,
 empowering actors who claim to speak for a bloc, and creating veto points that
 frustrate broadly supported decisions
 \citep{mcgarryoleary2009,schwartz2010,mcculloch2025}. CCA faces a platform-scale
-version of the same tradeoff. Treating two behavioral constituencies as the
-units of consent could preserve a division that might otherwise weaken, while
-the soft veto against one-sided capture could also block a note supported by a
-broad but not overwhelming majority. The rule therefore applies only while
+version of the same tradeoff: treating two behavioral constituencies as the
+units of consent could preserve a division that might otherwise weaken, and the
+soft veto against one-sided capture could also block a note supported by a broad
+but not overwhelming majority. The rule therefore applies only while
 co-rating behavior supports stable, substantively sized constituencies. If that
 structure disappears, forcing a group-based decision would no longer satisfy
 P4, and pooled estimation becomes the more appropriate baseline.
@@ -1135,18 +1122,16 @@ implementation, not as evidence that these settings are optimal.
 \section{Conclusion}
 
 Community Notes already commits to cross-group acceptability as its display
-standard; it just cannot state that standard directly, because its rating
-model never forms the constituencies the standard is about. This paper
-recovers those constituencies from rating behavior and makes the standard
-explicit: a geometric mean of within-constituency approval, gated by a
-coverage requirement that keeps any single constituency from being counted
-without being heard. Applied to the platform's own representative picks, the
-rule surfaces 13,655 notes that clear cross-constituency support and remain
-hidden, of which 8,558 also pass an independent content check. Neither
-number is the platform's final answer on any of these notes; both are
-evidence that a meaningful share of what disappears into Needs More Ratings
-disappears for a reason the aggregation rule creates, not only for lack of
-attention. The broader claim is not specific to Community Notes: any system
+standard; it just cannot state that standard directly, because its rating model
+never forms the constituencies the standard is about. This paper recovers those
+constituencies from rating behavior and makes the standard explicit: a geometric
+mean of within-constituency approval, gated by a coverage requirement that keeps
+any single constituency from being counted without being heard. Applied to the
+platform's own representative picks, the rule surfaces 13,655 notes that clear
+cross-constituency support and remain hidden, of which 8,558 also pass an
+independent content check. Neither number is the platform's final answer on any
+of these notes; both are evidence that a meaningful share of what disappears
+into Needs More Ratings disappears for a reason the aggregation rule creates. The broader claim is not specific to Community Notes: any system
 that decides visibility, in a collective name, over a durably divided
 audience faces the same choice we describe in Section~\ref{sec:learning},
 between compressing disagreement into one pooled score and preserving its
@@ -1225,6 +1210,9 @@ paper; the original spectral label survives only as a diagnostic column.
 
 \section{Gemma Validation Runtime}
 \label{app:gemma-runtime}
+
+Table~\ref{tab:gemma-runtime} records the canonical configuration of the
+validation run.
 
 \begin{table}[ht]
 \centering
