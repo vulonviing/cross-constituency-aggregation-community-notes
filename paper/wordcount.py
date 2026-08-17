@@ -39,7 +39,8 @@ def count(text):
 
 def main(path):
     src = open(path).read()
-    body = strip(src.split("\\begin{document}", 1)[1].split("\\bibliographystyle", 1)[0])
+    body_src = re.sub(r"(?<!\\)%.*", "", src.split("\\begin{document}", 1)[1].split("\\bibliographystyle", 1)[0])
+    body = strip(body_src)
 
     parts = re.split(r"\\section\*?\{([^}]*)\}", body)
     rows = [("(front matter + abstract)", count(parts[0]))]
@@ -48,8 +49,17 @@ def main(path):
     width = max(len(name) for name, _ in rows)
     for name, n in rows:
         print(f"{name:{width}s}  {n:>6}")
+    prose = sum(n for _, n in rows)
     print("-" * (width + 8))
-    print(f"{'TOTAL body prose':{width}s}  {sum(n for _, n in rows):>6}")
+    print(f"{'TOTAL body prose':{width}s}  {prose:>6}")
+
+    # The course limit is on the main body including its tables and figures, so
+    # report that separately: it is the number the paper is actually held to.
+    floats = 0
+    for m in re.finditer(r"\\begin\{(table\*?|figure\*?)\}.*?\\end\{\1\}", body_src, re.S):
+        floats += count(m.group(0))
+    print(f"{'  + tables and figures':{width}s}  {floats:>6}")
+    print(f"{'MAIN BODY (course limit)':{width}s}  {prose + floats:>6}")
 
 
 if __name__ == "__main__":

@@ -868,11 +868,6 @@ rather than estimate the average quality of either population.
 Tables~\ref{tab:hidden-rescue-cases} and \ref{tab:better-alternatives}
 reproduce them and their linked sources in full.
 
-\urldef{\rawChickenStudyUrl}\url{https://www.fsis.usda.gov/sites/default/files/media_file/2021-02/FSCRP_Year%2B2_Final_Aug2019.pdf}
-\urldef{\mutahShownWikiUrl}\url{https://en.wikipedia.org/wiki/Battle_of_Mu%27tah#:~:text=Notes%20%5E%20The%20Byzantines%20do%20not%20appear,uncertain%2C%20but%20unlikely%20to%20have%20exceeded%2010%2C000.}
-\urldef{\mutahShownHistoryUrl}\url{https://islam365.io/topics/wars.html#:~:text=The%20Muslim%20army%20marched%20north%20to%20Mu'tah%2C,Muslims%20were%20greatly%20outnumbered%20(perhaps%20by%20ten%2Dto}
-\urldef{\mutahCcaWikiUrl}\url{https://en.wikipedia.org/wiki/Battle_of_Mu%27tah}
-
 \begin{table*}[t]
 \centering
 \footnotesize
@@ -884,32 +879,29 @@ reproduce them and their linked sources in full.
 \textbf{Global} & \textbf{CCA score} & \textbf{Gemma} \\
 \midrule
 Raw chicken safety &
-Raw chicken does not need to be washed before cooking. Washing poultry prior
-to cooking it has been found to slightly increase bacterial contamination in
-the kitchen. \url{https://www.cdc.gov/food-safety/foods/chicken.html}
-\rawChickenStudyUrl
+Raw chicken does not need to be washed before cooking. Washing poultry
+[\ldots] increase bacterial contamination in the kitchen. \emph{[CDC; USDA]}
 & 95.1\% & 0.941 & 98 \\
 \addlinespace
 Eisenhower and Suez &
 Factual error: U.S. President Dwight D. Eisenhower insisted that Israel
 withdraw from Arab territory during the 1956 Suez Crisis.
-\url{https://www.presidency.ucsb.edu/documents/message-prime-minister-ben-gurion-urging-withdrawal-israeli-forces-egypt}
+\emph{[Eisenhower's message to Ben-Gurion]}
 & 84.6\% & 0.817 & 98 \\
 \addlinespace
 Trump--Colorado ballot ruling &
 The Supreme Court unanimously ruled Trump could not be taken off the ballot by
-Colorado under Section 3 of the 14th Amendment because states do not have the
-power to do so. It wasn't a matter of not ``holding him accountable'' for
-January 6. \url{https://www.supremecourt.gov/opinions/23pdf/23-719_19m2.pdf}
+Colorado [\ldots] because states do not have the power to do so.
+\emph{[the Court's opinion]}
 & 92.1\% & 0.735 & 98 \\
 \bottomrule
 \end{tabularx}
 \caption{Validated CCA selections for three tweets on which Community Notes
-displays no note. Note wording and source URLs are reproduced in full; only
-quotation marks and spacing are normalized for typesetting.
-``Global'' is overall approval, ``CCA score'' is the geometric mean of the two
-constituency-specific approval rates, and ``Gemma'' is the Stage 2
-rescue-worthiness score.}
+displays no note. Quotations are abridged with [\ldots] and each note's linked
+sources are named in brackets rather than printed; the full text and URLs are
+in the repository. ``Global'' is overall approval, ``CCA score'' is the
+geometric mean of the two constituency-specific approval rates, and ``Gemma''
+is the Stage 2 rescue-worthiness score.}
 \label{tab:hidden-rescue-cases}
 \end{table*}
 
@@ -925,52 +917,41 @@ rescue-worthiness score.}
 \midrule
 Yarmouk/Mu'tah & X shown &
 The Battle of Mu'tah was fought between the Byzantine Empire and the First
-Islamic State. The true size of the armies is considered to be around 10,000
-for the Byzantines and 3000 for the Muslims. It ended with a Byzantine
-victory.
-\mutahShownWikiUrl
-\mutahShownHistoryUrl
+Islamic State. [\ldots] It ended with a Byzantine victory.
+\emph{[Wikipedia; islam365]}
 & 92.2\% & 0.774 & --- \\
 & CCA &
 The post refers to the Battle of Yarmouk (636 AD), but reliable estimates put
-Muslim forces at 15,000-40,000, not 3,000, vs. 15,000-150,000 Byzantines.
-3,000 Muslims fought at the earlier Battle of Mu'tah (629 AD).
-\url{https://en.wikipedia.org/wiki/Battle_of_the_Yarmuk}
-\url{https://www.britannica.com/topic/Battle-of-Yarmouk-636}
-\mutahCcaWikiUrl
+Muslim forces at 15,000-40,000, not 3,000 [\ldots]. 3,000 Muslims fought at the
+earlier Battle of Mu'tah (629 AD). \emph{[Wikipedia; Britannica]}
 & 91.2\% & 0.837 & 95 \\
 \addlinespace
 Anne Frank graphic adaptation & X shown &
 Diary of a Young Girl, by Anne Frank, is part of the 8th-grade curriculum of
-the Florida Department of Education.
-\url{https://www.fldoe.org/core/fileparse.php/7539/urlt/pgg-8-standards.pdf}
-\url{https://www.fldoe.org/core/fileparse.php/7539/urlt/elabeststandardsfinal.pdf}
+the Florida Department of Education. \emph{[FL DoE standards]}
 & 97.8\% & 0.781 & --- \\
 & CCA &
 Florida removed the graphic novel adaptation of Anne Frank's diary due to
 nudity deemed unsuitable for kids, but the original diary remains available.
-Source:
-\url{https://www.wafb.com/2023/04/10/graphic-novel-version-anne-frank-book-removed-by-florida-school/}
+\emph{[WAFB]}
 & 97.8\% & 0.848 & 95 \\
 \addlinespace
 Cardinal Burke/Vigan\`o & X shown &
 Mr Vigano is a former archbishop who was excommunicated from the church in
-2024 for schism.
-\url{https://www.pillarcatholic.com/p/archbishop-vigano-excommunicated}
+2024 for schism. \emph{[The Pillar]}
 & 89.9\% & 0.783 & --- \\
 & CCA &
 The image shows Cardinal Raymond Burke, not Archbishop Vigan\`o. Vigan\`o was
 excommunicated for schism in July 2024 and holds no Church office.
-\url{https://www.vaticannews.va/en/vatican-city/news/2024-07/vigano-excommunicated-for-schism.html}
-\url{https://thecatholicherald.com/article/cardinal-burke-appeals-to-pope-leo-for-restoration-of-traditional-latin-mass}
+\emph{[Vatican News; Catholic Herald]}
 & 94.2\% & 0.871 & 95 \\
 \bottomrule
 \end{tabularx}
 \caption{Same-tweet cases where CCA selects a stronger alternative to the note
 displayed by Community Notes. Each pair contains the tweet's only displayed
-note and the different, higher-scoring CCA selection. Text and URLs are
-reproduced in full under the same normalization described in
-Table~\ref{tab:hidden-rescue-cases}. ``Global'' is overall approval, ``CCA
+note and the different, higher-scoring CCA selection. Quotations are abridged
+and sources named as in Table~\ref{tab:hidden-rescue-cases}. ``Global'' is
+overall approval, ``CCA
 score'' is the geometric mean of the two constituency-specific approval rates,
 and ``Gemma'' is the Stage 2 rescue-worthiness score, reported only for the
 CCA-selected notes.}
