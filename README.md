@@ -276,9 +276,11 @@ jobs/submit_llm_validation.sh smoke
 jobs/submit_llm_validation.sh stage1-array 2-7 3 64
 ```
 
-See [notebooks/llm_validation/README.md](notebooks/llm_validation/README.md)
-for frozen prompts, adaptive batch sizing, parallel Stage 1 shards, checkpoint
-behavior, and output schemas.
+The three frozen prompts are reproduced verbatim, with their hashes, in
+[data/llm_validation/PROMPTS.md](data/llm_validation/PROMPTS.md). See
+[notebooks/llm_validation/README.md](notebooks/llm_validation/README.md)
+for adaptive batch sizing, parallel Stage 1 shards, checkpoint behavior, and
+output schemas.
 
 The separately reported Stage 1.5 sensitivity analysis rechecks only the
 1,703 resolved Gemma opinion notes for a substantial sourced factual core. It
@@ -303,9 +305,8 @@ cd paper
 latexmk -pdf main.tex
 ```
 
-The five figures and the three frozen prompt files the appendices quote are
-pulled in from `figures/` and `data/`, so a fresh clone builds without any extra
-downloads. See [paper/README.md](paper/README.md).
+The five figures are pulled in from `figures/`, so a fresh clone builds
+without any extra downloads. See [paper/README.md](paper/README.md).
 
 ## Methodology
 

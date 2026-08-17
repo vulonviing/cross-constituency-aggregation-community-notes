@@ -94,7 +94,7 @@ Each directory carries the same audit set:
 | File | What it is |
 |---|---|
 | `run_manifest.json` | Model identity, decoding settings, seeds, prompt hash, input manifest hash. |
-| `*_prompt.txt` | The frozen prompt text, byte for byte as sent. |
+| `*_prompt.txt` | The frozen prompt text, byte for byte as sent. All three are collected, with hashes, in [PROMPTS.md](llm_validation/PROMPTS.md). |
 | `input_manifest.{parquet,csv}` | Exactly which notes entered the run, in order. |
 | `*_results.parquet` | The parsed per-note judgment. |
 | `*_unresolved.parquet` | Notes that failed to produce a schema-valid response within three attempts. |
