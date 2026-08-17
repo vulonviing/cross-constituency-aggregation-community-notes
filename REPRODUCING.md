@@ -1,7 +1,7 @@
 # Reproducing the Paper
 
 This document maps every headline number, table, and figure in
-[`paper/main.pdf`](paper/main.pdf)
+[`paper/Ulu_Yao.pdf`](paper/Ulu_Yao.pdf)
 to the artifact that produced it.
 
 **The fastest check is two commands.** From the repository root:
@@ -261,7 +261,7 @@ today will not reproduce these results.
 
 | Looking for | Path |
 |---|---|
-| The paper | `paper/main.pdf` |
+| The paper | `paper/Ulu_Yao.pdf` |
 | Method implementation | `src/` |
 | Stage-by-stage pipeline | `notebooks/` |
 | Gemma validation code | `notebooks/llm_validation/` |

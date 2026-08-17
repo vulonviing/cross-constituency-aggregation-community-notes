@@ -71,7 +71,7 @@ dist/
 *.ipynb.bak
 **/*.ipynb.bak
 
-# LaTeX build products; the canonical paper/main.pdf remains tracked.
+# LaTeX build products; the canonical paper/Ulu_Yao.pdf remains tracked.
 *.aux
 *.fdb_latexmk
 *.fls

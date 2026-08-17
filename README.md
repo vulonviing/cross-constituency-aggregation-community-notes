@@ -27,7 +27,7 @@ above can be re-derived from the files in this repository.
 
 | If you want to | Go to |
 |---|---|
-| **Read the paper** | [`paper/main.pdf`](paper/main.pdf) |
+| **Read the paper** | [`paper/Ulu_Yao.pdf`](paper/Ulu_Yao.pdf) |
 | **See the final talk** (July 2026) | [`community-notes-final-presentation.pdf`](docs/presentations/11-07-2026-community-notes-final/community-notes-final-presentation.pdf) |
 | **See the class talk** (June 2026) | [`CCA_presentation.pdf`](docs/presentations/25-06-2026-1408-class_presentation/CCA_presentation.pdf) |
 | **Check a number in the paper** | [REPRODUCING.md](REPRODUCING.md) — maps every result to the file that produced it |

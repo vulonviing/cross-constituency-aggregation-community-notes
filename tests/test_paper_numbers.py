@@ -1,6 +1,6 @@
 """Regression tests that re-derive the paper's headline numbers from committed data.
 
-Every value asserted here appears in `paper/main.pdf`, and
+Every value asserted here appears in `paper/Ulu_Yao.pdf`, and
 every one of them is recomputed from a parquet file that ships with this
 repository. No Hugging Face download and no raw X snapshot are required.
 
