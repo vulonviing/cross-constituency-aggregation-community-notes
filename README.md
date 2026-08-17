@@ -305,8 +305,9 @@ cd paper
 latexmk -pdf main.tex
 ```
 
-The five figures are pulled in from `figures/`, so a fresh clone builds
-without any extra downloads. See [paper/README.md](paper/README.md).
+The five figures and the three frozen prompt files the appendix quotes are
+pulled in from `figures/` and `data/`, so a fresh clone builds without any extra
+downloads. See [paper/README.md](paper/README.md).
 
 ## Methodology
 

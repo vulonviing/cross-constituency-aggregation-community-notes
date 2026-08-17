@@ -1166,19 +1166,25 @@ distinction between model output and post-generation validation.
 \section{Canonical Gemma Validation Prompts}
 \label{app:gemma-prompts}
 
-The three prompts are not reproduced here. They are published verbatim, with
-the SHA-256 hashes below, at \texttt{data/llm\_validation/PROMPTS.md} in the
-repository, alongside the tracked artifacts the canonical run consumed. At
-inference time \verb|{note_text}| was replaced by the text of one Community
-Note; no system prompt or additional contextual message was supplied. Stage 1
-classifies a note into one of five content categories, Stage 1.5 rechecks
-opinion-labeled notes for a sourced factual core, and Stage 2 scores
-rescue-worthiness. The hashes were computed over the template text before the
-tracked artifact's terminal newline:
+The prompts below are included directly from the tracked artifacts the
+canonical run consumed; they are also collected, with these hashes, at
+\texttt{data/llm\_validation/PROMPTS.md} in the repository. At inference time
+\verb|{note_text}| was replaced by the text of one Community Note; no system
+prompt or additional contextual message was supplied. The hashes were computed
+over the template text before the tracked artifact's terminal newline:
 \begin{itemize}[nosep,leftmargin=1.7cm]
   \item[Stage 1:] \texttt{fbbd4bd93fb419ad66cce097bb18a8705fd331f38ec1a9bf433aa783281023d2}
   \item[Stage 1.5:] \texttt{26114bb8632357166cf4cee9a4f0ce356ed1e9e527477d56c842e53415bc930f}
   \item[Stage 2:] \texttt{8c98c54b9c413ee70c161f40ec8e89f0b19ac6420b2bfe669e7ee1f9b136c644}
 \end{itemize}
+
+\subsection{Stage 1: Content Classification}
+\VerbatimInput[fontsize=\scriptsize]{../data/llm_validation/runs/gemma-4-31b-it-scckn-v1/stage1_prompt.txt}
+
+\subsection{Stage 1.5: Sourced-Factual-Core Recall}
+\VerbatimInput[fontsize=\scriptsize]{../data/llm_validation/runs/gemma-4-31b-it-scckn-stage1-5-opinion-v1/stage1_5_prompt.txt}
+
+\subsection{Stage 2: Rescue-Worthiness Scoring}
+\VerbatimInput[fontsize=\scriptsize]{../data/llm_validation/runs/gemma-4-31b-it-scckn-stage2-expanded-v1/stage2_prompt.txt}
 
 \end{document}

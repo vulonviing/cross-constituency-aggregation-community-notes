@@ -1,8 +1,8 @@
 # Canonical Gemma Validation Prompts
 
 The three frozen prompts used by the canonical validation run, reproduced
-verbatim. The paper's appendix gives their hashes and points here rather than
-printing them.
+verbatim. The paper's appendix prints the same three; this file is the
+plain-text copy, next to the artifacts the run consumed.
 
 At inference time `{note_text}` was replaced by the text of one Community Note.
 No system prompt and no additional contextual message was supplied: the model
